@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Alvinsu Blog</title>
-    <link>https://alvinsu.github.io.git/</link>
+    <link>https://alvin-su.github.io/</link>
     <description>Recent content on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 26 May 2022 21:30:55 +0800</lastBuildDate><atom:link href="https://alvinsu.github.io.git/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 26 May 2022 21:30:55 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>利用Hugo搭建个人博客站点</title>
-      <link>https://alvinsu.github.io.git/post/hugo-site/</link>
+      <link>https://alvin-su.github.io/post/hugo-site/</link>
       <pubDate>Thu, 26 May 2022 21:30:55 +0800</pubDate>
       
-      <guid>https://alvinsu.github.io.git/post/hugo-site/</guid>
+      <guid>https://alvin-su.github.io/post/hugo-site/</guid>
       <description>什么是HugoHugo 是一个基于Go 语言的框架，可以快速方便的创建自己的博客。</description>
     </item>
     
