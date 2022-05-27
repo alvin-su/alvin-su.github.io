@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hugo on Alvinsu Blog</title>
+    <link>https://alvin-su.github.io/tags/hugo/</link>
+    <description>Recent content in Hugo on Alvinsu Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 26 May 2022 21:30:55 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>利用Hugo搭建个人博客站点</title>
+      <link>https://alvin-su.github.io/post/hugo-site/</link>
+      <pubDate>Thu, 26 May 2022 21:30:55 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/hugo-site/</guid>
+      <description>什么是HugoHugo 是由Go语言实现的静态网站生成器。简单、易用、高效、易扩展、快速部署,可以快速方便的创建自己的博客。
+安装HugoHugo 因为是Go语言实现的 所以支持 Windows\Linux\MacOS 系统。因为日常办公只要是使用的Windows,所以这里只介绍Windows环境的安装。
+在github上下载Hugo的最新版本，地址：https://github.com/gohugoio/hugo/releases 如下图：
+下载下来后进行解压，进入目录只有一个hugo.exe 可执行文件，在系统环境变量path中，配置该exe的路径: 配置好环境变量后，就可以在powershell 中使用 hugo 命令，利用 hugo version 命令查看下hugo 的版本
+创建博客站点可以方便的利用 hugo new site myblog 命令创建一个名为 “myblog” 的博客。
+我们进入到myblog里面，可以看到如下内容:
+添加博客主题可以在 https://themes.gohugo.io/选择自己喜欢的主题进行下载，比如选择 m10c 主题，可以通过下面的命令进行下载： git clone https://github.com/vaga/hugo-theme-m10c.git themes/m10c
+输入命令 hugo server -t m10c &amp;ndash;buildDrafts 启动站点
+创建博客文章通过命令 hugo new post/myfirst.md 创建一个 myfirst.md 的文件。</description>
+    </item>
+    
+  </channel>
+</rss>
