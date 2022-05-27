@@ -6,7 +6,38 @@
     <description>Recent content in Posts on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 27 May 2022 09:26:30 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 27 May 2022 09:49:01 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dapr_k8s部署</title>
+      <link>https://alvin-su.github.io/post/dapr_k8s/</link>
+      <pubDate>Fri, 27 May 2022 09:49:01 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/dapr_k8s/</guid>
+      <description>在 Kubernetes集群中部署 DaprKubernetes 上的Dapr概述Dapr 可以配置为在任何受支持的Kubernetes版本上运行。主要通过 dapr-sidecar-inject、dapr-operator、dapr-placement和dapr-sentry k8s服务为dapr在k8s中运行提供支持。
+ dapr-operator 为Dapr管理组件更新和kubernetes服务端点 (状态存储、发布/订阅等) dapr-sidecar-injector 将Dapr 注入带注解的deployment pods中，并添加环境变量 DAPR_HTTP_PORT 和 DAPR_GRPC_PORT，以使用户定义的应用程序能够轻松地与Dapr通信，而无需硬编码Dapr端口。 dapr-placement 仅用于actor，创建映射表，将actor实例映射到pod。 dapr-sentry 管理服务之间的mTLS 并充当证书的颁发机构。  在kubernetes 集群上部署 Dapr在K8s中安装Dapr有两种方式，一种是使用Dapr CLI,另外一种是使用Helm 在 kubernetes中部署Dapr。我这里主要介绍使用Helm的方式部署Dapr。
+在centos7中安装K3sk3s概述k3s是一个高可用的、经过CNCF认证的Kubernetes发行版，专为物联网及边缘计算设计。k3s被打包成单个小于60MB的二进制文件，从而减少了运行安装、运行和自动更新生产Kubernetes集群所需的依赖性和步骤。k3s在小到树莓派或大到 AWS a1.4xlarge 32GiB服务器的环境中均能出色工作。
+安装k3s安装命令: curl -sfL https://get.k3s.io | sh -s - server &amp;ndash;docker 最好指定 容器运行时为docker，否则默认的容器运行时为containerd</description>
+    </item>
+    
+    <item>
+      <title>领域、子域和限界上下文</title>
+      <link>https://alvin-su.github.io/post/domain/</link>
+      <pubDate>Fri, 27 May 2022 09:46:32 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/domain/</guid>
+      <description>DDD 领域、限界上下文领域学习领域驱动设计首先要理解里面的一些核心概念，DDD既然是以 领域 为核心概念，那么理解DDD里面的各种以 域 为概念的名词就非常的关键，是学习DDD的第一步和前提。
+领域和子域  领域是从事一种专门活动或事业的 范围 、部类或部门，是指一种特定的 范围 或区域。领域其实就是来确定范围的，范围即边界。
+  范围有大小之分，所以领域也有大小之分，根据领域确定的边界的大小可以将领域进一步划分出子域，每个子域对应一个更小的问题域或更小的业务范围。
+  领域中存在着 问题空间 和 解决方案空间 在问题空间中我们思考的是业务面临的挑战，在解决方案空间中，我们思考如何实现软件以解决这些业务面临的挑战。
+  一般我们研究一个比较大的问题，通常的做法就是将该问题拆分出几个小问题，对每一个小问题研究透了，那么我们就建立了整个大的问题域的知识体系，也就是建立了整个全域的领域模型。所以领域建模的核心思想是将问题域逐步分解，降低业务理解和系统实现的复杂度。
+  核心域、通用域和支撑域在领域不断的划分的过程中（对问题空间的逐步分解），领域会细分为不同的子域，子域可以根据对业务的重要性和功能属性划分为三类子域：核心域、通用域和支撑域。
+ 核心域 在这三类子域中，核心域 是最重要的，我们应该投入最多的资源在核心域上。 支撑域 是指在关注于业务的某一个方面，但确不是核心，他们专注于业务的某个方面。比如数据字典等。 通用域 是指一个子域被用于整个业务系统，比如认证、权限等。  在系统建设过程中，由于预算和资源的有限，对于不同类型的子域应有不同的关注度和资源投入策略。
+在微服务系统建设的过程中，技术团队要将核心域的建设排在首位，需要有绝对的掌控能力和自主研发能力。
+限界上下文在DDD 领域建模和系统建设过程中，有很多的参与者，对于同样的领域知识，不同的参与者可能会有不同的理解，因此DDD就出现了 通用语言 和 限界上下文 这两个重要的概念。
+限界上下文是一个显示的边界，领域模型便存在于这个边界之内。领域模型把通用语言表达成软件模型。创建边界的含义在于，每一个模型的概念，包括它的属性和操作，在边界之内都有特殊的含义，每一个参与者都应该知道确切的含义。
+通用语言通用语言 是团队统一的语言，不管你在团队中承担什么角色，在同一个领域的软件生命周期里都使用统一的语言进行交流。</description>
+    </item>
+    
     <item>
       <title>什么是领域驱动设计</title>
       <link>https://alvin-su.github.io/post/%E4%BB%80%E4%B9%88%E6%98%AF%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1/</link>
