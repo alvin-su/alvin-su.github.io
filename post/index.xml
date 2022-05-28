@@ -6,7 +6,21 @@
     <description>Recent content in Posts on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 27 May 2022 09:49:01 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 27 May 2022 21:18:02 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>开始学习Go</title>
+      <link>https://alvin-su.github.io/post/go_begin/</link>
+      <pubDate>Fri, 27 May 2022 21:18:02 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/go_begin/</guid>
+      <description>让我们开始吧Go 是一种注重简单性和速度的编程语言。Go 语言的目标：
+ 快速编译 不太笨重的代码（语法简单） 自动释放未使用的内存（垃圾回收） 易于编写同时执行多个操作的软件（并发\协程） 很好的支持多核处理器  Go 程序代码结构package main  import &amp;#34;fmt&amp;#34;  func main(){  fmt.Println(&amp;#34;Hello,Go!&amp;#34;) } 上面是典型的Go文件代码布局，主要分三部分：
+ package main 子句，表示该代码文件中的所有其余代码都属于 main 包。 import &amp;quot;fmt&amp;quot; 子句，表示我们导入了 fmt 包，可以使用里面公开的文本格式代码。 实际代码 每个Go文件的最后一部分都是实际代码，它通常被分割成一个或多个 function(函数)。main 包和main函数是 Go 程序的入口点。  调用函数调用函数的格式是：包名.函数名，比如 fmt.Println(),一个包中的函数可被其它包调用，前提是该函数是大写字母开头，表示是可导出的。
+在代码中要使用其它包中的函数，首先要导入其它包，通过impport 子句。
+import (  &amp;#34;fmt&amp;#34;  &amp;#34;math&amp;#34; ) 上面这种格式表示导入了两个包。
+字符串字符串是一系列字节，通常表示文本字符，通过字面量定义字符：双引号之间的文本，Go将把他们视为字符串,&amp;quot;Hello,Go&amp;quot;。</description>
+    </item>
+    
     <item>
       <title>Dapr_k8s部署</title>
       <link>https://alvin-su.github.io/post/dapr_k8s/</link>
