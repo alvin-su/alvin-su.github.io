@@ -206,21 +206,19 @@ git clone <a href="https://github.com/vaga/hugo-theme-m10c.git">https://github.c
 <p>创建git 仓库，利用Github pages 功能进行部署,命令格式如下：开头 github用户名(alvin-su),结尾 github.io,如：alvin-su.github.io</p>
 </li>
 <li>
-<p>命令 hugo &ndash;theme=m10c &ndash;baseUrl=&ldquo;<a href="https://alvin-su.github.io">https://alvin-su.github.io</a>&rdquo; &ndash;buildDrafts 将hugo站点发布成静态文件站点，会发布到 <em><strong>public</strong></em> 文件夹下。</p>
+<p>命令 <code>hugo --theme=hugo-coder --baseUrl=&quot;https://alvin-su.github.io&quot; --buildDrafts</code> 将hugo站点发布成静态文件站点，会发布到 <em><strong>public</strong></em> 文件夹下。</p>
 </li>
 <li>
 <p>推送该public 文件夹 到上面创建的远端github仓库。</p>
 </li>
 </ul>
-<blockquote>
-<p>cd public<br>
-git init<br>
-git remote add origin <a href="https://github.com/alvin-su/alvin-su.github.io.git">https://github.com/alvin-su/alvin-su.github.io.git</a><br>
-git add -A<br>
-git commit -m &ldquo;first commit&rdquo;<br>
-git push -u origin master</p>
-</blockquote>
-<p>然后我们就可以通过 域名：<a href="https://alvin-su.github.io">https://alvin-su.github.io</a> 访问该博客站点。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmd" data-lang="cmd"><span style="display:flex;"><span><span style="font-weight:bold">cd</span> public  
+</span></span><span style="display:flex;"><span>git init  
+</span></span><span style="display:flex;"><span>git remote add origin https://github.com/alvin-su/alvin-su.github.io.git  
+</span></span><span style="display:flex;"><span>git add -A  
+</span></span><span style="display:flex;"><span>git commit -m <span style="font-style:italic">&#34;first commit&#34;</span>  
+</span></span><span style="display:flex;"><span>git push -u origin master
+</span></span></code></pre></div><p>然后我们就可以通过 域名：<a href="https://alvin-su.github.io">https://alvin-su.github.io</a> 访问该博客站点。</p>
 
   </article>
 </section>

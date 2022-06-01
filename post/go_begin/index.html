@@ -9,7 +9,7 @@
     
 
     <meta name="author" content="Alvinsu">
-    <meta name="description" content="让我们开始吧Go 是一种注重简单性和速度的编程语言。Go 语言的目标：
+    <meta name="description" content="语法基础Go 是一种注重简单性和速度的编程语言。Go 语言的目标：
  快速编译 不太笨重的代码（语法简单） 自动释放未使用的内存（垃圾回收） 易于编写同时执行多个操作的软件（并发\协程） 很好的支持多核处理器  Go 程序代码结构package main  import &#34;fmt&#34;  func main(){  fmt.Println(&#34;Hello,Go!&#34;) } 上面是典型的Go文件代码布局，主要分三部分：
  package main 子句，表示该代码文件中的所有其余代码都属于 main 包。 import &quot;fmt&quot; 子句，表示我们导入了 fmt 包，可以使用里面公开的文本格式代码。 实际代码 每个Go文件的最后一部分都是实际代码，它通常被分割成一个或多个 function(函数)。main 包和main函数是 Go 程序的入口点。  调用函数调用函数的格式是：包名.函数名，比如 fmt.Println(),一个包中的函数可被其它包调用，前提是该函数是大写字母开头，表示是可导出的。
 在代码中要使用其它包中的函数，首先要导入其它包，通过impport 子句。
@@ -18,16 +18,16 @@ import (  &#34;fmt&#34;  &#34;math&#34; ) 上面这种格式表示导入了两�
     <meta name="keywords" content="blog,developer,personal">
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="开始学习Go"/>
-<meta name="twitter:description" content="让我们开始吧Go 是一种注重简单性和速度的编程语言。Go 语言的目标：
+<meta name="twitter:title" content="开始学习Go--语法基础"/>
+<meta name="twitter:description" content="语法基础Go 是一种注重简单性和速度的编程语言。Go 语言的目标：
  快速编译 不太笨重的代码（语法简单） 自动释放未使用的内存（垃圾回收） 易于编写同时执行多个操作的软件（并发\协程） 很好的支持多核处理器  Go 程序代码结构package main  import &#34;fmt&#34;  func main(){  fmt.Println(&#34;Hello,Go!&#34;) } 上面是典型的Go文件代码布局，主要分三部分：
  package main 子句，表示该代码文件中的所有其余代码都属于 main 包。 import &quot;fmt&quot; 子句，表示我们导入了 fmt 包，可以使用里面公开的文本格式代码。 实际代码 每个Go文件的最后一部分都是实际代码，它通常被分割成一个或多个 function(函数)。main 包和main函数是 Go 程序的入口点。  调用函数调用函数的格式是：包名.函数名，比如 fmt.Println(),一个包中的函数可被其它包调用，前提是该函数是大写字母开头，表示是可导出的。
 在代码中要使用其它包中的函数，首先要导入其它包，通过impport 子句。
 import (  &#34;fmt&#34;  &#34;math&#34; ) 上面这种格式表示导入了两个包。
 字符串字符串是一系列字节，通常表示文本字符，通过字面量定义字符：双引号之间的文本，Go将把他们视为字符串,&quot;Hello,Go&quot;。"/>
 
-    <meta property="og:title" content="开始学习Go" />
-<meta property="og:description" content="让我们开始吧Go 是一种注重简单性和速度的编程语言。Go 语言的目标：
+    <meta property="og:title" content="开始学习Go--语法基础" />
+<meta property="og:description" content="语法基础Go 是一种注重简单性和速度的编程语言。Go 语言的目标：
  快速编译 不太笨重的代码（语法简单） 自动释放未使用的内存（垃圾回收） 易于编写同时执行多个操作的软件（并发\协程） 很好的支持多核处理器  Go 程序代码结构package main  import &#34;fmt&#34;  func main(){  fmt.Println(&#34;Hello,Go!&#34;) } 上面是典型的Go文件代码布局，主要分三部分：
  package main 子句，表示该代码文件中的所有其余代码都属于 main 包。 import &quot;fmt&quot; 子句，表示我们导入了 fmt 包，可以使用里面公开的文本格式代码。 实际代码 每个Go文件的最后一部分都是实际代码，它通常被分割成一个或多个 function(函数)。main 包和main函数是 Go 程序的入口点。  调用函数调用函数的格式是：包名.函数名，比如 fmt.Println(),一个包中的函数可被其它包调用，前提是该函数是大写字母开头，表示是可导出的。
 在代码中要使用其它包中的函数，首先要导入其它包，通过impport 子句。
@@ -41,7 +41,7 @@ import (  &#34;fmt&#34;  &#34;math&#34; ) 上面这种格式表示导入了两�
 
 
     <title>
-  开始学习Go · Alvinsu Blog
+  开始学习Go--语法基础 · Alvinsu Blog
 </title>
 
     
@@ -133,14 +133,14 @@ import (  &#34;fmt&#34;  &#34;math&#34; ) 上面这种格式表示导入了两�
     <header>
       <h1 class="title">
         <a class="title-link" href="https://alvin-su.github.io/post/go_begin/">
-          开始学习Go
+          开始学习Go--语法基础
         </a>
       </h1>
     </header>
 
-    <h1 id="让我们开始吧">
-  让我们开始吧
-  <a class="heading-link" href="#%e8%ae%a9%e6%88%91%e4%bb%ac%e5%bc%80%e5%a7%8b%e5%90%a7">
+    <h1 id="语法基础">
+  语法基础
+  <a class="heading-link" href="#%e8%af%ad%e6%b3%95%e5%9f%ba%e7%a1%80">
     <i class="fa fa-link" aria-hidden="true"></i>
   </a>
 </h1>

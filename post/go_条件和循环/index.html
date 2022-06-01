@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+
+    
+
+    <meta name="author" content="Alvinsu">
+    <meta name="description" content="调用方法在 Go中，可以定义方法，方法其实是与特定 类型的值 关联的函数。看下面的代码，我们将调用 time 包中的方法。
+package main  import (  &#34;fmt&#34;  &#34;time&#34; )  func main(){  var now time.Time = time.Now() //time.Now方法返回代表当前日期和时间的 time.Time值  var year int = now.Year() //返回年份的 Year方法  fmt.Println(year) } 上面看到调用方法的语法看起来很像调用不同包中的函数的语法，两者的区别是，函数属于一个包，而方法属于一个单独的值。这个值出现在圆点的左边。
+下面使用 strings包中的Replacer类型中的Replace方法，替换字符串中的指定的要替换的字符串。
+package main  import (  &#34;fmt&#34;  &#34;strings&#34;  &#34;strings&#34; )  func main(){  broken:=&#34;G# r#cks&#34;  replacer:=strings.NewReplacer(&#34;#&#34;,&#34;o&#34;)  fixed:=replacer.Replace(broken)  fmt.Println(fixed) } 获取用户输入的分数在控制台中获取用户输入的分数并打印出来。">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go-条件和循环"/>
+<meta name="twitter:description" content="调用方法在 Go中，可以定义方法，方法其实是与特定 类型的值 关联的函数。看下面的代码，我们将调用 time 包中的方法。
+package main  import (  &#34;fmt&#34;  &#34;time&#34; )  func main(){  var now time.Time = time.Now() //time.Now方法返回代表当前日期和时间的 time.Time值  var year int = now.Year() //返回年份的 Year方法  fmt.Println(year) } 上面看到调用方法的语法看起来很像调用不同包中的函数的语法，两者的区别是，函数属于一个包，而方法属于一个单独的值。这个值出现在圆点的左边。
+下面使用 strings包中的Replacer类型中的Replace方法，替换字符串中的指定的要替换的字符串。
+package main  import (  &#34;fmt&#34;  &#34;strings&#34;  &#34;strings&#34; )  func main(){  broken:=&#34;G# r#cks&#34;  replacer:=strings.NewReplacer(&#34;#&#34;,&#34;o&#34;)  fixed:=replacer.Replace(broken)  fmt.Println(fixed) } 获取用户输入的分数在控制台中获取用户输入的分数并打印出来。"/>
+
+    <meta property="og:title" content="Go-条件和循环" />
+<meta property="og:description" content="调用方法在 Go中，可以定义方法，方法其实是与特定 类型的值 关联的函数。看下面的代码，我们将调用 time 包中的方法。
+package main  import (  &#34;fmt&#34;  &#34;time&#34; )  func main(){  var now time.Time = time.Now() //time.Now方法返回代表当前日期和时间的 time.Time值  var year int = now.Year() //返回年份的 Year方法  fmt.Println(year) } 上面看到调用方法的语法看起来很像调用不同包中的函数的语法，两者的区别是，函数属于一个包，而方法属于一个单独的值。这个值出现在圆点的左边。
+下面使用 strings包中的Replacer类型中的Replace方法，替换字符串中的指定的要替换的字符串。
+package main  import (  &#34;fmt&#34;  &#34;strings&#34;  &#34;strings&#34; )  func main(){  broken:=&#34;G# r#cks&#34;  replacer:=strings.NewReplacer(&#34;#&#34;,&#34;o&#34;)  fixed:=replacer.Replace(broken)  fmt.Println(fixed) } 获取用户输入的分数在控制台中获取用户输入的分数并打印出来。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://alvin-su.github.io/post/go_%E6%9D%A1%E4%BB%B6%E5%92%8C%E5%BE%AA%E7%8E%AF/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-05-29T09:51:35+08:00" />
+<meta property="article:modified_time" content="2022-05-29T09:51:35+08:00" />
+
+
+
+    <title>
+  Go-条件和循环 · Alvinsu Blog
+</title>
+
+    
+      <link rel="canonical" href="https://alvin-su.github.io/post/go_%E6%9D%A1%E4%BB%B6%E5%92%8C%E5%BE%AA%E7%8E%AF/">
+    
+
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <meta name="generator" content="Hugo 0.99.1" />
+  </head>
+
+  
+  
+    
+  
+  <body class="preload-transitions colorscheme-auto">
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Alvinsu Blog
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/post/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">分类</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://alvin-su.github.io/post/go_%E6%9D%A1%E4%BB%B6%E5%92%8C%E5%BE%AA%E7%8E%AF/">
+          Go-条件和循环
+        </a>
+      </h1>
+    </header>
+
+    <h1 id="调用方法">
+  调用方法
+  <a class="heading-link" href="#%e8%b0%83%e7%94%a8%e6%96%b9%e6%b3%95">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>在 <code>Go</code>中，可以定义方法，方法其实是与特定 <em><strong>类型的值</strong></em> 关联的函数。看下面的代码，我们将调用 <code>time</code> 包中的方法。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">var</span> now time.Time = time.Now() <span style="font-style:italic">//time.Now方法返回代表当前日期和时间的 time.Time值
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">var</span> year <span style="">int</span> = now.Year() <span style="font-style:italic">//返回年份的 Year方法
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    fmt.Println(year)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>上面看到调用方法的语法看起来很像调用不同包中的函数的语法，两者的区别是，函数属于一个包，而方法属于一个单独的值。这个值出现在圆点的左边。</p>
+<p>下面使用 <code>strings</code>包中的<code>Replacer</code>类型中的<code>Replace</code>方法，替换字符串中的指定的要替换的字符串。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
+</span></span><span style="display:flex;"><span>    broken:=<span style="font-style:italic">&#34;G# r#cks&#34;</span>
+</span></span><span style="display:flex;"><span>    replacer:=strings.NewReplacer(<span style="font-style:italic">&#34;#&#34;</span>,<span style="font-style:italic">&#34;o&#34;</span>)
+</span></span><span style="display:flex;"><span>    fixed:=replacer.Replace(broken)
+</span></span><span style="display:flex;"><span>    fmt.Println(fixed)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="获取用户输入的分数">
+  获取用户输入的分数
+  <a class="heading-link" href="#%e8%8e%b7%e5%8f%96%e7%94%a8%e6%88%b7%e8%be%93%e5%85%a5%e7%9a%84%e5%88%86%e6%95%b0">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>在控制台中获取用户输入的分数并打印出来。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;bufio&#34;</span> 
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;os&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
+</span></span><span style="display:flex;"><span>    fmt.Print(<span style="font-style:italic">&#34;请输入分数：&#34;</span>)
+</span></span><span style="display:flex;"><span>    reader:=bufio.NewReader(os.Stdin) <span style="font-style:italic">//设置从键盘获取文本的缓冲读取器
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    input:=reader.ReadString(<span style="font-style:italic">&#39;\n&#39;</span>) <span style="font-style:italic">//返回用户的输入直到 &lt;Enter&gt;键为止
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    fmt.Println(input)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>bufio.NewReader(os.Stdin)</code>,从程序的标准输入中读取（接收和存储）输入的方法。 <code>reader.ReadString('\n')</code>方法需要带有一个<code>rune</code>(字符)的参数来标记输入的结束，这里传入换行符<code>'\n'</code>。</p>
+<h1 id="函数或方法的多个返回值">
+  函数或方法的多个返回值
+  <a class="heading-link" href="#%e5%87%bd%e6%95%b0%e6%88%96%e6%96%b9%e6%b3%95%e7%9a%84%e5%a4%9a%e4%b8%aa%e8%bf%94%e5%9b%9e%e5%80%bc">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>上面这段 <code>input:=reader.ReadString('\n')</code> 编译的时候会报错，因为 <code>reader.ReadString()</code> 方法返回了多个值，而我们只提供一个变量来赋值。</p>
+<p><code>Go</code>中多个返回值最常见的用法是返回一个额外的错误值，可以通过查询该错误值来确定函数或方法运行时师傅发生了错误。 改造后的代码为：<code>input,err:=reader.ReadString('\n')</code>。在 <code>Go</code>中要求声明的每个变量都必须在程序的某个地方使用，如果我们添加了一个 <code>err</code>变量，而不使用它，我们的程序将无法编译通过。对于返回的 <code>err</code>变量我们有两个选项来处理它。</p>
+<h3 id="选项1使用空白标识符忽略错误返回值">
+  选项1：使用空白标识符忽略错误返回值
+  <a class="heading-link" href="#%e9%80%89%e9%a1%b91%e4%bd%bf%e7%94%a8%e7%a9%ba%e7%99%bd%e6%a0%87%e8%af%86%e7%ac%a6%e5%bf%bd%e7%95%a5%e9%94%99%e8%af%af%e8%bf%94%e5%9b%9e%e5%80%bc">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>如果对接收的<code>err</code>变量，我们不打算使用，可以使用<code>Go</code>的空白标识符。空白标识符分配一个值实际上会丢弃它。要使用空白标识，只需要在赋值语句中输入一个下划线:(_)字符：<code>input, _ := reader.ReadString('\n')</code>。</p>
+<h3 id="选项2处理错误">
+  选项2：处理错误
+  <a class="heading-link" href="#%e9%80%89%e9%a1%b92%e5%a4%84%e7%90%86%e9%94%99%e8%af%af">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>如果我们从<code>ReadString</code>方法中的第一个错误的返回，空白标识符只会导致错误被忽略，而我们的程序会继续执行，导致可能会得到无效的数据。我们来改造下代码，log包中有一个<code>Fatal</code> 函数，它可以同时为我们完成这两项操作：将一条消息记录到终端并停止程序运行。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;bufio&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;os&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;log&#34;</span> <span style="font-style:italic">//添加&#34;log&#34;包
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>)
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
+</span></span><span style="display:flex;"><span>    fmt.Print(<span style="font-style:italic">&#34;请输入分数：&#34;</span>)
+</span></span><span style="display:flex;"><span>    reader:=bufio.NewReader(os.Stdin) <span style="font-style:italic">//设置从键盘获取文本的缓冲读取器
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    input,err:=reader.ReadString(<span style="font-style:italic">&#39;\n&#39;</span>) <span style="font-style:italic">//返回用户的输入直到 &lt;Enter&gt;键为止
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    log.Fatal(err) <span style="font-style:italic">//报告错误并停止程序的运行
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    fmt.Println(input)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>我们试着运行这个程序，又会发现一个新的问题&hellip;</p>
+<h1 id="条件">
+  条件
+  <a class="heading-link" href="#%e6%9d%a1%e4%bb%b6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>新的问题就是，当不返回错误，一切正常程序也会停止运行。如果 <code>err</code>为<code>nil</code>,则表示没有错误。我们现在要做的是只有当<code>err</code>变量的值不是<code>nil</code>时才退出程序。要实现这一点我们可以使用条件语句：只有在满足某个条件时，才导致代码块被执行的语句。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;bufio&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;os&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
+</span></span><span style="display:flex;"><span>     fmt.Print(<span style="font-style:italic">&#34;请输入分数：&#34;</span>)
+</span></span><span style="display:flex;"><span>    reader:=bufio.NewReader(os.Stdin) <span style="font-style:italic">//设置从键盘获取文本的缓冲读取器
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    input,err:=reader.ReadString(<span style="font-style:italic">&#39;\n&#39;</span>) <span style="font-style:italic">//返回用户的输入直到 &lt;Enter&gt;键为止
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">if</span> err!=<span style="font-weight:bold">nil</span>{
+</span></span><span style="display:flex;"><span>       log.Fatal(err) <span style="font-style:italic">//报告错误并停止程序的运行
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    }
+</span></span><span style="display:flex;"><span>    fmt.Println(input)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="将字符串转为数字">
+  将字符串转为数字
+  <a class="heading-link" href="#%e5%b0%86%e5%ad%97%e7%ac%a6%e4%b8%b2%e8%bd%ac%e4%b8%ba%e6%95%b0%e5%ad%97">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>条件语句允许我们评估输入的分数。让我添加一个<code>if/else</code>语句来确定分数是及格还是不及格。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
+</span></span><span style="display:flex;"><span>     fmt.Print(<span style="font-style:italic">&#34;请输入分数：&#34;</span>)
+</span></span><span style="display:flex;"><span>    reader:=bufio.NewReader(os.Stdin) <span style="font-style:italic">//设置从键盘获取文本的缓冲读取器
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    input,err:=reader.ReadString(<span style="font-style:italic">&#39;\n&#39;</span>) <span style="font-style:italic">//返回用户的输入直到 &lt;Enter&gt;键为止
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">if</span> err!=<span style="font-weight:bold">nil</span>{
+</span></span><span style="display:flex;"><span>       log.Fatal(err) <span style="font-style:italic">//报告错误并停止程序的运行
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    }
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">if</span> input&gt;=60{
+</span></span><span style="display:flex;"><span>        status:=<span style="font-style:italic">&#34;passing&#34;</span>
+</span></span><span style="display:flex;"><span>    }<span style="font-weight:bold">else</span>{
+</span></span><span style="display:flex;"><span>        status:=<span style="font-style:italic">&#34;failing&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这种比较方式会导致编译错误，因为 <code>input</code>为字符串，Go只能将数字与其他数字进行比较，不能将数字与字符串进行比较。而且没有直接类型转换方法可以将字符串转换成数字。</p>
+<p>这里还有一个问题，<code>input</code>字符串的末尾有一个换行符，我们需要将其去除。利用 <code>strings</code>包中的<code>TrimSpace</code>函数，它将删除字符串开头和结尾的所有空白字符(换行符、制表符、常规空格):<code>strings.TrimSpace(s)</code></p>
+<p>现在需要将<code>input</code>字符串转换为数字。我们可以使用<code>strconv</code>包中的<code>ParseFloat</code>函数将其转换为<code>float64</code>值。
+<code>grade,err:=strconv.ParseFloat(input，64)</code>，该函数接收两个值，一个为要转换的字符串，一个为转换结果要具有的精度位数。</p>
+<p>现在我们来看下最终改造后的程序：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;bufio&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;os&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;strings&#34;</span> <span style="font-style:italic">// 该包中有TrimSpace函数
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-style:italic">&#34;strconv&#34;</span> <span style="font-style:italic">//该包中有 ParseFloat函数
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
+</span></span><span style="display:flex;"><span>     fmt.Print(<span style="font-style:italic">&#34;请输入分数：&#34;</span>)
+</span></span><span style="display:flex;"><span>    reader:=bufio.NewReader(os.Stdin) <span style="font-style:italic">//设置从键盘获取文本的缓冲读取器
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    input,err:=reader.ReadString(<span style="font-style:italic">&#39;\n&#39;</span>) <span style="font-style:italic">//返回用户的输入直到 &lt;Enter&gt;键为止
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">if</span> err!=<span style="font-weight:bold">nil</span>{
+</span></span><span style="display:flex;"><span>       log.Fatal(err) <span style="font-style:italic">//报告错误并停止程序的运行
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    }
+</span></span><span style="display:flex;"><span>    input=strings.TrimSpace(input)
+</span></span><span style="display:flex;"><span>    grade,err:=strconv.ParseFloat(input,64)
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">var</span> status <span style="">string</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">if</span> err !=<span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>        log.Fatal(err)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">if</span> grade &gt;= 60{
+</span></span><span style="display:flex;"><span>        status = <span style="font-style:italic">&#34;passing&#34;</span>
+</span></span><span style="display:flex;"><span>    }<span style="font-weight:bold">else</span>{
+</span></span><span style="display:flex;"><span>        status = <span style="font-style:italic">&#34;failing&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;A grade of&#34;</span>,grade,<span style="font-style:italic">&#34;is&#34;</span>,status)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="短变量声名中有一个变量必须是新的">
+  短变量声名中有一个变量必须是新的
+  <a class="heading-link" href="#%e7%9f%ad%e5%8f%98%e9%87%8f%e5%a3%b0%e5%90%8d%e4%b8%ad%e6%9c%89%e4%b8%80%e4%b8%aa%e5%8f%98%e9%87%8f%e5%bf%85%e9%a1%bb%e6%98%af%e6%96%b0%e7%9a%84">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>在上面的代码中 <code>err</code>变量出现在了两个不同的短变量声明中。在短变量声明语法中至少有一个变量名是新的，这是允许的。新变量名被视为声明，而现有的名字被视为赋值。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span>a :=1 <span style="font-style:italic">//声明 &#34;a&#34;
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>b,a := 2,3 <span style="font-style:italic">//声明 “b”,赋值 &#34;a&#34;
+</span></span></span></code></pre></div><h1 id="让我们创建一个游戏">
+  让我们创建一个游戏
+  <a class="heading-link" href="#%e8%ae%a9%e6%88%91%e4%bb%ac%e5%88%9b%e5%bb%ba%e4%b8%80%e4%b8%aa%e6%b8%b8%e6%88%8f">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>通过创建一个简单的游戏程序，学习循环的语法。</p>
+<h3 id="生成一个随机数">
+  生成一个随机数
+  <a class="heading-link" href="#%e7%94%9f%e6%88%90%e4%b8%80%e4%b8%aa%e9%9a%8f%e6%9c%ba%e6%95%b0">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><code>math/rand</code>包中有一个<code>Intn</code>函数，可以生成一个随机数。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;math/rand&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
+</span></span><span style="display:flex;"><span>    target := rand.Intn(100)+1
+</span></span><span style="display:flex;"><span>    fmt.Println(target)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>上面的代码 <code>math/rand</code>是包的导入路径,而不是包的名称。导入路径是一个特殊的字符串，用于标识包以及在导入语句中使用的包。按照惯例，导入路径的最后一个用作包名。因此 <code>rand</code>为包名。</p>
+<p>代码<code>rand.Intn(100)</code>将得到一个0到99之间的整数。加1使其成为1到100之前的整数:<code>rand.Intn(100)+1</code>。</p>
+<p>这段代码多试几次运行总会得到相同的随机数。为了得到不同的随机数，我们需要向<code>rand.Seed</code>函数传递一个值。给它一个值，它将用于生成其它的随机数。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;math/rand&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
+</span></span><span style="display:flex;"><span>    seconds := time.Now().Unix() <span style="font-style:italic">//获取当前日期和时间的整数形式 （秒）
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    rand.Seed(seconds) <span style="font-style:italic">//给它一个值，它将用于生成其它的随机数。
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    target := rand.Intn(100)+1
+</span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;I&#39;ve chose a random number between 1 and 100.&#34;</span>)
+</span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;Can you guess it?&#34;</span>)
+</span></span><span style="display:flex;"><span>    fmt.Println(target)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="从键盘获取整数">
+  从键盘获取整数
+  <a class="heading-link" href="#%e4%bb%8e%e9%94%ae%e7%9b%98%e8%8e%b7%e5%8f%96%e6%95%b4%e6%95%b0">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>我们需要得到一个用户的输入，将用户输入的字符串去掉多余的空格并转换为整数。我们之前的程序通过<code>strconv</code>包中的<code>ParseFloat</code>函数转为了float，这次我们需要转为整数，可以通过<code>strconv</code>包中的<code>Atoi</code>函数将字符串转为整数。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;bufio&#34;</span> 
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;os&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;strvonv&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;math/rand&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main (){
+</span></span><span style="display:flex;"><span>     seconds := time.Now().Unix() <span style="font-style:italic">//获取当前日期和时间的整数形式 （秒）
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    rand.Seed(seconds) <span style="font-style:italic">//给它一个值，它将用于生成其它的随机数。
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    target := rand.Intn(100)+1
+</span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;I&#39;ve chose a random number between 1 and 100.&#34;</span>)
+</span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;Can you guess it?&#34;</span>)
+</span></span><span style="display:flex;"><span>    fmt.Println(target)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    reader := bufio.NewReader(os.Stdin)
+</span></span><span style="display:flex;"><span>    input,err:=reader.ReadString(<span style="font-style:italic">&#39;\n&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">if</span> err !=<span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>        log.Fatal(err)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    input=strings.TrimSpace(input)
+</span></span><span style="display:flex;"><span>    guess,err:=strconv.Atoi(input)
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">if</span> err!=<span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>        log.Fatal(err)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    fmt.Println(guess)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="将猜测的数与目标数进行比较">
+  将猜测的数与目标数进行比较
+  <a class="heading-link" href="#%e5%b0%86%e7%8c%9c%e6%b5%8b%e7%9a%84%e6%95%b0%e4%b8%8e%e7%9b%ae%e6%a0%87%e6%95%b0%e8%bf%9b%e8%a1%8c%e6%af%94%e8%be%83">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>利用前面学的 <code>if...else if</code>语句。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> main (){
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">if</span> guess &lt; target {
+</span></span><span style="display:flex;"><span>        fmt.Println(<span style="font-style:italic">&#34;Oops.Your guess was LOW&#34;</span>)
+</span></span><span style="display:flex;"><span>    } <span style="font-weight:bold">else</span> <span style="font-weight:bold">if</span> guess &gt; target {
+</span></span><span style="display:flex;"><span>        fmt.Println(<span style="font-style:italic">&#34;Oops.Your guess was HIGH.&#34;</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="循环">
+  循环
+  <a class="heading-link" href="#%e5%be%aa%e7%8e%af">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>我们这这个游戏程序中，允许玩家最多猜10次，在每次猜之前让他们知道还剩下多少次。这里就需要用到循环的概念。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">for</span> x:=3;x&lt;=6;x++ {
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>}
+</span></span></code></pre></div><ul>
+<li><code>x:=3</code>为初始化语句，通常用于初始化一个变量。</li>
+<li><code>x&lt;=6</code>为条件表达式，用于决定何时中断循环。</li>
+<li><code>x++</code>为标志语句，在循环的每次迭代之后运行。</li>
+</ul>
+<p><em><strong>初始化和标志语句是可选的</strong></em> 可以从循环中省略初始化和标志语句，只留下条件表达式。比如：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span>x:=1
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">for</span> x&lt;=3 {
+</span></span><span style="display:flex;"><span>    fmt.Println(x)
+</span></span><span style="display:flex;"><span>    x++
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>下面我们来改造我们的游戏程序，允许玩家猜测10次：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;bufio&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;os&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;strconv&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;math/rand&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main (){
+</span></span><span style="display:flex;"><span>     seconds := time.Now().Unix() <span style="font-style:italic">//获取当前日期和时间的整数形式 （秒）
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    rand.Seed(seconds) <span style="font-style:italic">//给它一个值，它将用于生成其它的随机数。
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    target := rand.Intn(100)+1
+</span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;I&#39;ve chose a random number between 1 and 100.&#34;</span>)
+</span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;Can you guess it?&#34;</span>)
+</span></span><span style="display:flex;"><span>    fmt.Println(target)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    reader := bufio.NewReader(os.Stdin)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">for</span> guesses :=0; guesses&lt;10;guesses++ {
+</span></span><span style="display:flex;"><span>        fmt.Println(<span style="font-style:italic">&#34;You have&#34;</span>,10-guesses,<span style="font-style:italic">&#34;guesses left.&#34;</span>)
+</span></span><span style="display:flex;"><span>        fmt.Println(<span style="font-style:italic">&#34;Make a guess:&#34;</span>)
+</span></span><span style="display:flex;"><span>        input,err:=reader.ReadString(<span style="font-style:italic">&#39;\n&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">if</span> err !=<span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>            log.Fatal(err)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        input=strings.TrimSpace(input)
+</span></span><span style="display:flex;"><span>        guess,err:=strconv.Atoi(input)
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">if</span> err!=<span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>            log.Fatal(err)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>         <span style="font-weight:bold">if</span> guess &lt; target {
+</span></span><span style="display:flex;"><span>        fmt.Println(<span style="font-style:italic">&#34;Oops.Your guess was LOW&#34;</span>)
+</span></span><span style="display:flex;"><span>        } <span style="font-weight:bold">else</span> <span style="font-weight:bold">if</span> guess &gt; target {
+</span></span><span style="display:flex;"><span>            fmt.Println(<span style="font-style:italic">&#34;Oops.Your guess was HIGH.&#34;</span>)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>上面的代码成功让玩家可以猜测10次，但是还有一个问题，就是玩家猜测对了，循环也要运行10次。</p>
+<p>可以使用 <code>continue</code>和<code>break</code>语法跳过部分循环。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span>  <span style="font-weight:bold">if</span> guess &lt; target {
+</span></span><span style="display:flex;"><span>        fmt.Println(<span style="font-style:italic">&#34;Oops.Your guess was LOW&#34;</span>)
+</span></span><span style="display:flex;"><span>   <span style="font-weight:bold">else</span> <span style="font-weight:bold">if</span> guess &gt; target {
+</span></span><span style="display:flex;"><span>            fmt.Println(<span style="font-style:italic">&#34;Oops.Your guess was HIGH.&#34;</span>)
+</span></span><span style="display:flex;"><span>  } <span style="font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>            fmt.Println(<span style="font-style:italic">&#34;Good job! You guessed it!&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">break</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><p>如果玩家用完所有10次机会也没猜对，我们还需要提示玩家，你没有猜对，它是什么。</p>
+<p>因此，在猜测循环之前，我们将声明一个保存布尔值的success变量。（我们需要在循环之前声明它，这样在循环结束后它仍然在作用
+域内。）我们将把success初始化为一个默认值false。然后，如果玩家猜对了，我们将把success设置为true，表示我们不需要打印失败信息。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;bufio&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;os&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;strconv&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;math/rand&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main (){
+</span></span><span style="display:flex;"><span>     seconds := time.Now().Unix() <span style="font-style:italic">//获取当前日期和时间的整数形式 （秒）
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    rand.Seed(seconds) <span style="font-style:italic">//给它一个值，它将用于生成其它的随机数。
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    target := rand.Intn(100)+1
+</span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;I&#39;ve chose a random number between 1 and 100.&#34;</span>)
+</span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;Can you guess it?&#34;</span>)
+</span></span><span style="display:flex;"><span>    fmt.Println(target)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    reader := bufio.NewReader(os.Stdin)
+</span></span><span style="display:flex;"><span>    success := <span style="font-weight:bold">false</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">for</span> guesses :=0; guesses&lt;10;guesses++ {
+</span></span><span style="display:flex;"><span>        fmt.Println(<span style="font-style:italic">&#34;You have&#34;</span>,10-guesses,<span style="font-style:italic">&#34;guesses left.&#34;</span>)
+</span></span><span style="display:flex;"><span>        fmt.Println(<span style="font-style:italic">&#34;Make a guess:&#34;</span>)
+</span></span><span style="display:flex;"><span>        input,err:=reader.ReadString(<span style="font-style:italic">&#39;\n&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">if</span> err !=<span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>            log.Fatal(err)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        input=strings.TrimSpace(input)
+</span></span><span style="display:flex;"><span>        guess,err:=strconv.Atoi(input)
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">if</span> err!=<span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>            log.Fatal(err)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>         <span style="font-weight:bold">if</span> guess &lt; target {
+</span></span><span style="display:flex;"><span>        fmt.Println(<span style="font-style:italic">&#34;Oops.Your guess was LOW&#34;</span>)
+</span></span><span style="display:flex;"><span>        } <span style="font-weight:bold">else</span> <span style="font-weight:bold">if</span> guess &gt; target {
+</span></span><span style="display:flex;"><span>            fmt.Println(<span style="font-style:italic">&#34;Oops.Your guess was HIGH.&#34;</span>)
+</span></span><span style="display:flex;"><span>        }<span style="font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>            success=<span style="font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>            fmt.Println(<span style="font-style:italic">&#34;Good job! You guessed it!&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">break</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">if</span> !success {
+</span></span><span style="display:flex;"><span>        fmt.Println(<span style="font-style:italic">&#34;Sorry,you didn&#39;t guess my number.It was:&#34;</span>,target)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="知识要点">
+  知识要点
+  <a class="heading-link" href="#%e7%9f%a5%e8%af%86%e8%a6%81%e7%82%b9">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<ul>
+<li>方法是一种与给定类型的值相关联的函数。</li>
+<li>Go将从<code>//</code>标记到行尾的所有内容都视为注释，并忽略它。</li>
+<li>多行注释以<code>/*</code>开头，以<code>*/</code>结尾。中间的所有内容，包括换行符，都将被忽略。</li>
+<li>传统的做法是在每个程序的顶部都加上一条注释，解释它是做什么的。</li>
+<li>与大多数编程语言不同，Go允许从函数调用或方法调用返回多个值。</li>
+<li>多个返回值的一个常见用法是返回函数的主要结果，然后返回第二个值，指示是否有错误。</li>
+<li>若要在不使用值的情况下丢弃它，请使用<code>_</code>空白标识符。空白标识符可以用于任何变量的任何赋值语句中。</li>
+<li>避免给变量取与类型、函数或包相同的名称，这会使变量遮盖（覆盖）具有相同名称的内容。</li>
+<li>函数、条件和循环都有出现在<code>{}</code>大括号中的代码块。</li>
+<li>文件和包的代码不出现在<code>{}</code>大括号中，但是它们也包含块。</li>
+<li>变量的作用域仅限于它被定义的块内以及嵌套在该块中的所有块。</li>
+<li>除了名称之外，导入包时可能还需要包的导入路径。</li>
+<li><code>continue</code>关键字跳转到循环的下一个迭代。</li>
+<li><code>break</code>关键字完全退出循环。</li>
+</ul>
+
+  </article>
+</section>
+
+  
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    ©
+    
+    2022
+     Alvinsu 
+    ·
+    
+    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+      
+      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
