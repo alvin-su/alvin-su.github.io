@@ -6,7 +6,26 @@
     <description>Recent content in Posts on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 29 May 2022 09:51:35 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Jun 2022 22:16:25 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>实体和值对象</title>
+      <link>https://alvin-su.github.io/post/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8A%E8%81%9A%E5%90%88/</link>
+      <pubDate>Wed, 01 Jun 2022 22:16:25 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8A%E8%81%9A%E5%90%88/</guid>
+      <description>实体、值对象以及聚合实体和值对象都是DDD战术设计中的两个重要概念。这两个概念都是领域模型中的领域对象。
+实体拥有唯一标识符，且标识符在历经各种状态变更后仍能保持一致。对这些对象而言，重要的不是其属性，而是其延续性和标识，对象的延续性和标识会跨越甚至超出软件的生命周期。我们把这样的对象称为实体。
+一个实体是一个唯一的东西，并且可以在相当长的一段时间内持续地变化。我们可以对实体做多次修改，故一个实体对象可能和它先前的状态大不相同。但是，由于它们拥有相同的身份标识(identity)，它们依然是同一个实体。
+为什么需要实体CRUD&amp;ndash;面向数据库表建模开发的系统有时候并不能满足我们的业务需求，特别是随着业务的复杂性和多变带来的软件复杂性的增加，我们就越能体会现有 CRUD方式的不足。CRUD系统是不能创建出好的业务模型的。
+在使用DDD的情况下，我们可以把原来的数据模型转变为实体模型。我们通过 标识 对对象进行区分，而不是属性，此时我们应该将标识作为主要的模型定义。同时我们需要保持简单的类定义，并且关注对象在其生命周期中的连续性和唯一标识性。我们不应该通过对象的状态形式和历史来区分不同的实体对象……对于什么是相同的东西，模型应该给出定义。
+身份标识身份标识 (identity)是实体对象的必要标志，在DDD中，没用ID的领域对象就不是实体。实体的状态值可以变更，我们不能依据实体的属性值去判断其身份，如果没有唯一的ID我们就无法跟踪实体的状态变更。
+属性实体的属性用来说明它的 静态特征 ，并持有数据与状态。我们又可以将属性进一步分为:原子属性 和 组合属性 。我们来看一断代码：
+public class Product extends Entity&amp;lt;ProductId&amp;gt; {  private String name;  private int quantity;  private Category category; } 在上面的代码中 name和qunatity 是原子属性，分别被定义为 String和int类型，原子属性通常用开发语言（java或者C#）的内建类型。表达了不可再分性。Category为组合属性，通常用自定义类来表现，可以封装高内聚的一系列属性。
+领域行为实体佣有领域行为，可以更好的说明它的动态特征。领域行为分为以下几种：
+  变更状态的领域行为
+实体对象允许调用者更改其状态，不仅仅是通过 get和 set访问器，应该让方法名满足业务含义，比如修改产品价格的领域行为应该定义为 ：changePriceTo(newPrice)的方法名，而非setPrice(newPrice)。</description>
+    </item>
+    
     <item>
       <title>Go-条件和循环</title>
       <link>https://alvin-su.github.io/post/go_%E6%9D%A1%E4%BB%B6%E5%92%8C%E5%BE%AA%E7%8E%AF/</link>

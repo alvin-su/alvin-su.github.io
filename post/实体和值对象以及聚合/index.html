@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+
+    
+
+    <meta name="author" content="Alvinsu">
+    <meta name="description" content="实体、值对象以及聚合实体和值对象都是DDD战术设计中的两个重要概念。这两个概念都是领域模型中的领域对象。
+实体拥有唯一标识符，且标识符在历经各种状态变更后仍能保持一致。对这些对象而言，重要的不是其属性，而是其延续性和标识，对象的延续性和标识会跨越甚至超出软件的生命周期。我们把这样的对象称为实体。
+一个实体是一个唯一的东西，并且可以在相当长的一段时间内持续地变化。我们可以对实体做多次修改，故一个实体对象可能和它先前的状态大不相同。但是，由于它们拥有相同的身份标识(identity)，它们依然是同一个实体。
+为什么需要实体CRUD&ndash;面向数据库表建模开发的系统有时候并不能满足我们的业务需求，特别是随着业务的复杂性和多变带来的软件复杂性的增加，我们就越能体会现有 CRUD方式的不足。CRUD系统是不能创建出好的业务模型的。
+在使用DDD的情况下，我们可以把原来的数据模型转变为实体模型。我们通过 标识 对对象进行区分，而不是属性，此时我们应该将标识作为主要的模型定义。同时我们需要保持简单的类定义，并且关注对象在其生命周期中的连续性和唯一标识性。我们不应该通过对象的状态形式和历史来区分不同的实体对象……对于什么是相同的东西，模型应该给出定义。
+身份标识身份标识 (identity)是实体对象的必要标志，在DDD中，没用ID的领域对象就不是实体。实体的状态值可以变更，我们不能依据实体的属性值去判断其身份，如果没有唯一的ID我们就无法跟踪实体的状态变更。
+属性实体的属性用来说明它的 静态特征 ，并持有数据与状态。我们又可以将属性进一步分为:原子属性 和 组合属性 。我们来看一断代码：
+public class Product extends Entity&lt;ProductId&gt; {  private String name;  private int quantity;  private Category category; } 在上面的代码中 name和qunatity 是原子属性，分别被定义为 String和int类型，原子属性通常用开发语言（java或者C#）的内建类型。表达了不可再分性。Category为组合属性，通常用自定义类来表现，可以封装高内聚的一系列属性。
+领域行为实体佣有领域行为，可以更好的说明它的动态特征。领域行为分为以下几种：
+  变更状态的领域行为
+实体对象允许调用者更改其状态，不仅仅是通过 get和 set访问器，应该让方法名满足业务含义，比如修改产品价格的领域行为应该定义为 ：changePriceTo(newPrice)的方法名，而非setPrice(newPrice)。">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="实体和值对象"/>
+<meta name="twitter:description" content="实体、值对象以及聚合实体和值对象都是DDD战术设计中的两个重要概念。这两个概念都是领域模型中的领域对象。
+实体拥有唯一标识符，且标识符在历经各种状态变更后仍能保持一致。对这些对象而言，重要的不是其属性，而是其延续性和标识，对象的延续性和标识会跨越甚至超出软件的生命周期。我们把这样的对象称为实体。
+一个实体是一个唯一的东西，并且可以在相当长的一段时间内持续地变化。我们可以对实体做多次修改，故一个实体对象可能和它先前的状态大不相同。但是，由于它们拥有相同的身份标识(identity)，它们依然是同一个实体。
+为什么需要实体CRUD&ndash;面向数据库表建模开发的系统有时候并不能满足我们的业务需求，特别是随着业务的复杂性和多变带来的软件复杂性的增加，我们就越能体会现有 CRUD方式的不足。CRUD系统是不能创建出好的业务模型的。
+在使用DDD的情况下，我们可以把原来的数据模型转变为实体模型。我们通过 标识 对对象进行区分，而不是属性，此时我们应该将标识作为主要的模型定义。同时我们需要保持简单的类定义，并且关注对象在其生命周期中的连续性和唯一标识性。我们不应该通过对象的状态形式和历史来区分不同的实体对象……对于什么是相同的东西，模型应该给出定义。
+身份标识身份标识 (identity)是实体对象的必要标志，在DDD中，没用ID的领域对象就不是实体。实体的状态值可以变更，我们不能依据实体的属性值去判断其身份，如果没有唯一的ID我们就无法跟踪实体的状态变更。
+属性实体的属性用来说明它的 静态特征 ，并持有数据与状态。我们又可以将属性进一步分为:原子属性 和 组合属性 。我们来看一断代码：
+public class Product extends Entity&lt;ProductId&gt; {  private String name;  private int quantity;  private Category category; } 在上面的代码中 name和qunatity 是原子属性，分别被定义为 String和int类型，原子属性通常用开发语言（java或者C#）的内建类型。表达了不可再分性。Category为组合属性，通常用自定义类来表现，可以封装高内聚的一系列属性。
+领域行为实体佣有领域行为，可以更好的说明它的动态特征。领域行为分为以下几种：
+  变更状态的领域行为
+实体对象允许调用者更改其状态，不仅仅是通过 get和 set访问器，应该让方法名满足业务含义，比如修改产品价格的领域行为应该定义为 ：changePriceTo(newPrice)的方法名，而非setPrice(newPrice)。"/>
+
+    <meta property="og:title" content="实体和值对象" />
+<meta property="og:description" content="实体、值对象以及聚合实体和值对象都是DDD战术设计中的两个重要概念。这两个概念都是领域模型中的领域对象。
+实体拥有唯一标识符，且标识符在历经各种状态变更后仍能保持一致。对这些对象而言，重要的不是其属性，而是其延续性和标识，对象的延续性和标识会跨越甚至超出软件的生命周期。我们把这样的对象称为实体。
+一个实体是一个唯一的东西，并且可以在相当长的一段时间内持续地变化。我们可以对实体做多次修改，故一个实体对象可能和它先前的状态大不相同。但是，由于它们拥有相同的身份标识(identity)，它们依然是同一个实体。
+为什么需要实体CRUD&ndash;面向数据库表建模开发的系统有时候并不能满足我们的业务需求，特别是随着业务的复杂性和多变带来的软件复杂性的增加，我们就越能体会现有 CRUD方式的不足。CRUD系统是不能创建出好的业务模型的。
+在使用DDD的情况下，我们可以把原来的数据模型转变为实体模型。我们通过 标识 对对象进行区分，而不是属性，此时我们应该将标识作为主要的模型定义。同时我们需要保持简单的类定义，并且关注对象在其生命周期中的连续性和唯一标识性。我们不应该通过对象的状态形式和历史来区分不同的实体对象……对于什么是相同的东西，模型应该给出定义。
+身份标识身份标识 (identity)是实体对象的必要标志，在DDD中，没用ID的领域对象就不是实体。实体的状态值可以变更，我们不能依据实体的属性值去判断其身份，如果没有唯一的ID我们就无法跟踪实体的状态变更。
+属性实体的属性用来说明它的 静态特征 ，并持有数据与状态。我们又可以将属性进一步分为:原子属性 和 组合属性 。我们来看一断代码：
+public class Product extends Entity&lt;ProductId&gt; {  private String name;  private int quantity;  private Category category; } 在上面的代码中 name和qunatity 是原子属性，分别被定义为 String和int类型，原子属性通常用开发语言（java或者C#）的内建类型。表达了不可再分性。Category为组合属性，通常用自定义类来表现，可以封装高内聚的一系列属性。
+领域行为实体佣有领域行为，可以更好的说明它的动态特征。领域行为分为以下几种：
+  变更状态的领域行为
+实体对象允许调用者更改其状态，不仅仅是通过 get和 set访问器，应该让方法名满足业务含义，比如修改产品价格的领域行为应该定义为 ：changePriceTo(newPrice)的方法名，而非setPrice(newPrice)。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://alvin-su.github.io/post/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8A%E8%81%9A%E5%90%88/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-06-01T22:16:25+08:00" />
+<meta property="article:modified_time" content="2022-06-01T22:16:25+08:00" />
+
+
+
+    <title>
+  实体和值对象 · Alvinsu Blog
+</title>
+
+    
+      <link rel="canonical" href="https://alvin-su.github.io/post/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8A%E8%81%9A%E5%90%88/">
+    
+
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <meta name="generator" content="Hugo 0.99.1" />
+  </head>
+
+  
+  
+    
+  
+  <body class="preload-transitions colorscheme-auto">
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Alvinsu Blog
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/post/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">分类</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://alvin-su.github.io/post/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8A%E8%81%9A%E5%90%88/">
+          实体和值对象
+        </a>
+      </h1>
+    </header>
+
+    <h1 id="实体值对象以及聚合">
+  实体、值对象以及聚合
+  <a class="heading-link" href="#%e5%ae%9e%e4%bd%93%e5%80%bc%e5%af%b9%e8%b1%a1%e4%bb%a5%e5%8f%8a%e8%81%9a%e5%90%88">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>实体和值对象都是DDD战术设计中的两个重要概念。这两个概念都是领域模型中的领域对象。</p>
+<h2 id="实体">
+  实体
+  <a class="heading-link" href="#%e5%ae%9e%e4%bd%93">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>拥有唯一标识符，且标识符在历经各种状态变更后仍能保持一致。对这些对象而言，重要的不是其属性，而是其延续性和标识，对象的延续性和标识会跨越甚至超出软件的生命周期。我们把这样的对象称为实体。</p>
+<p>一个实体是一个唯一的东西，并且可以在相当长的一段时间内持续地变化。我们可以对实体做多次修改，故一个实体对象可能和它先前的状态大不相同。但是，由于它们拥有相同的身份标识(identity)，它们依然是同一个实体。</p>
+<h3 id="为什么需要实体">
+  为什么需要实体
+  <a class="heading-link" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e5%ae%9e%e4%bd%93">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>CRUD&ndash;面向数据库表建模开发的系统有时候并不能满足我们的业务需求，特别是随着业务的复杂性和多变带来的软件复杂性的增加，我们就越能体会现有 CRUD方式的不足。CRUD系统是不能创建出好的业务模型的。</p>
+<p>在使用DDD的情况下，我们可以把原来的数据模型转变为实体模型。我们通过 <em><strong>标识</strong></em> 对对象进行区分，而不是属性，此时我们应该将标识作为主要的模型定义。同时我们需要保持简单的类定义，并且关注对象在其生命周期中的连续性和唯一标识性。我们不应该通过对象的状态形式和历史来区分不同的实体对象……对于什么是相同的东西，模型应该给出定义。</p>
+<h3 id="身份标识">
+  身份标识
+  <a class="heading-link" href="#%e8%ba%ab%e4%bb%bd%e6%a0%87%e8%af%86">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>身份标识 (identity)是实体对象的必要标志，在DDD中，没用ID的领域对象就不是实体。实体的状态值可以变更，我们不能依据实体的属性值去判断其身份，如果没有唯一的ID我们就无法跟踪实体的状态变更。</p>
+<h3 id="属性">
+  属性
+  <a class="heading-link" href="#%e5%b1%9e%e6%80%a7">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>实体的属性用来说明它的 <em><strong>静态特征</strong></em> ，并持有数据与状态。我们又可以将属性进一步分为:<em><strong>原子属性</strong></em> 和 <em><strong>组合属性</strong></em> 。我们来看一断代码：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="font-weight:bold">public</span> <span style="font-weight:bold">class</span> <span style="font-weight:bold">Product</span> <span style="font-weight:bold">extends</span> Entity&lt;ProductId&gt; {
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">private</span> String name;
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">private</span> <span style="">int</span> quantity;
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">private</span> Category category;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>在上面的代码中 <code>name</code>和<code>qunatity</code> 是原子属性，分别被定义为 <code>String</code>和<code>int</code>类型，原子属性通常用开发语言（java或者C#）的内建类型。表达了不可再分性。<code>Category</code>为组合属性，通常用自定义类来表现，可以封装高内聚的一系列属性。</p>
+<h3 id="领域行为">
+  领域行为
+  <a class="heading-link" href="#%e9%a2%86%e5%9f%9f%e8%a1%8c%e4%b8%ba">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>实体佣有领域行为，可以更好的说明它的动态特征。领域行为分为以下几种：</p>
+<ul>
+<li>
+<p>变更状态的领域行为</p>
+<p>实体对象允许调用者更改其状态，不仅仅是通过 <code>get</code>和 <code>set</code>访问器，应该让方法名满足业务含义，比如修改产品价格的领域行为应该定义为 ：<code>changePriceTo(newPrice)</code>的方法名，而非<code>setPrice(newPrice)</code>。</p>
+</li>
+<li>
+<p>自给自足的领域行为
+这意味着实体只操作了自己的属性，不外求别的对象，不会和别的对象产生依赖。</p>
+</li>
+<li>
+<p>相互协作的领域行为
+实体不可能完全做到自给自足，有时也需要调用者提供必要的信息。这些信息往往通过参数传入，这就形成了领域对象之间相互协作的领域行为。</p>
+</li>
+</ul>
+<p>实体拥有的变更状态的领域行为，变更的只是对象的内存状态，与持久化无关，对实体的增删改查这些涉及持久化的操作在DDD的设计中分配给了专门的资源库(repository)对象，实体无需承担 <em><strong>增删改查</strong></em> 。<em><strong>资源库(repository)</strong></em> 分离了聚合的领域行为和持久化行为，保证了领域模型对象的业务纯粹性，成为了隔离业务复杂度和技术复杂度的关键。</p>
+<h2 id="值对象">
+  值对象
+  <a class="heading-link" href="#%e5%80%bc%e5%af%b9%e8%b1%a1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>值对象（value object） 通常作为实体的属性，值对象是不可变的，唯一的身份标识(ID)和可变性特征将实体和值对象区分开来。</p>
+<p>在进行领域建模时可优先考虑使用值对象而非实体对象建模。因为值对象没有ID，不用管理身份标识，值对象是不可变的，就不用考虑并发带来的问题，因为不变类是线程安全的，比实体对象更容易维护、测试，更容易优化也更容易使用。</p>
+<p>在<code>C#</code>中可以将值对象定义为结构体 <code>struct</code>类型，因为<code>C#</code>的结构类型是一种可封装数据和行为的值类型，本身具备了不变性。</p>
+<p>在<code>java</code>中没有<code>struct</code>结构体，就需要将自定义类型施加一些约束来满足不变性。</p>
+<ul>
+<li>对象创建以后其状态就不能修改</li>
+<li>对象的所有字段都是<code>final</code>类型</li>
+<li>对象是正确创建的(创建期间没有<code>this</code>引用溢出)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>@Immutable
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">public</span> <span style="font-weight:bold">final</span> <span style="font-weight:bold">class</span> <span style="font-weight:bold">Money</span> {
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">private</span> <span style="font-weight:bold">final</span> <span style="">double</span> faceValue;
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">public</span> Money(<span style="">double</span> value){
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">this</span>.faceValue=value;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">public</span> Money(){
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">this</span>(0d);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">public</span> Money add(Money toAdd){
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">return</span> <span style="font-weight:bold">new</span> Money(faceValue+toAdd.getFaceValue());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>上面的代码字段都是<code>final</code>类型，由构造函数初始化，<code>add</code>方法并没有修改当前对象的值，而是返回了一个新的<code>Money</code>对象。</p>
+<h4 id="领域行为-1">
+  领域行为
+  <a class="heading-link" href="#%e9%a2%86%e5%9f%9f%e8%a1%8c%e4%b8%ba-1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<p>值对象同样拥有领域行为，值对象往往拥有的是 <em><strong>自给自足的领域行为</strong></em> 。比如上面代码的<code>add</code>方法，修改的是值对象自己的属性字段。</p>
+<h4 id="值对象的优势">
+  值对象的优势
+  <a class="heading-link" href="#%e5%80%bc%e5%af%b9%e8%b1%a1%e7%9a%84%e4%bc%98%e5%8a%bf">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<p>在进行领域建模时，一般是使用值对象(符合约束规范的自定义类型或结构体)而非编程语言的内建类型。原因有以下几点：</p>
+<ul>
+<li>内建类型无法展现领域概念。</li>
+<li>内建类型无法封装显而易见的领域逻辑。</li>
+<li>内建类型缺乏验证能力。</li>
+</ul>
+<h1 id="聚合">
+  聚合
+  <a class="heading-link" href="#%e8%81%9a%e5%90%88">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>要想理解聚合，需要先搞清楚面向对象设计中类之间的关系。</p>
+<h2 id="类的关系">
+  类的关系
+  <a class="heading-link" href="#%e7%b1%bb%e7%9a%84%e5%85%b3%e7%b3%bb">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>对象建模类之间的关系主要有以下几种：</p>
+<ul>
+<li>范化</li>
+<li>关联</li>
+<li>依赖</li>
+</ul>
+<h4 id="泛化关系">
+  泛化关系
+  <a class="heading-link" href="#%e6%b3%9b%e5%8c%96%e5%85%b3%e7%b3%bb">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<p>范化关系体现了父类与特定子类之间的关系。在编程语言中往往体现为子类继承父类或子类派生自父类。特化的子类在继承了父类的特征之外，还定义了符合自身的特殊实现，比如会飞的鸭子。我们往往使用 <em><strong>继承</strong></em> 这一术语来表示范化关系。</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1/%E8%8C%83%E5%8C%96uml.png?raw=true" alt=""></p>
+<h4 id="关联关系">
+  关联关系
+  <a class="heading-link" href="#%e5%85%b3%e8%81%94%e5%85%b3%e7%b3%bb">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<p>关联关系代表了类之间的一种结构关系，用以指定一个类的对象与另一个类对象之间存在的连接关系。包括以下几种：</p>
+<ul>
+<li>一对一关系</li>
+<li>一对多关系</li>
+<li>多对多关系</li>
+</ul>
+<p>除上面几种关系外，还存在着一种特殊的关联关系：<em><strong>整体</strong></em> 和 <em><strong>部分</strong></em> 的特征，  代表整体的对象包含了代表部分的对象，这就是 <em><strong>组合关系</strong></em> 。组合关系又可以分为：</p>
+<ul>
+<li>
+<p>合成关系(复合关系)</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1/%E5%90%88%E6%88%90%E5%85%B3%E7%B3%BBuml.png?raw=true" alt=""></p>
+<p>合成关系表示整体和部分关系的同时还强调了所有权的特征。组成合成关系的两个对象属于同一个生命周期。当代表主体的对象被销毁时，代表部分的对象也将随之销毁。</p>
+</li>
+<li>
+<p>聚合关系</p>
+<p>聚合关系表示整体和部分关系的同时，却没有强调所有权特征，不会约束他们的生命周期，故而关联关系要弱于合成关系。</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1/%E8%81%9A%E5%90%88uml.png?raw=true" alt=""></p>
+</li>
+</ul>
+<h4 id="依赖关系">
+  依赖关系
+  <a class="heading-link" href="#%e4%be%9d%e8%b5%96%e5%85%b3%e7%b3%bb">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<p>依赖关系代表了一个类使用了另一个类的信息或服务。依赖关系存在这方向，在UML类图中，往往使用一个带剪头的虚线条表示。虚线条也说明了依赖的双方耦合较弱。依赖关系产生于：</p>
+<ul>
+<li>
+<p>类的方法接收了另一个类的参数。</p>
+</li>
+<li>
+<p>类的方法返回了另外一个类的对象。</p>
+</li>
+<li>
+<p>类的方法内部创建了另一个类的实例。</p>
+</li>
+<li>
+<p>类的方法内部使用了另外一个类的成员。</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1/%E4%BE%9D%E8%B5%96uml.png?raw=true" alt=""></p>
+</li>
+</ul>
+<h2 id="聚合-1">
+  聚合
+  <a class="heading-link" href="#%e8%81%9a%e5%90%88-1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>将实体和值对象划分为聚合并围绕着聚合定义边界。选择一个实体作为每个聚合的根，并允许外部对象仅能持有聚合根的引用。作为一个整体来定义聚合的属性和不变量，并将执行职责赋予聚合根或指定的框架机制。这个定义说明了聚合的基本特征：</p>
+<ul>
+<li>聚合是包含了实体和值对象的一个边界</li>
+<li>聚合内部包含的实体和值对象形成一颗树，只有实体才能作为这颗树的根。这个根称为 <em><strong>聚合根</strong></em> ,这个实体称为 <em><strong>根实体</strong></em> 。</li>
+<li>外部对象只允许持有聚合根的引用，以起到边界的控制作用。</li>
+<li>聚合作为一个完整的领域概念整体，其内部会维护这个领域概念的完整性，体现业务上的不变量约束。</li>
+<li>由聚合根统一对外提供履行该领域概念职责的行为方法，实现内部各个对象之间的行为协作。</li>
+</ul>
+<h4 id="聚合根">
+  聚合根
+  <a class="heading-link" href="#%e8%81%9a%e5%90%88%e6%a0%b9">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<p>聚合根的主要目的是为了避免由于复杂数据模型缺少统一的业务规则控制，而导致聚合、实体之间数据不一致性的问题。最后在聚合之间，它还是聚合对外的接口人，以聚合根 ID 关联的方式接受外部任务和请求，在上下文内实现聚合之间的业务协同。也就是说，聚合之间通过聚合根 ID 关联引用，如果需要访问其它聚合的实体，就要先访问聚合根，再导航到聚合内部实体，外部对象不能直接访问聚合内实体。</p>
+
+  </article>
+</section>
+
+  
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    ©
+    
+    2022
+     Alvinsu 
+    ·
+    
+    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+      
+      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
