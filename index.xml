@@ -6,7 +6,21 @@
     <description>Recent content on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 01 Jun 2022 22:16:25 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 04 Jun 2022 22:32:06 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>调用函数</title>
+      <link>https://alvin-su.github.io/post/%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Sat, 04 Jun 2022 22:32:06 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0/</guid>
+      <description>调用函数本章学习创建自定义函数，包括声明参数和返回单个值、多个值。我们还将学习指针，以便进行高效的内存函数调用。
+一些重复的代码我们需要计算两面墙的面积，看下面的代码：
+func main(){  var width,height,area float64  //第一面墙的面积计算  width = 4.2  height = 3.0  area = width*height  fmt.Println(area/10,&amp;#34;liters needes&amp;#34;)  //第二面墙的面积计算  width=5.2  heigth=3.5  area=width*height  fmt.Println(area/10,&amp;#34;liters needes&amp;#34;) } 上面的代码存在两个问题：
+ 计算结果有异常精确的浮点值，我们只需要精确到两位小数。 有相当多的重复代码，如果需要计算十面墙的面积，那么代码量很可观。  下面我们就解决上面代码中存在的这两个问题，先看浮点数值得问题。
+使用 Printf 和 Sprintf 格式化代码Go的 fmt 包提供了 Printf函数。Printf代表 带格式的打印 。它接受一个字符串并将一个或多个值插入其中，以特定的方式进行格式化。然后打印结果字符串: fmt.Printf(&amp;quot;About one-third:%0.2f\n&amp;quot;,1.0/3.0)。
+Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似，只是它是返回格式化后的字符串而不是打印它。 resultString := fmt.</description>
+    </item>
+    
     <item>
       <title>实体和值对象</title>
       <link>https://alvin-su.github.io/post/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8A%E8%81%9A%E5%90%88/</link>
