@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+
+    
+
+    <meta name="author" content="Alvinsu">
+    <meta name="description" content="领域事件和DDD分层架构在理解领域事件之前，我们先来看看什么是领域服务
+领域服务我们先来看聚合存在的三个问题：
+  聚合无法封装不稳定的领域行为
+聚合封装了多个实体和值对象，聚合根是访问聚合的唯一入口点。领域行为被固化在聚合之中，问题在于，虽然一些领域行为需要访问集合封装的信息，它的实现却不稳定，常常随着需求的变化而变化。无法将领域行为分配到一个固定的对象。
+  两个聚合之间的协作该由谁发起负责？
+多数时候，一个自治的聚合无法完成一个完整的业务服务，聚合之间需要协作。比如一个聚合的根实体作为参数传递给另一个聚合根实体的方法，去完成行为的协作。那么这两个位聚合之间的协作该由谁负责？
+  聚合如何与外部组件协作？
+聚合是领域层的自治设计单元，封装了系统最为核心的业务功能。为了保证领域模型的纯粹性，会分离领域逻辑与技术实现，但是为了满足完整业务需要，二者又需要有机的结合起来。
+  为了解决上面三个问题，需要引入领域服务的概念。领域服务 与实体、值对象一样，表示了领域模型。它封装了领域行为，前提是改领域行为在实体和值对象中找不到栖息之地。领域服务是领域设计建模的最后选择。
+为了限制领域服务的范围，防止削弱聚合内实体和值对象的领域行为，我们需要控制领域服务的粒度，保证领域服务实现一个单一职责的领域行为，领域服务并不反映真实世界的领域概念（名词），而是单纯的体现一种领域行为（动词）。所以在领域服务的命名上必须包含动词，比如：OrderDeletionService这样的类，体现了领域服务的行为本质。
+领域服务的运用场景领域服务是为了解决聚合的三个问题的
+  聚合无法封装不稳定的领域行为
+比如一个调查问卷的聚合，业务需求现在要求将调查问卷导出为CSV格式，隔一段时间又要求导出为JSON格式。转换行为操作由调查问卷聚合拥有，但是转换行为存在着多种变化，不同的格式代表了不同的实现。显然，该行为的变化原因与调查问卷的结构无关，所以我们需要将转换行为和聚合分开，分离变化与不变，变化的领域行为从聚合中分离出来，形成领域服务。
+  两个聚合之间的协作该由谁负责?
+多数时候，一个自治的聚合无法完成一个完整的业务需求，聚合之间需要协作。通常是一个聚合的根实体作为参数传递给另一个聚合根实体的方法，从而完成行为的协作。
+聚合的生命周期由资源库管理，故而两个聚合的协作行为之上，需要引入一个设计对象负责聚合的协作。这个设计对象就是 领域服务 。
+领域服务调用资源库获得聚合，发起它们之间的行为协作。
+ 聚合如何与外部组件的协作?  在业务系统中，几乎不可能让领域逻辑完全不依赖于任何外部资源，如果领域行为突破了聚合的粒度，就需要与外部资源进行协作，比如访问南北向的网关，这个协作就交由领域服务来实现，
+  哪些领域行为要分配给聚合，哪些因为聚合无法做到，才会考虑分配给领域服务？
+ 与状态无关的领域行为 变化方向与聚合不一致的领域行为 聚合之间协作的领域行为 聚合和端口之间协作的领域行为  领域事件领域事件重点关注 状态 这两个字，在进行领域建模时，状态往往作为对象的属性被定义，例如，订单对象定义的订单状态的属性Created、Registered、Canceled等等。领域驱动设计将状态赋予它 领域事件 的身份。领域事件具有如下特征：
+ 领域事件代表了领域概念 领域事件是已经发送的事实 领域事件是不可变的领域对象 领域事件会基于某个条件而触发  领域事件的命名应采用动词的过去时态，如订单完成的事件命名为OrderCompleted。作为不变事实的领域事件可以参考值对象的定义要求，定义为不变类。">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="领域事件"/>
+<meta name="twitter:description" content="领域事件和DDD分层架构在理解领域事件之前，我们先来看看什么是领域服务
+领域服务我们先来看聚合存在的三个问题：
+  聚合无法封装不稳定的领域行为
+聚合封装了多个实体和值对象，聚合根是访问聚合的唯一入口点。领域行为被固化在聚合之中，问题在于，虽然一些领域行为需要访问集合封装的信息，它的实现却不稳定，常常随着需求的变化而变化。无法将领域行为分配到一个固定的对象。
+  两个聚合之间的协作该由谁发起负责？
+多数时候，一个自治的聚合无法完成一个完整的业务服务，聚合之间需要协作。比如一个聚合的根实体作为参数传递给另一个聚合根实体的方法，去完成行为的协作。那么这两个位聚合之间的协作该由谁负责？
+  聚合如何与外部组件协作？
+聚合是领域层的自治设计单元，封装了系统最为核心的业务功能。为了保证领域模型的纯粹性，会分离领域逻辑与技术实现，但是为了满足完整业务需要，二者又需要有机的结合起来。
+  为了解决上面三个问题，需要引入领域服务的概念。领域服务 与实体、值对象一样，表示了领域模型。它封装了领域行为，前提是改领域行为在实体和值对象中找不到栖息之地。领域服务是领域设计建模的最后选择。
+为了限制领域服务的范围，防止削弱聚合内实体和值对象的领域行为，我们需要控制领域服务的粒度，保证领域服务实现一个单一职责的领域行为，领域服务并不反映真实世界的领域概念（名词），而是单纯的体现一种领域行为（动词）。所以在领域服务的命名上必须包含动词，比如：OrderDeletionService这样的类，体现了领域服务的行为本质。
+领域服务的运用场景领域服务是为了解决聚合的三个问题的
+  聚合无法封装不稳定的领域行为
+比如一个调查问卷的聚合，业务需求现在要求将调查问卷导出为CSV格式，隔一段时间又要求导出为JSON格式。转换行为操作由调查问卷聚合拥有，但是转换行为存在着多种变化，不同的格式代表了不同的实现。显然，该行为的变化原因与调查问卷的结构无关，所以我们需要将转换行为和聚合分开，分离变化与不变，变化的领域行为从聚合中分离出来，形成领域服务。
+  两个聚合之间的协作该由谁负责?
+多数时候，一个自治的聚合无法完成一个完整的业务需求，聚合之间需要协作。通常是一个聚合的根实体作为参数传递给另一个聚合根实体的方法，从而完成行为的协作。
+聚合的生命周期由资源库管理，故而两个聚合的协作行为之上，需要引入一个设计对象负责聚合的协作。这个设计对象就是 领域服务 。
+领域服务调用资源库获得聚合，发起它们之间的行为协作。
+ 聚合如何与外部组件的协作?  在业务系统中，几乎不可能让领域逻辑完全不依赖于任何外部资源，如果领域行为突破了聚合的粒度，就需要与外部资源进行协作，比如访问南北向的网关，这个协作就交由领域服务来实现，
+  哪些领域行为要分配给聚合，哪些因为聚合无法做到，才会考虑分配给领域服务？
+ 与状态无关的领域行为 变化方向与聚合不一致的领域行为 聚合之间协作的领域行为 聚合和端口之间协作的领域行为  领域事件领域事件重点关注 状态 这两个字，在进行领域建模时，状态往往作为对象的属性被定义，例如，订单对象定义的订单状态的属性Created、Registered、Canceled等等。领域驱动设计将状态赋予它 领域事件 的身份。领域事件具有如下特征：
+ 领域事件代表了领域概念 领域事件是已经发送的事实 领域事件是不可变的领域对象 领域事件会基于某个条件而触发  领域事件的命名应采用动词的过去时态，如订单完成的事件命名为OrderCompleted。作为不变事实的领域事件可以参考值对象的定义要求，定义为不变类。"/>
+
+    <meta property="og:title" content="领域事件" />
+<meta property="og:description" content="领域事件和DDD分层架构在理解领域事件之前，我们先来看看什么是领域服务
+领域服务我们先来看聚合存在的三个问题：
+  聚合无法封装不稳定的领域行为
+聚合封装了多个实体和值对象，聚合根是访问聚合的唯一入口点。领域行为被固化在聚合之中，问题在于，虽然一些领域行为需要访问集合封装的信息，它的实现却不稳定，常常随着需求的变化而变化。无法将领域行为分配到一个固定的对象。
+  两个聚合之间的协作该由谁发起负责？
+多数时候，一个自治的聚合无法完成一个完整的业务服务，聚合之间需要协作。比如一个聚合的根实体作为参数传递给另一个聚合根实体的方法，去完成行为的协作。那么这两个位聚合之间的协作该由谁负责？
+  聚合如何与外部组件协作？
+聚合是领域层的自治设计单元，封装了系统最为核心的业务功能。为了保证领域模型的纯粹性，会分离领域逻辑与技术实现，但是为了满足完整业务需要，二者又需要有机的结合起来。
+  为了解决上面三个问题，需要引入领域服务的概念。领域服务 与实体、值对象一样，表示了领域模型。它封装了领域行为，前提是改领域行为在实体和值对象中找不到栖息之地。领域服务是领域设计建模的最后选择。
+为了限制领域服务的范围，防止削弱聚合内实体和值对象的领域行为，我们需要控制领域服务的粒度，保证领域服务实现一个单一职责的领域行为，领域服务并不反映真实世界的领域概念（名词），而是单纯的体现一种领域行为（动词）。所以在领域服务的命名上必须包含动词，比如：OrderDeletionService这样的类，体现了领域服务的行为本质。
+领域服务的运用场景领域服务是为了解决聚合的三个问题的
+  聚合无法封装不稳定的领域行为
+比如一个调查问卷的聚合，业务需求现在要求将调查问卷导出为CSV格式，隔一段时间又要求导出为JSON格式。转换行为操作由调查问卷聚合拥有，但是转换行为存在着多种变化，不同的格式代表了不同的实现。显然，该行为的变化原因与调查问卷的结构无关，所以我们需要将转换行为和聚合分开，分离变化与不变，变化的领域行为从聚合中分离出来，形成领域服务。
+  两个聚合之间的协作该由谁负责?
+多数时候，一个自治的聚合无法完成一个完整的业务需求，聚合之间需要协作。通常是一个聚合的根实体作为参数传递给另一个聚合根实体的方法，从而完成行为的协作。
+聚合的生命周期由资源库管理，故而两个聚合的协作行为之上，需要引入一个设计对象负责聚合的协作。这个设计对象就是 领域服务 。
+领域服务调用资源库获得聚合，发起它们之间的行为协作。
+ 聚合如何与外部组件的协作?  在业务系统中，几乎不可能让领域逻辑完全不依赖于任何外部资源，如果领域行为突破了聚合的粒度，就需要与外部资源进行协作，比如访问南北向的网关，这个协作就交由领域服务来实现，
+  哪些领域行为要分配给聚合，哪些因为聚合无法做到，才会考虑分配给领域服务？
+ 与状态无关的领域行为 变化方向与聚合不一致的领域行为 聚合之间协作的领域行为 聚合和端口之间协作的领域行为  领域事件领域事件重点关注 状态 这两个字，在进行领域建模时，状态往往作为对象的属性被定义，例如，订单对象定义的订单状态的属性Created、Registered、Canceled等等。领域驱动设计将状态赋予它 领域事件 的身份。领域事件具有如下特征：
+ 领域事件代表了领域概念 领域事件是已经发送的事实 领域事件是不可变的领域对象 领域事件会基于某个条件而触发  领域事件的命名应采用动词的过去时态，如订单完成的事件命名为OrderCompleted。作为不变事实的领域事件可以参考值对象的定义要求，定义为不变类。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://alvin-su.github.io/post/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E5%92%8Cddd%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-06-09T10:16:35+08:00" />
+<meta property="article:modified_time" content="2022-06-09T10:16:35+08:00" />
+
+
+
+    <title>
+  领域事件 · Alvinsu Blog
+</title>
+
+    
+      <link rel="canonical" href="https://alvin-su.github.io/post/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E5%92%8Cddd%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84/">
+    
+
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <meta name="generator" content="Hugo 0.99.1" />
+  </head>
+
+  
+  
+    
+  
+  <body class="preload-transitions colorscheme-auto">
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Alvinsu Blog
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/post/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">分类</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://alvin-su.github.io/post/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E5%92%8Cddd%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84/">
+          领域事件
+        </a>
+      </h1>
+    </header>
+
+    <h1 id="领域事件和ddd分层架构">
+  领域事件和DDD分层架构
+  <a class="heading-link" href="#%e9%a2%86%e5%9f%9f%e4%ba%8b%e4%bb%b6%e5%92%8cddd%e5%88%86%e5%b1%82%e6%9e%b6%e6%9e%84">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>在理解领域事件之前，我们先来看看什么是领域服务</p>
+<h2 id="领域服务">
+  领域服务
+  <a class="heading-link" href="#%e9%a2%86%e5%9f%9f%e6%9c%8d%e5%8a%a1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>我们先来看聚合存在的三个问题：</p>
+<ul>
+<li>
+<p>聚合无法封装不稳定的领域行为</p>
+<p>聚合封装了多个实体和值对象，聚合根是访问聚合的唯一入口点。领域行为被固化在聚合之中，问题在于，虽然一些领域行为需要访问集合封装的信息，它的实现却不稳定，常常随着需求的变化而变化。无法将领域行为分配到一个固定的对象。</p>
+</li>
+<li>
+<p>两个聚合之间的协作该由谁发起负责？</p>
+<p>多数时候，一个自治的聚合无法完成一个完整的业务服务，聚合之间需要协作。比如一个聚合的根实体作为参数传递给另一个聚合根实体的方法，去完成行为的协作。那么这两个位聚合之间的协作该由谁负责？</p>
+</li>
+<li>
+<p>聚合如何与外部组件协作？</p>
+<p>聚合是领域层的自治设计单元，封装了系统最为核心的业务功能。为了保证领域模型的纯粹性，会分离领域逻辑与技术实现，但是为了满足完整业务需要，二者又需要有机的结合起来。</p>
+</li>
+</ul>
+<p>为了解决上面三个问题，需要引入领域服务的概念。<em><strong>领域服务</strong></em> 与实体、值对象一样，表示了领域模型。它封装了领域行为，前提是改领域行为在实体和值对象中找不到栖息之地。领域服务是领域设计建模的最后选择。</p>
+<p>为了限制领域服务的范围，防止削弱聚合内实体和值对象的领域行为，我们需要控制领域服务的粒度，保证领域服务实现一个单一职责的领域行为，领域服务并不反映真实世界的领域概念（名词），而是单纯的体现一种领域行为（动词）。所以在领域服务的命名上必须包含动词，比如：<code>OrderDeletionService</code>这样的类，体现了领域服务的行为本质。</p>
+<h3 id="领域服务的运用场景">
+  领域服务的运用场景
+  <a class="heading-link" href="#%e9%a2%86%e5%9f%9f%e6%9c%8d%e5%8a%a1%e7%9a%84%e8%bf%90%e7%94%a8%e5%9c%ba%e6%99%af">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>领域服务是为了解决聚合的三个问题的</p>
+<ul>
+<li>
+<p>聚合无法封装不稳定的领域行为</p>
+<p>比如一个调查问卷的聚合，业务需求现在要求将调查问卷导出为CSV格式，隔一段时间又要求导出为JSON格式。转换行为操作由调查问卷聚合拥有，但是转换行为存在着多种变化，不同的格式代表了不同的实现。显然，该行为的变化原因与调查问卷的结构无关，所以我们需要将转换行为和聚合分开，分离变化与不变，变化的领域行为从聚合中分离出来，形成领域服务。</p>
+</li>
+<li>
+<p>两个聚合之间的协作该由谁负责?</p>
+<p>多数时候，一个自治的聚合无法完成一个完整的业务需求，聚合之间需要协作。通常是一个聚合的根实体作为参数传递给另一个聚合根实体的方法，从而完成行为的协作。</p>
+<p>聚合的生命周期由资源库管理，故而两个聚合的协作行为之上，需要引入一个设计对象负责聚合的协作。这个设计对象就是 <em><strong>领域服务</strong></em> 。</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/DomainService.png?raw=true" alt=""></p>
+<p>领域服务调用资源库获得聚合，发起它们之间的行为协作。</p>
+<ul>
+<li>聚合如何与外部组件的协作?</li>
+</ul>
+<p>在业务系统中，几乎不可能让领域逻辑完全不依赖于任何外部资源，如果领域行为突破了聚合的粒度，就需要与外部资源进行协作，比如访问南北向的网关，这个协作就交由领域服务来实现，</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/DomainService2.png?raw=true" alt=""></p>
+</li>
+</ul>
+<p>哪些领域行为要分配给聚合，哪些因为聚合无法做到，才会考虑分配给领域服务？</p>
+<ul>
+<li>与状态无关的领域行为</li>
+<li>变化方向与聚合不一致的领域行为</li>
+<li>聚合之间协作的领域行为</li>
+<li>聚合和端口之间协作的领域行为</li>
+</ul>
+<h2 id="领域事件">
+  领域事件
+  <a class="heading-link" href="#%e9%a2%86%e5%9f%9f%e4%ba%8b%e4%bb%b6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>领域事件重点关注 <em><strong>状态</strong></em> 这两个字，在进行领域建模时，状态往往作为对象的属性被定义，例如，订单对象定义的订单状态的属性<code>Created</code>、<code>Registered</code>、<code>Canceled</code>等等。领域驱动设计将状态赋予它 <em><strong>领域事件</strong></em> 的身份。领域事件具有如下特征：</p>
+<ul>
+<li>领域事件代表了领域概念</li>
+<li>领域事件是已经发送的事实</li>
+<li>领域事件是不可变的领域对象</li>
+<li>领域事件会基于某个条件而触发</li>
+</ul>
+<p>领域事件的命名应采用动词的过去时态，如订单完成的事件命名为<code>OrderCompleted</code>。作为不变事实的领域事件可以参考值对象的定义要求，定义为不变类。</p>
+<p>领域事件表达了实体的状态变更和迁移，可以以领域事件为核心进行领域建模，称为 <em><strong>事件驱动模型</strong></em> 。</p>
+<p>领域事件分以下几种：</p>
+<ul>
+<li>
+<p>微服务内的领域事件</p>
+<p>当领域事件发生在微服务内的聚合之间，领域事件发生后完成事件实体构建和事件数据持久化，发布方聚合将事件发布到事件总线，订阅方接收事件数据完成后续业务操作。</p>
+</li>
+<li>
+<p>微服务之间的领域事件</p>
+</li>
+</ul>
+<p>领域事件属于领域层的领域模型对象。如果事件参与了限界上下文之间的协作，应考虑定义应用事件，作为包裹在领域层之外的消息契约。事件的传递通过事件总线负责。</p>
+<h2 id="ddd-分层架构">
+  DDD 分层架构
+  <a class="heading-link" href="#ddd-%e5%88%86%e5%b1%82%e6%9e%b6%e6%9e%84">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>DDD 的分层架构在不断发展。最早是传统的四层架构；后来四层架构有了进一步的优化，实现了各层对基础层的解耦；再后来领域层和应用层之间增加了上下文环境（Context）层，五层架构（DCI）就此形成了。</p>
+<p><img src="https://static001.geekbang.org/resource/image/d6/e1/d6abc3e4f5837cd51b689d01433cace1.jpg" alt=""></p>
+<p>我们看一下上面这张图，在最早的传统四层架构中，基础层是被其它层依赖的，它位于最核心的位置，那按照分层架构的思想，它应该就是核心，但实际上领域层才是软件的核心，所以这种依赖是有问题的。后来我们采用了依赖倒置的设计，优化了传统的四层架构，实现了各层对基础层的解耦。</p>
+<p>我们今天讲的 DDD 分层架构就是优化后的四层架构。在下面这张图中，从上到下依次是：用户接口层、应用层、领域层和基础层。</p>
+<p><img src="https://static001.geekbang.org/resource/image/d0/9d/d02e92626dd8d6b077002ab6b977159d.png" alt=""></p>
+<p>我们具体看实际的代码中的例子：</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/DDD%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84.png?raw=true" alt=""></p>
+<p>具体依赖关系如下：</p>
+<p><img src="https://raw.githubusercontent.com/abpframework/abp/rel-5.2/docs/zh-Hans/images/layered-project-dependencies-module.png" alt=""></p>
+<ul>
+<li>
+<p>Domain.Shared</p>
+<p>项目包含常量,枚举和其他对象,这些对象实际上是领域层的一部分,但是解决方案中所有的层/项目中都会使用到。该项目不依赖解决方案中的其他项目。 其他项目直接或间接依赖该项目。</p>
+</li>
+<li>
+<p>Domain 项目</p>
+<p>解决方案的领域层. 它主要包含 实体, 集合根, 领域服务, 值类型, 仓储接口 和解决方案的其他领域对象。它依赖 .Domain.Shared 项目,因为项目中会用到它的一些常量,枚举和定义其他对象。</p>
+</li>
+<li>
+<p>Application.Contracts 项目
+项目主要包含 应用服务 interfaces 和应用层的 数据传输对象 (DTO). 它用于分离应用层的接口和实现. 这种方式可以将接口项目做为约定包共享给客户端。它依赖 .Domain.Shared 因为它可能会在应用接口和DTO中使用常量,枚举和其他的共享对象。</p>
+</li>
+<li>
+<p>.Application 项目</p>
+<p>项目包含 .Application.Contracts 项目的 应用服务 接口实现。它依赖 Application.Contracts 项目, 因为它需要实现接口与使用DTO。它依赖 .Domain 项目,因为它需要使用领域对象(实体,仓储接口等)执行应用程序逻辑。</p>
+</li>
+<li>
+<p>EntityFrameworkCore 项目
+这是集成EF Core的项目. 它定义了 DbContext 并实现 .Domain 项目中定义的仓储接口。它依赖 .Domain 项目,因为它需要引用实体和仓储接口。</p>
+</li>
+</ul>
+
+  </article>
+</section>
+
+  
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    ©
+    
+    2022
+     Alvinsu 
+    ·
+    
+    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+      
+      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
