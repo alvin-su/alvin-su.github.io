@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+
+    
+
+    <meta name="author" content="Alvinsu">
+    <meta name="description" content="Docker基本介绍在介绍Docker技术之前，我们先来看一下容器的发展之路
+容器的发展之路现在容器无疑成为了一种潮流，为了我们更全面的了解Docker，我们需要先了解容器技术的发展。
+ 容器为什么会出现 容器的作用 容器的应用场景  落后的旧时代这个时代也就是服务器时代，业务是基于应用运转的，如果应用出现故障，业务也就无法正常运行，而大部分应用运行在服务器之上，曾经是每个服务器只能运行单一应用。windows和linux系统都无法保证稳定而安全的运行多个应用。在那个时代，经常会出现业务部分需要一个新的应用时，IT部分就去采购一台服务器，往往采购的服务器都是性能比较好的，因为你无法提前知道该应用所需的服务器性能究竟是怎样的。其实这是对公司资产的极大浪费。、
+虚拟机时代VMware 公司带来了虚拟机 VM。虚拟机是一种划时代的技术！现在每当业务部分需要增加应用的时候，IT部分无须再采购新的服务器。只需要在现有的空闲的服务器上启用一个新的虚拟机来部署应用。
+但是虚拟机也有非常多的不足之处。虚拟机需要依赖其专用的操作系统，操作系统会占用额外的CPU、RAM和存储，每个操作系统都需要补丁和监控。如果是 widnows 操作系统还需要付费购买许可证。虚拟机启动也比较慢，并且可移植性比较差。
+容器时代容器完美的解决了虚拟机的不足之处，容器运行不会独占操作系统。实际上，运行在相同宿主机上的容器是共享一个操作系统的，这样能够节省大量的系统资源，如CPU、RAM以及存储。容器还节省了操作系统的许可证，以及操作系统打补丁等运维成本。容器还具有启动速度快和便于迁移等优势。
+容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰；而被装进集装箱的应用，也可以被方便地搬来搬去。
+容器技术的核心功能，就是通过约束和修改进程的动态表现，从而为其创造出一个“边界”。Cgroups 技术是用来制造约束的主要手段，而 Namespace 技术则是用来修改进程视图的主要方法。Linux Cgroups 就是 Linux 内核中用来为进程设置资源限制的一个重要功能。Linux Cgroups 的全称是 Linux Control Group它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+现代容器技术起源于linux时代，容器技术已经非常出色，但是对于大部分公司来说还是比较复杂，比如，内核命名空间、Control Group、Union File System，容器技术的复杂度是阻止其实际运用的主要原因。
+Docker 时代Docker技术的出现，让容器技术变的简单，容器才真正被大众所接受。我们也可以说是 Dcoker这家公司让容器变得简单。
+Dokcer简介Dokcer 是一种运行于Linux和windows上的软件，用于创建、管理和编排容器。Docker是在Github上开发的Moby开源项目的一部分。 (https://github.com/moby/moby)
+容器编排容器本身没有价值，有价值的是容器编排。正因为如此，容器技术生态才爆发了一场关于“容器编排”的“战争”。而这次战争，最终以 Kubernetes 项目和 CNCF 社区的胜利而告终。">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Docker简介和基本技术"/>
+<meta name="twitter:description" content="Docker基本介绍在介绍Docker技术之前，我们先来看一下容器的发展之路
+容器的发展之路现在容器无疑成为了一种潮流，为了我们更全面的了解Docker，我们需要先了解容器技术的发展。
+ 容器为什么会出现 容器的作用 容器的应用场景  落后的旧时代这个时代也就是服务器时代，业务是基于应用运转的，如果应用出现故障，业务也就无法正常运行，而大部分应用运行在服务器之上，曾经是每个服务器只能运行单一应用。windows和linux系统都无法保证稳定而安全的运行多个应用。在那个时代，经常会出现业务部分需要一个新的应用时，IT部分就去采购一台服务器，往往采购的服务器都是性能比较好的，因为你无法提前知道该应用所需的服务器性能究竟是怎样的。其实这是对公司资产的极大浪费。、
+虚拟机时代VMware 公司带来了虚拟机 VM。虚拟机是一种划时代的技术！现在每当业务部分需要增加应用的时候，IT部分无须再采购新的服务器。只需要在现有的空闲的服务器上启用一个新的虚拟机来部署应用。
+但是虚拟机也有非常多的不足之处。虚拟机需要依赖其专用的操作系统，操作系统会占用额外的CPU、RAM和存储，每个操作系统都需要补丁和监控。如果是 widnows 操作系统还需要付费购买许可证。虚拟机启动也比较慢，并且可移植性比较差。
+容器时代容器完美的解决了虚拟机的不足之处，容器运行不会独占操作系统。实际上，运行在相同宿主机上的容器是共享一个操作系统的，这样能够节省大量的系统资源，如CPU、RAM以及存储。容器还节省了操作系统的许可证，以及操作系统打补丁等运维成本。容器还具有启动速度快和便于迁移等优势。
+容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰；而被装进集装箱的应用，也可以被方便地搬来搬去。
+容器技术的核心功能，就是通过约束和修改进程的动态表现，从而为其创造出一个“边界”。Cgroups 技术是用来制造约束的主要手段，而 Namespace 技术则是用来修改进程视图的主要方法。Linux Cgroups 就是 Linux 内核中用来为进程设置资源限制的一个重要功能。Linux Cgroups 的全称是 Linux Control Group它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+现代容器技术起源于linux时代，容器技术已经非常出色，但是对于大部分公司来说还是比较复杂，比如，内核命名空间、Control Group、Union File System，容器技术的复杂度是阻止其实际运用的主要原因。
+Docker 时代Docker技术的出现，让容器技术变的简单，容器才真正被大众所接受。我们也可以说是 Dcoker这家公司让容器变得简单。
+Dokcer简介Dokcer 是一种运行于Linux和windows上的软件，用于创建、管理和编排容器。Docker是在Github上开发的Moby开源项目的一部分。 (https://github.com/moby/moby)
+容器编排容器本身没有价值，有价值的是容器编排。正因为如此，容器技术生态才爆发了一场关于“容器编排”的“战争”。而这次战争，最终以 Kubernetes 项目和 CNCF 社区的胜利而告终。"/>
+
+    <meta property="og:title" content="Docker简介和基本技术" />
+<meta property="og:description" content="Docker基本介绍在介绍Docker技术之前，我们先来看一下容器的发展之路
+容器的发展之路现在容器无疑成为了一种潮流，为了我们更全面的了解Docker，我们需要先了解容器技术的发展。
+ 容器为什么会出现 容器的作用 容器的应用场景  落后的旧时代这个时代也就是服务器时代，业务是基于应用运转的，如果应用出现故障，业务也就无法正常运行，而大部分应用运行在服务器之上，曾经是每个服务器只能运行单一应用。windows和linux系统都无法保证稳定而安全的运行多个应用。在那个时代，经常会出现业务部分需要一个新的应用时，IT部分就去采购一台服务器，往往采购的服务器都是性能比较好的，因为你无法提前知道该应用所需的服务器性能究竟是怎样的。其实这是对公司资产的极大浪费。、
+虚拟机时代VMware 公司带来了虚拟机 VM。虚拟机是一种划时代的技术！现在每当业务部分需要增加应用的时候，IT部分无须再采购新的服务器。只需要在现有的空闲的服务器上启用一个新的虚拟机来部署应用。
+但是虚拟机也有非常多的不足之处。虚拟机需要依赖其专用的操作系统，操作系统会占用额外的CPU、RAM和存储，每个操作系统都需要补丁和监控。如果是 widnows 操作系统还需要付费购买许可证。虚拟机启动也比较慢，并且可移植性比较差。
+容器时代容器完美的解决了虚拟机的不足之处，容器运行不会独占操作系统。实际上，运行在相同宿主机上的容器是共享一个操作系统的，这样能够节省大量的系统资源，如CPU、RAM以及存储。容器还节省了操作系统的许可证，以及操作系统打补丁等运维成本。容器还具有启动速度快和便于迁移等优势。
+容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰；而被装进集装箱的应用，也可以被方便地搬来搬去。
+容器技术的核心功能，就是通过约束和修改进程的动态表现，从而为其创造出一个“边界”。Cgroups 技术是用来制造约束的主要手段，而 Namespace 技术则是用来修改进程视图的主要方法。Linux Cgroups 就是 Linux 内核中用来为进程设置资源限制的一个重要功能。Linux Cgroups 的全称是 Linux Control Group它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
+现代容器技术起源于linux时代，容器技术已经非常出色，但是对于大部分公司来说还是比较复杂，比如，内核命名空间、Control Group、Union File System，容器技术的复杂度是阻止其实际运用的主要原因。
+Docker 时代Docker技术的出现，让容器技术变的简单，容器才真正被大众所接受。我们也可以说是 Dcoker这家公司让容器变得简单。
+Dokcer简介Dokcer 是一种运行于Linux和windows上的软件，用于创建、管理和编排容器。Docker是在Github上开发的Moby开源项目的一部分。 (https://github.com/moby/moby)
+容器编排容器本身没有价值，有价值的是容器编排。正因为如此，容器技术生态才爆发了一场关于“容器编排”的“战争”。而这次战争，最终以 Kubernetes 项目和 CNCF 社区的胜利而告终。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://alvin-su.github.io/post/docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-06-15T09:19:17+08:00" />
+<meta property="article:modified_time" content="2022-06-15T09:19:17+08:00" />
+
+
+
+    <title>
+  Docker简介和基本技术 · Alvinsu Blog
+</title>
+
+    
+      <link rel="canonical" href="https://alvin-su.github.io/post/docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/">
+    
+
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <meta name="generator" content="Hugo 0.99.1" />
+  </head>
+
+  
+  
+    
+  
+  <body class="preload-transitions colorscheme-auto">
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Alvinsu Blog
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/post/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">分类</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://alvin-su.github.io/post/docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/">
+          Docker简介和基本技术
+        </a>
+      </h1>
+    </header>
+
+    <h1 id="docker基本介绍">
+  Docker基本介绍
+  <a class="heading-link" href="#docker%e5%9f%ba%e6%9c%ac%e4%bb%8b%e7%bb%8d">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>在介绍Docker技术之前，我们先来看一下容器的发展之路</p>
+<h2 id="容器的发展之路">
+  容器的发展之路
+  <a class="heading-link" href="#%e5%ae%b9%e5%99%a8%e7%9a%84%e5%8f%91%e5%b1%95%e4%b9%8b%e8%b7%af">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>现在容器无疑成为了一种潮流，为了我们更全面的了解Docker，我们需要先了解容器技术的发展。</p>
+<ul>
+<li>容器为什么会出现</li>
+<li>容器的作用</li>
+<li>容器的应用场景</li>
+</ul>
+<h3 id="落后的旧时代">
+  落后的旧时代
+  <a class="heading-link" href="#%e8%90%bd%e5%90%8e%e7%9a%84%e6%97%a7%e6%97%b6%e4%bb%a3">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>这个时代也就是服务器时代，业务是基于应用运转的，如果应用出现故障，业务也就无法正常运行，而大部分应用运行在服务器之上，曾经是每个服务器只能运行单一应用。windows和linux系统都无法保证稳定而安全的运行多个应用。在那个时代，经常会出现业务部分需要一个新的应用时，IT部分就去采购一台服务器，往往采购的服务器都是性能比较好的，因为你无法提前知道该应用所需的服务器性能究竟是怎样的。其实这是对公司资产的极大浪费。、</p>
+<h3 id="虚拟机时代">
+  虚拟机时代
+  <a class="heading-link" href="#%e8%99%9a%e6%8b%9f%e6%9c%ba%e6%97%b6%e4%bb%a3">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>VMware 公司带来了虚拟机 VM。虚拟机是一种划时代的技术！现在每当业务部分需要增加应用的时候，IT部分无须再采购新的服务器。只需要在现有的空闲的服务器上启用一个新的虚拟机来部署应用。</p>
+<p>但是虚拟机也有非常多的不足之处。虚拟机需要依赖其专用的操作系统，操作系统会占用额外的CPU、RAM和存储，每个操作系统都需要补丁和监控。如果是 widnows 操作系统还需要付费购买许可证。虚拟机启动也比较慢，并且可移植性比较差。</p>
+<h3 id="容器时代">
+  容器时代
+  <a class="heading-link" href="#%e5%ae%b9%e5%99%a8%e6%97%b6%e4%bb%a3">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>容器完美的解决了虚拟机的不足之处，容器运行不会独占操作系统。实际上，运行在相同宿主机上的容器是共享一个操作系统的，这样能够节省大量的系统资源，如CPU、RAM以及存储。容器还节省了操作系统的许可证，以及操作系统打补丁等运维成本。容器还具有启动速度快和便于迁移等优势。</p>
+<p><img src="https://static001.geekbang.org/resource/image/d1/96/d1bb34cda8744514ba4c233435bf4e96.jpg?wh=2242*1163" alt=""></p>
+<p>容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰；而被装进集装箱的应用，也可以被方便地搬来搬去。</p>
+<p>容器技术的核心功能，就是通过约束和修改进程的动态表现，从而为其创造出一个“边界”。<code>Cgroups</code> 技术是用来制造约束的主要手段，而 <code>Namespace</code> 技术则是用来修改进程视图的主要方法。<code>Linux Cgroups</code> 就是 Linux 内核中用来为进程设置资源限制的一个重要功能。<code>Linux Cgroups</code> 的全称是 <code>Linux Control Group</code>它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。</p>
+<p>现代容器技术起源于linux时代，容器技术已经非常出色，但是对于大部分公司来说还是比较复杂，比如，内核命名空间、<code>Control Group</code>、<code>Union File System</code>，容器技术的复杂度是阻止其实际运用的主要原因。</p>
+<h3 id="docker-时代">
+  Docker 时代
+  <a class="heading-link" href="#docker-%e6%97%b6%e4%bb%a3">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>Docker技术的出现，让容器技术变的简单，容器才真正被大众所接受。我们也可以说是 Dcoker这家公司让容器变得简单。</p>
+<h2 id="dokcer简介">
+  Dokcer简介
+  <a class="heading-link" href="#dokcer%e7%ae%80%e4%bb%8b">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>Dokcer 是一种运行于Linux和windows上的软件，用于创建、管理和编排容器。Docker是在Github上开发的Moby开源项目的一部分。
+(<a href="https://github.com/moby/moby">https://github.com/moby/moby</a>)</p>
+<h3 id="容器编排">
+  容器编排
+  <a class="heading-link" href="#%e5%ae%b9%e5%99%a8%e7%bc%96%e6%8e%92">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>容器本身没有价值，有价值的是容器编排。正因为如此，容器技术生态才爆发了一场关于“容器编排”的“战争”。而这次战争，最终以 <code>Kubernetes</code> 项目和 <code>CNCF</code> 社区的胜利而告终。</p>
+<h3 id="开发容器计划">
+  开发容器计划
+  <a class="heading-link" href="#%e5%bc%80%e5%8f%91%e5%ae%b9%e5%99%a8%e8%ae%a1%e5%88%92">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>开放容器计划&mdash;OCI，OCI是一个旨在对容器基础架构中的基础组件进行标准化的管理委员会。OCI目前已经发布了两份规范：镜像规范和运行时规范。
+<code>containerd</code>是容器虚拟化技术，从docker中剥离出来，形成开放容器接口（OCI）标准的一部分。还有 <code>podman</code> 也是满足OCI规范的一种容器化技术。</p>
+<h1 id="dokcer技术">
+  Dokcer技术
+  <a class="heading-link" href="#dokcer%e6%8a%80%e6%9c%af">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<h2 id="docker-引擎">
+  Docker 引擎
+  <a class="heading-link" href="#docker-%e5%bc%95%e6%93%8e">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>Docker 引擎是用来运行和管理容器的核心软件。基于OCI标准的要求，Docker引擎是采用了模块化的设计原则，其组件是可替换的。Docker 引擎是由多个专用的工具协调工作，从而可以创建和运行容器。Docker引擎主要有以下组件构成：</p>
+<ul>
+<li>Docker客户端 (Docker Client)</li>
+<li>Docker  守护进程 (Docker daenmon)</li>
+<li>containerd</li>
+<li>runc</li>
+</ul>
+<p>Dokcker 总体逻辑图如下：
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/Docker%E6%80%BB%E4%BD%93%E9%80%BB%E8%BE%91%E5%9B%BE.png?raw=true" alt=""></p>
+<p>Docker引擎架构图如下：</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/Docker%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84.png?raw=true" alt=""></p>
+<p>我们下面来逐一看下Dokcer引擎的组件。</p>
+<h3 id="runc">
+  runc
+  <a class="heading-link" href="#runc">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><code>runc</code>是OCI容器运行时规范的实现。<code>runc</code>生来就只有一个作用&mdash;创建容器。</p>
+<h3 id="containerd">
+  containerd
+  <a class="heading-link" href="#containerd">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><code>containerd</code>的主要任何就是容器的生命周期管理：start|stop|pause|rm&hellip;。<code>containerd</code>位于daemon和runc所在的OCI层之间。<code>containerd</code>是由Docker公司开发的，并捐献给了云原生基金会 CNCF。</p>
+<h3 id="启动一个新的容器的过程">
+  启动一个新的容器的过程
+  <a class="heading-link" href="#%e5%90%af%e5%8a%a8%e4%b8%80%e4%b8%aa%e6%96%b0%e7%9a%84%e5%ae%b9%e5%99%a8%e7%9a%84%e8%bf%87%e7%a8%8b">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><code>docker run --name myredis -d -p 6379:6379 redis:latest</code></p>
+<p>当使用Docker命令行工具执行如上命令时，Docker客户端会将其转换为合适的API格式，并发送到正确的API端点。</p>
+<p>API是在daemon中实现的。这套功能丰富、基于版本的RESTAPI已经成为Docker的标志。并且被行业接受成为事实上的容器API。</p>
+<p>一旦daemon接收到创建新容器的命令，它就会向containerd发出调用。daemon已经不再包含任何创建容器的代码了!</p>
+<p>daemon使用一种CRUD风格的API，通过gRPC与containerd进行通信。
+虽然名叫containerd，但是它并不负责创建容器，而是指挥runc去做。containerd将Docker。镜像转换为OCIbundle，并让runc基于此创建一个新的容器。</p>
+<p>然后，runc与操作系统内核接口进行通信，基于所有必要的工具(Namespace、CGroup等)来创建容器。容器进程作为runc 的子进程启动，启动完毕后，runc 将会退出。</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8%E7%9A%84%E8%BF%87%E7%A8%8B.png?raw=true" alt=""></p>
+<h3 id="shim">
+  shim
+  <a class="heading-link" href="#shim">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><code>shim</code>是实现无 <code>daemon</code>的容器不可获缺的工具。从上面的图可知，<code>containerd</code>指挥<code>runc</code>来创建容器。每次都会创建一个新的 <code>runc</code>实例。不过一旦容器创建完毕，对应的<code>runc</code>就会退出，一旦<code>runc</code>退出，相关联的<code>shim</code>就会成为容器的父进程，<code>shim</code>的部分职责如下：</p>
+<ul>
+<li>保存所有 <code>stdin</code>和<code>stdout</code>流是开启状态</li>
+<li>将容器的退出状态反馈给<code>daemon</code></li>
+</ul>
+<h3 id="daemon">
+  daemon
+  <a class="heading-link" href="#daemon">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><code>daemon</code>作用目前只要是哦用于镜像的管理、镜像构建、REST API、身份验证、安全、核心网络以及编排。</p>
+<h2 id="docker镜像">
+  Docker镜像
+  <a class="heading-link" href="#docker%e9%95%9c%e5%83%8f">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>镜像是一种构建时结构，容器是运行时结构。镜像与容器的关系如下图：</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/%E9%95%9C%E5%83%8F%E4%B8%8E%E5%AE%B9%E5%99%A8%E7%9A%84%E5%85%B3%E7%B3%BB.png?raw=true" alt=""></p>
+<p>镜像通常比较小，镜像不包含操作系统内核，通常只包含操作系统文件和文件系统对象。</p>
+<p>镜像一般存储在 <code>Image Registry</code>当中。Docker 客户端中的镜像是可配置的，默认使用的是 <code>Docker hub</code>。镜像仓库服务可以包含多个镜像仓库(Image Repository)，一个镜像仓库可以包含多个镜像。</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93%E6%9C%8D%E5%8A%A1.png?raw=true" alt=""></p>
+<h3 id="镜像命名和标签">
+  镜像命名和标签
+  <a class="heading-link" href="#%e9%95%9c%e5%83%8f%e5%91%bd%e5%90%8d%e5%92%8c%e6%a0%87%e7%ad%be">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>镜像命名采用 <code>:</code>分隔，比如命令：<code>docker pull redis:latest</code>。该命令会从官方 redis 库拉取标签为 <code>latest</code>的镜像。如果没有指定标签，默认拉取的是 <code>latest</code>标签。</p>
+<p>拉取非官方镜像仓库的镜像需要在仓库名称前加上Docker Hub的用户名或者组织名。比如：<code>docker pull alvinsu/web:latest</code>。这条命令从我自己的Docker hub 账号下拉取 <code>web</code>这个镜像。再比如 <code>docker pull mcr.microsoft.com/dotnet/sdk:6.0</code>。这个命令从mcr.microsoft.com/dotnet/sdk仓库中拉取标签为<code>6.0</code>的 <code>dotnet sdk</code>。</p>
+<h3 id="镜像基本命令">
+  镜像基本命令
+  <a class="heading-link" href="#%e9%95%9c%e5%83%8f%e5%9f%ba%e6%9c%ac%e5%91%bd%e4%bb%a4">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>可以通过 <code> docker tag [ImageId] alvinsu:[镜像版本号]</code> 给镜像打一个tag。</p>
+<p><code>docker images</code> 列出所有的镜像。</p>
+<p><code>docker images --filter dangling=true</code> 可以过滤输出内容，这里列出所有悬虚镜像。</p>
+<p><code>filter</code>目前支持如下的过滤器：</p>
+<ul>
+<li>dangling:可以指定true或者false，仅返回悬虚镜像(true)，或者非悬虚镜像(false)。</li>
+<li>before:需要镜像名称或者ID作为参数，返回在之前被创建的全部镜像。</li>
+<li>since:与before类似，不过返回的是指定镜像之后创建的全部镜像。</li>
+<li>label:根据标注(label)的名称或者值，对镜像进行过滤。dockerimagels命令</li>
+<li>reference 比如:<code>docker images --filter=reference=&quot;*:latest&quot;</code> 仅仅显示标签为<code>latest</code>的镜像。可以通过 <code>docker image prune</code> 命令移除全部的悬虚镜像。</li>
+</ul>
+<p>其它镜像命令，有如下：</p>
+<ul>
+<li><code>docker image pull | docker pull</code> 从远程镜像仓库拉取镜像</li>
+<li><code>docker image rm | docker rmi</code>  删除镜像</li>
+<li><code>docker image inspect</code>,可以查看镜像的细节，包括镜像层和元数据。</li>
+</ul>
+<h3 id="镜像分层">
+  镜像分层
+  <a class="heading-link" href="#%e9%95%9c%e5%83%8f%e5%88%86%e5%b1%82">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>Docker 镜像由一些松耦合的只读镜像层组成。如下图：</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/%E9%95%9C%E5%83%8F%E5%88%86%E5%B1%82.png?raw=true" alt=""></p>
+<p>Docker 负责堆叠这些镜像层，并且将它们表示为单个统一的对象。</p>
+<p>我们可以通过 <code>docker image inspect</code> 命令查看镜像的分层信息。</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/%E6%9F%A5%E7%9C%8B%E9%95%9C%E5%83%8F%E5%88%86%E5%B1%82%E4%BF%A1%E6%81%AF.png?raw=true" alt=""></p>
+<p>所有的Docker镜像都起始于一个基础镜像层，当进行修改或增加内容时，就会在当前镜像层之上，创建新的镜像层。</p>
+<p>Docker通过 快照机制的方式实现镜像层的堆栈，并保证多层镜像层对外展示为统一的文件系统。</p>
+<p>多个镜像之间还可以共享镜像层。我们在拉取某一个镜像仓库时，会看到以下的输出信息以<code>Already exists</code>结尾。说明该镜像层已经存在，这样不需要重复拉取，可以有效节省空间并提升性能。</p>
+<h2 id="docker容器和应用的容器化">
+  Docker容器和应用的容器化
+  <a class="heading-link" href="#docker%e5%ae%b9%e5%99%a8%e5%92%8c%e5%ba%94%e7%94%a8%e7%9a%84%e5%ae%b9%e5%99%a8%e5%8c%96">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<h3 id="docker-容器">
+  Docker 容器
+  <a class="heading-link" href="#docker-%e5%ae%b9%e5%99%a8">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>容器是应用的运行时实例。可以从单个镜像启动一个或多个容器。
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/%E4%BB%8E%E9%95%9C%E5%83%8F%E5%90%AF%E5%8A%A8%E5%AE%B9%E5%99%A8.png?raw=true" alt=""></p>
+<p>docker 容器启动时可以指定 &ndash;restart always 策略，这是容器的一种自我修复策略，可以在指定事件或错误后重启来完成自我修复。</p>
+<p><code>docker run --name myredis -d -p 6379:6379 --restart always</code></p>
+<p>Docker 容器主要有以下命令：</p>
+<ul>
+<li>docker run是启动新容器的命令。该命令的最简形式接收镜像和命令作为参数。镜像用于创建容器，而命令则是希望容器运行的应用。dockercontainerrun -itubuntu/bin/bash命令会在前台启动一个Ubuntu容器，并运行BashShell。</li>
+<li>Ctrl-Po会断开Shell和容器终端之间的链接，并在退出后保持容器在后台处干运行(UP)状态。</li>
+<li>docker container ls用于列出所有在运行(UP)状态的容器。如果使用-a标记还可以看到处于停止(Exited)状态的容器。</li>
+<li>docker container exec允许用户在运行状态的容器中，启动一个新进程。该命令在将Docker主机Shell连接到一个运行中容器终端时非常有用。dockercontainer exec-it <!-- raw HTML omitted -->bash命令会在容器内部启动一个Bash Shell进程，并连接到该Shell。为了使该命令生效，用于创建容器的镜像必须包含Bash Shell。</li>
+<li>docker container stop命令会停止运行中的容器，并将状态置为Exited(0)。该命令通过发送SIGTERM信号给容器内PID为1的进程达到目的。如果进程没有在10s之内得到清理并停止运行，那么会接着发送SIGKILL信号来强制停止该容器。docker containerstop可以接收容器ID以及容器名称作为参数。</li>
+<li>docker container start会重启处干停止(Exited)状态的容器。可以在docker container start命令中指定容器的名称或者ID。</li>
+<li>docker container rm 会删除停止运行的容器。可以通过容器名称或者ID来指定要删除的容器。推荐首先使用dockercontainerstop命令停止容器，然后使用docker container rm来完成删除。</li>
+<li>docker containerinspect命令会显示容器的配置细节和运行时信息。该命令接收容器名称和容器ID作为主要参数。</li>
+</ul>
+<h3 id="应用容器化">
+  应用容器化
+  <a class="heading-link" href="#%e5%ba%94%e7%94%a8%e5%ae%b9%e5%99%a8%e5%8c%96">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>容器是为应用而生，具体来说，容器能够简化应用的构建、部署和运行过程。</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96.png?raw=true" alt=""></p>
+<p>完整的应用容器化过程主要分为以下几个步骤：</p>
+<ul>
+<li>
+<p>编写应用代码。</p>
+</li>
+<li>
+<p>创建一个Dockerfile，其中包括当前应用的描述、依赖以及该如何运行这个应用。</p>
+</li>
+<li>
+<p>对该Dockerfile执行docker image build命令。</p>
+</li>
+<li>
+<p>等待Docker将应用程序构建到Docker镜像中。一旦应用容器化完成(即应用被打包为一个Docker镜像)，就能以镜像的形式交付并以容器的方式运行了。</p>
+</li>
+</ul>
+<p>应用容器化的关键就是Dockerfile，这个文件包含了对当前应用的描述，指导Docker进行镜像的构建。</p>
+<pre><code>  FROM –指令指定当前要构建镜像的基础镜像层，当前应用的剩余内容会作为新增镜像层添加到基础镜像层上。
+  LABEL – 用于添加一些元数据,以键值对的形式 &lt;key&gt;=&lt;value&gt;。
+  RUN  ---  用于调用命令行命令进行执行相关操作
+  COPY---   拷贝文件  COPY .  /src 用于拷贝构建上下文到 当前镜像 并新建一个镜像层来存储。
+  WORKDIR--- 设定工作目录为 /src
+  EXPOSE ---指定容器镜像对外暴露的端口
+  ENTRYPOINT—设定入口
+</code></pre>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/Dockerfile.png?raw=true" alt=""></p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/Dockerfile%E5%91%BD%E4%BB%A4.png?raw=true" alt=""></p>
+<h4 id="dockerfile-多阶段构建">
+  Dockerfile 多阶段构建
+  <a class="heading-link" href="#dockerfile-%e5%a4%9a%e9%98%b6%e6%ae%b5%e6%9e%84%e5%bb%ba">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/Dockerfile%E5%A4%9A%E9%98%B6%E6%AE%B5%E6%9E%84%E5%BB%BA.png?raw=true" alt=""></p>
+<p>每个 <code>FROM</code>指令构成一个单独的构建阶段。重点在于 <code>COPY --from</code> 指定，它从之前的阶段构建的镜像中仅复制生产环境相关的应用代码，而不会复制生产环境不需要的构件。</p>
+<h4 id="dokcer-build-命令">
+  Dokcer build 命令
+  <a class="heading-link" href="#dokcer-build-%e5%91%bd%e4%bb%a4">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<p><code>docker build –t &lt;name&gt;:&lt;version&gt; .</code> 重点在于最后的 <code>.</code>，表示在当前的构建上下文中，也就是执行这条命令的目前要包含 Dockerfile文件和应用代码。</p>
+<h4 id="应用容器化命令">
+  应用容器化命令
+  <a class="heading-link" href="#%e5%ba%94%e7%94%a8%e5%ae%b9%e5%99%a8%e5%8c%96%e5%91%bd%e4%bb%a4">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<ul>
+<li>docker image build 命令会读取Dockerfile，并将应用程序容器化。使用-t参数为
+镜像打标签，使用-f参数指定Dockerfile的路径和名称，使用-f参数可以指定位于任意路径下的任意名称的Dockerfile。构建上下文是指应用文件存放的位置，可能是本地 Docker主机上的一个目录或一个远程的Git库。</li>
+<li>Dockerfile中的FROM指令用于指定要构建的镜像的基础镜像。它通常是Dockerfile中的第一条指令。</li>
+<li>Dockerfile中的RUN指令用于在镜像中执行命令，这会创建新的镜像层。每个RUN指令创建一个新的镜像层。</li>
+<li>Dockerfile中的 COPY指今用将文件作为一个新的层添加到错像中。通常使用COPY指令将应用代码赋值到镜像中。</li>
+<li>Dockerfile中的EXPOSE指令用于记录应用所使用的网络端口。</li>
+<li>Dockerfile中的ENTRYPOINT指令用于指定镜像以容器方式启动后默认运行的程序。</li>
+<li>其它的Dockerfile指令还有LABEL、ENV、ONBUILD、HEALTHCHECKCMD等。</li>
+</ul>
+
+  </article>
+</section>
+
+  
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    ©
+    
+    2022
+     Alvinsu 
+    ·
+    
+    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+      
+      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
