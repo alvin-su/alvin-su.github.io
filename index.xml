@@ -6,7 +6,21 @@
     <description>Recent content on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 15 Jun 2022 09:19:17 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 20 Jun 2022 09:15:49 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go结构体</title>
+      <link>https://alvin-su.github.io/post/go%E7%BB%93%E6%9E%84%E4%BD%93/</link>
+      <pubDate>Mon, 20 Jun 2022 09:15:49 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/go%E7%BB%93%E6%9E%84%E4%BD%93/</guid>
+      <description>Go结构体数组、切片以及映射（字典）只能保存一种数据类型。如果需要一个保存多种数据类型的结构，这个时候就需要用到 struct 结构体。
+什么是结构体一个struct是一个由其他不同的多种值构造出来的。一个struct可以保存string、int、float64等多种类型。使用struct关键字来声明一个struct，后面跟着{}花括号。在括号中可以定义一个或多个字段，每一个字段定义在一个单独的行中，由字段名称、后面跟着字段需要保存的值的类型组成。
+struct {  field1 string,  field2 int } 可以使用一个struct类型来作为定义的变量的类型。下面的代码定义了一个名为myStruct的变量，它保存float64类型的number字段、string类型的word字段和bool类型的toggle字段。
+var myStruct struct {  number float64  word string  toggle bool } fmt.Printf(&amp;#34;%#v\n&amp;#34;,myStruct) 使用Printf函数中的%#v将myStruct变量作为字面量打印。
+定义类型和struct上面定义一个struct类型的变量是比较麻烦的，如果我们需要定义多个myStruct变量，那么就需要重复整个struct声明，如下：
+var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct2 struct {  number float64  word string  toggle bool } 为了解决上面的问题，可以创建自己的类型。类型定义允许你创建新的类型，可以基于基础类型来创建新的定义类型。我们可以使用任何基础类型来创建自己的类型，比如int、string等。但是我们现在专注于struct作为基础类型。</description>
+    </item>
+    
     <item>
       <title>Docker简介和基本技术</title>
       <link>https://alvin-su.github.io/post/docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/</link>
