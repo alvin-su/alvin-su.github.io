@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+
+    
+
+    <meta name="author" content="Alvinsu">
+    <meta name="description" content="本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows环境为例，介绍两种安装单节点k8s的方法。
+Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
+(https://github.com/AliyunContainerService/k8s-for-docker-desktop)
+下载 zip 文件k8s-for-docker-desktop-master.zip到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令： .\load_images.ps1。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：
+等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：
+验证 Kubernetes 集群状态运行命令： kubectl cluster-info 显示结果如下：
+配置 Dashboard在之前的解压目录k8s-for-docker-desktop-master中有一个 kubernetes-dashboard.yaml 文件，用powershell进入到解压目录，执行下面的命令：kubectl apply -f kubernetes-dashboard.yaml,该命令会安装管理控制台。
+通过命令:kubectl proxy 开启 API Server 访问代理。如下图：
+然后通过以下 url 进行访问：(http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
+访问会提示需要认证才能登录： 配置控制台访问令牌在之前的解压目录k8s-for-docker-desktop-master中有一个kube-system-default.yaml文件，进入到解压目录，执行如下命令：kubectl apply -f kube-system-default.yaml。然后执行:
+$TOKEN=((kubectl -n kube-system describe secret default | Select-String &#34;token:&#34;) -split &#34; &#43;&#34;)[1] kubectl config set-credentials docker-desktop --token=&#34;${TOKEN}&#34; echo $TOKEN 获取访问token。然后请自行妥善保管好该token。因为每次登录dashboard都会要输入。">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="安装k8s"/>
+<meta name="twitter:description" content="本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows环境为例，介绍两种安装单节点k8s的方法。
+Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
+(https://github.com/AliyunContainerService/k8s-for-docker-desktop)
+下载 zip 文件k8s-for-docker-desktop-master.zip到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令： .\load_images.ps1。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：
+等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：
+验证 Kubernetes 集群状态运行命令： kubectl cluster-info 显示结果如下：
+配置 Dashboard在之前的解压目录k8s-for-docker-desktop-master中有一个 kubernetes-dashboard.yaml 文件，用powershell进入到解压目录，执行下面的命令：kubectl apply -f kubernetes-dashboard.yaml,该命令会安装管理控制台。
+通过命令:kubectl proxy 开启 API Server 访问代理。如下图：
+然后通过以下 url 进行访问：(http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
+访问会提示需要认证才能登录： 配置控制台访问令牌在之前的解压目录k8s-for-docker-desktop-master中有一个kube-system-default.yaml文件，进入到解压目录，执行如下命令：kubectl apply -f kube-system-default.yaml。然后执行:
+$TOKEN=((kubectl -n kube-system describe secret default | Select-String &#34;token:&#34;) -split &#34; &#43;&#34;)[1] kubectl config set-credentials docker-desktop --token=&#34;${TOKEN}&#34; echo $TOKEN 获取访问token。然后请自行妥善保管好该token。因为每次登录dashboard都会要输入。"/>
+
+    <meta property="og:title" content="安装k8s" />
+<meta property="og:description" content="本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows环境为例，介绍两种安装单节点k8s的方法。
+Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
+(https://github.com/AliyunContainerService/k8s-for-docker-desktop)
+下载 zip 文件k8s-for-docker-desktop-master.zip到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令： .\load_images.ps1。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：
+等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：
+验证 Kubernetes 集群状态运行命令： kubectl cluster-info 显示结果如下：
+配置 Dashboard在之前的解压目录k8s-for-docker-desktop-master中有一个 kubernetes-dashboard.yaml 文件，用powershell进入到解压目录，执行下面的命令：kubectl apply -f kubernetes-dashboard.yaml,该命令会安装管理控制台。
+通过命令:kubectl proxy 开启 API Server 访问代理。如下图：
+然后通过以下 url 进行访问：(http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
+访问会提示需要认证才能登录： 配置控制台访问令牌在之前的解压目录k8s-for-docker-desktop-master中有一个kube-system-default.yaml文件，进入到解压目录，执行如下命令：kubectl apply -f kube-system-default.yaml。然后执行:
+$TOKEN=((kubectl -n kube-system describe secret default | Select-String &#34;token:&#34;) -split &#34; &#43;&#34;)[1] kubectl config set-credentials docker-desktop --token=&#34;${TOKEN}&#34; echo $TOKEN 获取访问token。然后请自行妥善保管好该token。因为每次登录dashboard都会要输入。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://alvin-su.github.io/post/install_k8s/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-06-30T21:55:40+08:00" />
+<meta property="article:modified_time" content="2022-06-30T21:55:40+08:00" />
+
+
+
+    <title>
+  安装k8s · Alvinsu Blog
+</title>
+
+    
+      <link rel="canonical" href="https://alvin-su.github.io/post/install_k8s/">
+    
+
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <meta name="generator" content="Hugo 0.99.1" />
+  </head>
+
+  
+  
+    
+  
+  <body class="preload-transitions colorscheme-auto">
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Alvinsu Blog
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/post/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">分类</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://alvin-su.github.io/post/install_k8s/">
+          安装k8s
+        </a>
+      </h1>
+    </header>
+
+    <p>本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows环境为例，介绍两种安装单节点k8s的方法。</p>
+<h1 id="docker-desktop-安装k8s">
+  Docker Desktop 安装k8s
+  <a class="heading-link" href="#docker-desktop-%e5%ae%89%e8%a3%85k8s">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：</p>
+<p>(<a href="https://github.com/AliyunContainerService/k8s-for-docker-desktop">https://github.com/AliyunContainerService/k8s-for-docker-desktop</a>)</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_1.png?raw=true" alt=""></p>
+<p>下载 zip 文件<code>k8s-for-docker-desktop-master.zip</code>到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令：<code> .\load_images.ps1</code>。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_2.png?raw=true" alt=""></p>
+<p>等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_3.png?raw=true" alt=""></p>
+<h2 id="验证-kubernetes-集群状态">
+  验证 Kubernetes 集群状态
+  <a class="heading-link" href="#%e9%aa%8c%e8%af%81-kubernetes-%e9%9b%86%e7%be%a4%e7%8a%b6%e6%80%81">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>运行命令： <code>kubectl cluster-info</code> 显示结果如下：</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_4.png?raw=true" alt=""></p>
+<h2 id="配置-dashboard">
+  配置 Dashboard
+  <a class="heading-link" href="#%e9%85%8d%e7%bd%ae-dashboard">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>在之前的解压目录<code>k8s-for-docker-desktop-master</code>中有一个 <code>kubernetes-dashboard.yaml</code> 文件，用<code>powershell</code>进入到解压目录，执行下面的命令：<code>kubectl apply -f kubernetes-dashboard.yaml</code>,该命令会安装管理控制台。</p>
+<p>通过命令:<code>kubectl proxy</code> 开启 API Server 访问代理。如下图：</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_5.png?raw=true" alt=""></p>
+<p>然后通过以下 url 进行访问：(http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)</p>
+<p>访问会提示需要认证才能登录：
+<img src="https://github.com/AliyunContainerService/k8s-for-docker-desktop/raw/master/images/k8s_credentials.png" alt=""></p>
+<h2 id="配置控制台访问令牌">
+  配置控制台访问令牌
+  <a class="heading-link" href="#%e9%85%8d%e7%bd%ae%e6%8e%a7%e5%88%b6%e5%8f%b0%e8%ae%bf%e9%97%ae%e4%bb%a4%e7%89%8c">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>在之前的解压目录<code>k8s-for-docker-desktop-master</code>中有一个<code>kube-system-default.yaml</code>文件，进入到解压目录，执行如下命令：<code>kubectl apply -f kube-system-default.yaml</code>。然后执行:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$TOKEN=((kubectl -n kube-system describe secret <span style="font-weight:bold">default</span> | Select-String <span style="font-style:italic">&#34;token:&#34;</span>) -split <span style="font-style:italic">&#34; +&#34;</span>)[1]
+</span></span><span style="display:flex;"><span>kubectl config set-credentials docker-desktop --token=<span style="font-style:italic">&#34;${TOKEN}&#34;</span>
+</span></span><span style="display:flex;"><span>echo $TOKEN
+</span></span></code></pre></div><p>获取访问token。然后请自行妥善保管好该token。因为每次登录dashboard都会要输入。</p>
+<p>另外还有一种方式可以在 win10/win11上安装单机版k8s，就是使用rancher-desktop。</p>
+
+  </article>
+</section>
+
+  
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    ©
+    
+    2022
+     Alvinsu 
+    ·
+    
+    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+      
+      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>

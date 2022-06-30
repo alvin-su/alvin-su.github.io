@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>k8s on Alvinsu Blog</title>
+    <link>https://alvin-su.github.io/tags/k8s/</link>
+    <description>Recent content in k8s on Alvinsu Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 30 Jun 2022 21:55:40 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>安装k8s</title>
+      <link>https://alvin-su.github.io/post/install_k8s/</link>
+      <pubDate>Thu, 30 Jun 2022 21:55:40 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/install_k8s/</guid>
+      <description>本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows环境为例，介绍两种安装单节点k8s的方法。
+Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
+(https://github.com/AliyunContainerService/k8s-for-docker-desktop)
+下载 zip 文件k8s-for-docker-desktop-master.zip到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令： .\load_images.ps1。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：
+等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：
+验证 Kubernetes 集群状态运行命令： kubectl cluster-info 显示结果如下：
+配置 Dashboard在之前的解压目录k8s-for-docker-desktop-master中有一个 kubernetes-dashboard.yaml 文件，用powershell进入到解压目录，执行下面的命令：kubectl apply -f kubernetes-dashboard.yaml,该命令会安装管理控制台。
+通过命令:kubectl proxy 开启 API Server 访问代理。如下图：
+然后通过以下 url 进行访问：(http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
+访问会提示需要认证才能登录： 配置控制台访问令牌在之前的解压目录k8s-for-docker-desktop-master中有一个kube-system-default.yaml文件，进入到解压目录，执行如下命令：kubectl apply -f kube-system-default.yaml。然后执行:
+$TOKEN=((kubectl -n kube-system describe secret default | Select-String &amp;#34;token:&amp;#34;) -split &amp;#34; +&amp;#34;)[1] kubectl config set-credentials docker-desktop --token=&amp;#34;${TOKEN}&amp;#34; echo $TOKEN 获取访问token。然后请自行妥善保管好该token。因为每次登录dashboard都会要输入。</description>
+    </item>
+    
+  </channel>
+</rss>
