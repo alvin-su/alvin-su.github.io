@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+
+    
+
+    <meta name="author" content="Alvinsu">
+    <meta name="description" content="随着系统可部署组件的数量增长，把他们都管理起来会变得越来越困难。需要一个更好的方式来部署和管理这些组件，并支持基础设施的全球性伸缩，谷歌是最开始意思到这一点的公司。
+Kubernetes 起源Kubernetes最早起源于一个谷歌的内部系统Borg，后来又出来一个新系统叫Omega。这两套系统帮助应用开发者和系统管理员管理那些数以千计的应用程序和服务器。简化了开发和部署，也提供了应用对基础设施的利用率。后来谷歌将Borg和Omega系统在2014年的时候开源了出来，这就是Kubernetes。
+深入浅出地了解 Kubernetes一个“容器”，实际上是一个由 Linux Namespace、Linux Cgroups 和 rootfs 三种技术构建出来的进程的隔离环境。从这个结构可以看出，一个正在运行的容器其实可以被一分为二地看待：
+ 一组联合挂载在 /var/lib/docker/aufs/mnt 上的rootfs。这一部分称为 容器镜像 ，是容器的静态视图。 一个由 Namespace&#43;Cgroups构成的隔离环境，这一部分称为 容器运行时 ，是容器的动态视图。  作为一名开发者，我们并不关心容器运行时的差异。在整个“开发 - 测试 - 发布”的流程中，真正承载着容器信息进行传递的，是容器镜像，而不是容器运行时。这个重要假设，正是容器技术圈在 Docker 项目成功后不久，就迅速走向了“容器编排”这个“上层建筑”的主要原因：作为一家云服务商或者基础设施提供商，我只要能够将用户提交的 Docker 镜像以容器的方式运行起来，就能成为这个非常热闹的容器生态图上的一个承载点，从而将整个容器技术栈上的价值，沉淀在我的这个节点上。
+容器编排的工具就更加显得重要，这其中以Docker 公司的Compose&#43;Swarm组合以及Google与RedHat公司共同主导的Kubernetes项目为代表。目前Kubernetes以及事实上成为了容器编排工具的不二选择。
+Kubernetes的核心功能下图展示了一幅最简单的Kubernetes系统图。整个系统由一个主节点和若干个工作节点组成。开发着把一个应用列表提交到主节点上，Kubernetes会将它们部署到集群的工作节点。应用被部署到哪个节点对于开发者和系统管理员来说都不关心。 开发着指定一些应用必须一起运行，Kubernetes将会在一个工作节点上部署它们。其它的将被分散部署到集群中，但是不管部署在哪，它们都以相同的方式互相通信。
+Kubernetes的集群架构Kubernetes可以被当做集群的一个操作系统来看待。在硬件级别，一个Kubernetes集群由很多节点组成，这些节点被分成以下两种类型：
+ 主节点，它承载着Kubernetes控制和管理整个集群系统的控制面板。 工作节点，他们运行用户实际部署的应用。  控制面板控制面板用于控制集群并使它工作。它包含多个组件，组件可以运行在单个主节点上或通过副本分别部署在多个主节点以确保高可用性。这些组件分别为：
+ Kubernetes API服务器，主要用于组件间的相互通信。 Scheculer，调度应用，为应用的每个可部署组件分配一个工作节点。 Controller Manager，它执行集群级别的功能，如复制组件、持续跟踪工作节点、处理节点失败等。 etcd，一个可靠的分布式数据存储，它能持久化存储集群配置。  这些控制面板的组件持有并控制集群的状态，但是它们不允许应用，这些由工作节点完成。">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Kubernetes介绍"/>
+<meta name="twitter:description" content="随着系统可部署组件的数量增长，把他们都管理起来会变得越来越困难。需要一个更好的方式来部署和管理这些组件，并支持基础设施的全球性伸缩，谷歌是最开始意思到这一点的公司。
+Kubernetes 起源Kubernetes最早起源于一个谷歌的内部系统Borg，后来又出来一个新系统叫Omega。这两套系统帮助应用开发者和系统管理员管理那些数以千计的应用程序和服务器。简化了开发和部署，也提供了应用对基础设施的利用率。后来谷歌将Borg和Omega系统在2014年的时候开源了出来，这就是Kubernetes。
+深入浅出地了解 Kubernetes一个“容器”，实际上是一个由 Linux Namespace、Linux Cgroups 和 rootfs 三种技术构建出来的进程的隔离环境。从这个结构可以看出，一个正在运行的容器其实可以被一分为二地看待：
+ 一组联合挂载在 /var/lib/docker/aufs/mnt 上的rootfs。这一部分称为 容器镜像 ，是容器的静态视图。 一个由 Namespace&#43;Cgroups构成的隔离环境，这一部分称为 容器运行时 ，是容器的动态视图。  作为一名开发者，我们并不关心容器运行时的差异。在整个“开发 - 测试 - 发布”的流程中，真正承载着容器信息进行传递的，是容器镜像，而不是容器运行时。这个重要假设，正是容器技术圈在 Docker 项目成功后不久，就迅速走向了“容器编排”这个“上层建筑”的主要原因：作为一家云服务商或者基础设施提供商，我只要能够将用户提交的 Docker 镜像以容器的方式运行起来，就能成为这个非常热闹的容器生态图上的一个承载点，从而将整个容器技术栈上的价值，沉淀在我的这个节点上。
+容器编排的工具就更加显得重要，这其中以Docker 公司的Compose&#43;Swarm组合以及Google与RedHat公司共同主导的Kubernetes项目为代表。目前Kubernetes以及事实上成为了容器编排工具的不二选择。
+Kubernetes的核心功能下图展示了一幅最简单的Kubernetes系统图。整个系统由一个主节点和若干个工作节点组成。开发着把一个应用列表提交到主节点上，Kubernetes会将它们部署到集群的工作节点。应用被部署到哪个节点对于开发者和系统管理员来说都不关心。 开发着指定一些应用必须一起运行，Kubernetes将会在一个工作节点上部署它们。其它的将被分散部署到集群中，但是不管部署在哪，它们都以相同的方式互相通信。
+Kubernetes的集群架构Kubernetes可以被当做集群的一个操作系统来看待。在硬件级别，一个Kubernetes集群由很多节点组成，这些节点被分成以下两种类型：
+ 主节点，它承载着Kubernetes控制和管理整个集群系统的控制面板。 工作节点，他们运行用户实际部署的应用。  控制面板控制面板用于控制集群并使它工作。它包含多个组件，组件可以运行在单个主节点上或通过副本分别部署在多个主节点以确保高可用性。这些组件分别为：
+ Kubernetes API服务器，主要用于组件间的相互通信。 Scheculer，调度应用，为应用的每个可部署组件分配一个工作节点。 Controller Manager，它执行集群级别的功能，如复制组件、持续跟踪工作节点、处理节点失败等。 etcd，一个可靠的分布式数据存储，它能持久化存储集群配置。  这些控制面板的组件持有并控制集群的状态，但是它们不允许应用，这些由工作节点完成。"/>
+
+    <meta property="og:title" content="Kubernetes介绍" />
+<meta property="og:description" content="随着系统可部署组件的数量增长，把他们都管理起来会变得越来越困难。需要一个更好的方式来部署和管理这些组件，并支持基础设施的全球性伸缩，谷歌是最开始意思到这一点的公司。
+Kubernetes 起源Kubernetes最早起源于一个谷歌的内部系统Borg，后来又出来一个新系统叫Omega。这两套系统帮助应用开发者和系统管理员管理那些数以千计的应用程序和服务器。简化了开发和部署，也提供了应用对基础设施的利用率。后来谷歌将Borg和Omega系统在2014年的时候开源了出来，这就是Kubernetes。
+深入浅出地了解 Kubernetes一个“容器”，实际上是一个由 Linux Namespace、Linux Cgroups 和 rootfs 三种技术构建出来的进程的隔离环境。从这个结构可以看出，一个正在运行的容器其实可以被一分为二地看待：
+ 一组联合挂载在 /var/lib/docker/aufs/mnt 上的rootfs。这一部分称为 容器镜像 ，是容器的静态视图。 一个由 Namespace&#43;Cgroups构成的隔离环境，这一部分称为 容器运行时 ，是容器的动态视图。  作为一名开发者，我们并不关心容器运行时的差异。在整个“开发 - 测试 - 发布”的流程中，真正承载着容器信息进行传递的，是容器镜像，而不是容器运行时。这个重要假设，正是容器技术圈在 Docker 项目成功后不久，就迅速走向了“容器编排”这个“上层建筑”的主要原因：作为一家云服务商或者基础设施提供商，我只要能够将用户提交的 Docker 镜像以容器的方式运行起来，就能成为这个非常热闹的容器生态图上的一个承载点，从而将整个容器技术栈上的价值，沉淀在我的这个节点上。
+容器编排的工具就更加显得重要，这其中以Docker 公司的Compose&#43;Swarm组合以及Google与RedHat公司共同主导的Kubernetes项目为代表。目前Kubernetes以及事实上成为了容器编排工具的不二选择。
+Kubernetes的核心功能下图展示了一幅最简单的Kubernetes系统图。整个系统由一个主节点和若干个工作节点组成。开发着把一个应用列表提交到主节点上，Kubernetes会将它们部署到集群的工作节点。应用被部署到哪个节点对于开发者和系统管理员来说都不关心。 开发着指定一些应用必须一起运行，Kubernetes将会在一个工作节点上部署它们。其它的将被分散部署到集群中，但是不管部署在哪，它们都以相同的方式互相通信。
+Kubernetes的集群架构Kubernetes可以被当做集群的一个操作系统来看待。在硬件级别，一个Kubernetes集群由很多节点组成，这些节点被分成以下两种类型：
+ 主节点，它承载着Kubernetes控制和管理整个集群系统的控制面板。 工作节点，他们运行用户实际部署的应用。  控制面板控制面板用于控制集群并使它工作。它包含多个组件，组件可以运行在单个主节点上或通过副本分别部署在多个主节点以确保高可用性。这些组件分别为：
+ Kubernetes API服务器，主要用于组件间的相互通信。 Scheculer，调度应用，为应用的每个可部署组件分配一个工作节点。 Controller Manager，它执行集群级别的功能，如复制组件、持续跟踪工作节点、处理节点失败等。 etcd，一个可靠的分布式数据存储，它能持久化存储集群配置。  这些控制面板的组件持有并控制集群的状态，但是它们不允许应用，这些由工作节点完成。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://alvin-su.github.io/post/kubernetes%E4%BB%8B%E7%BB%8D/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-07-01T08:37:54+08:00" />
+<meta property="article:modified_time" content="2022-07-01T08:37:54+08:00" />
+
+
+
+    <title>
+  Kubernetes介绍 · Alvinsu Blog
+</title>
+
+    
+      <link rel="canonical" href="https://alvin-su.github.io/post/kubernetes%E4%BB%8B%E7%BB%8D/">
+    
+
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <meta name="generator" content="Hugo 0.99.1" />
+  </head>
+
+  
+  
+    
+  
+  <body class="preload-transitions colorscheme-auto">
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Alvinsu Blog
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/post/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">分类</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://alvin-su.github.io/post/kubernetes%E4%BB%8B%E7%BB%8D/">
+          Kubernetes介绍
+        </a>
+      </h1>
+    </header>
+
+    <p>随着系统可部署组件的数量增长，把他们都管理起来会变得越来越困难。需要一个更好的方式来部署和管理这些组件，并支持基础设施的全球性伸缩，谷歌是最开始意思到这一点的公司。</p>
+<h1 id="kubernetes-起源">
+  Kubernetes 起源
+  <a class="heading-link" href="#kubernetes-%e8%b5%b7%e6%ba%90">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>Kubernetes最早起源于一个谷歌的内部系统<code>Borg</code>，后来又出来一个新系统叫<code>Omega</code>。这两套系统帮助应用开发者和系统管理员管理那些数以千计的应用程序和服务器。简化了开发和部署，也提供了应用对基础设施的利用率。后来谷歌将<code>Borg</code>和<code>Omega</code>系统在2014年的时候开源了出来，这就是<code>Kubernetes</code>。</p>
+<h1 id="深入浅出地了解-kubernetes">
+  深入浅出地了解 Kubernetes
+  <a class="heading-link" href="#%e6%b7%b1%e5%85%a5%e6%b5%85%e5%87%ba%e5%9c%b0%e4%ba%86%e8%a7%a3-kubernetes">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>一个“容器”，实际上是一个由 Linux Namespace、Linux Cgroups 和 rootfs 三种技术构建出来的进程的隔离环境。从这个结构可以看出，一个正在运行的容器其实可以被一分为二地看待：</p>
+<ul>
+<li>一组联合挂载在 /var/lib/docker/aufs/mnt  上的rootfs。这一部分称为 <em><strong>容器镜像</strong></em> ，是容器的静态视图。</li>
+<li>一个由 <code>Namespace+Cgroups</code>构成的隔离环境，这一部分称为 <em><strong>容器运行时</strong></em> ，是容器的动态视图。</li>
+</ul>
+<p>作为一名开发者，我们并不关心容器运行时的差异。在整个“开发 - 测试 - 发布”的流程中，真正承载着容器信息进行传递的，是容器镜像，而不是容器运行时。这个重要假设，正是容器技术圈在 Docker 项目成功后不久，就迅速走向了“容器编排”这个“上层建筑”的主要原因：作为一家云服务商或者基础设施提供商，我只要能够将用户提交的 Docker 镜像以容器的方式运行起来，就能成为这个非常热闹的容器生态图上的一个承载点，从而将整个容器技术栈上的价值，沉淀在我的这个节点上。</p>
+<p>容器编排的工具就更加显得重要，这其中以Docker 公司的<code>Compose+Swarm</code>组合以及Google与RedHat公司共同主导的<code>Kubernetes</code>项目为代表。目前<code>Kubernetes</code>以及事实上成为了容器编排工具的不二选择。</p>
+<h2 id="kubernetes的核心功能">
+  Kubernetes的核心功能
+  <a class="heading-link" href="#kubernetes%e7%9a%84%e6%a0%b8%e5%bf%83%e5%8a%9f%e8%83%bd">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>下图展示了一幅最简单的Kubernetes系统图。整个系统由一个主节点和若干个工作节点组成。开发着把一个应用列表提交到主节点上，Kubernetes会将它们部署到集群的工作节点。应用被部署到哪个节点对于开发者和系统管理员来说都不关心。
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Kubernetes%E4%BB%8B%E7%BB%8D/k8s_1.png?raw=true" alt=""></p>
+<p>开发着指定一些应用必须一起运行，Kubernetes将会在一个工作节点上部署它们。其它的将被分散部署到集群中，但是不管部署在哪，它们都以相同的方式互相通信。</p>
+<h2 id="kubernetes的集群架构">
+  Kubernetes的集群架构
+  <a class="heading-link" href="#kubernetes%e7%9a%84%e9%9b%86%e7%be%a4%e6%9e%b6%e6%9e%84">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>Kubernetes可以被当做集群的一个操作系统来看待。在硬件级别，一个Kubernetes集群由很多节点组成，这些节点被分成以下两种类型：</p>
+<ul>
+<li>主节点，它承载着<code>Kubernetes</code>控制和管理整个集群系统的控制面板。</li>
+<li>工作节点，他们运行用户实际部署的应用。</li>
+</ul>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Kubernetes%E4%BB%8B%E7%BB%8D/k8s_2.png?raw=true" alt=""></p>
+<h3 id="控制面板">
+  控制面板
+  <a class="heading-link" href="#%e6%8e%a7%e5%88%b6%e9%9d%a2%e6%9d%bf">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>控制面板用于控制集群并使它工作。它包含多个组件，组件可以运行在单个主节点上或通过副本分别部署在多个主节点以确保高可用性。这些组件分别为：</p>
+<ul>
+<li><code>Kubernetes API服务器</code>，主要用于组件间的相互通信。</li>
+<li><code>Scheculer</code>，调度应用，为应用的每个可部署组件分配一个工作节点。</li>
+<li><code>Controller Manager</code>，它执行集群级别的功能，如复制组件、持续跟踪工作节点、处理节点失败等。</li>
+<li><code>etcd</code>，一个可靠的分布式数据存储，它能持久化存储集群配置。</li>
+</ul>
+<p>这些控制面板的组件持有并控制集群的状态，但是它们不允许应用，这些由工作节点完成。</p>
+<h3 id="工作节点">
+  工作节点
+  <a class="heading-link" href="#%e5%b7%a5%e4%bd%9c%e8%8a%82%e7%82%b9">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>工作节点是运行容器化应用的机器。运行、监控和管理应用服务的任务是由以下组件完成：</p>
+<ul>
+<li>Docker、rtk或其它的容器类型。</li>
+<li><code>Kubelet</code>，它由API服务器通信，并管理它所在节点的容器。</li>
+<li><code>Kubernetes Service Proxy</code>，简称<code>kube-proxy</code>，它负责组件之间的负载均衡网络流量。</li>
+</ul>
+<h2 id="在kubernetes中运行应用">
+  在Kubernetes中运行应用
+  <a class="heading-link" href="#%e5%9c%a8kubernetes%e4%b8%ad%e8%bf%90%e8%a1%8c%e5%ba%94%e7%94%a8">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>为了在Kubernetes中运行应用，首先需要将应用打包进一个或多个容器镜像，再将那些镜像推送到镜像仓库，然后将应用的描述发布到KubernetesAPI服务器。该描述包括诸如容器镜像或者包含应用程序组件的容器镜像、这些组件如何相互关联，以及哪些组件需要同时运行在同一个节点上和哪些组件不需要同时运行等信息。此外，该描述还包括哪些组件为内部或外部客户提供服务且应该通过单个IP地址暴露，并使其他组件可以发现。</p>
+<h3 id="描述信息是怎样成为一个运行的容器">
+  描述信息是怎样成为一个运行的容器
+  <a class="heading-link" href="#%e6%8f%8f%e8%bf%b0%e4%bf%a1%e6%81%af%e6%98%af%e6%80%8e%e6%a0%b7%e6%88%90%e4%b8%ba%e4%b8%80%e4%b8%aa%e8%bf%90%e8%a1%8c%e7%9a%84%e5%ae%b9%e5%99%a8">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>当API服务器处理应用的描述时，调度器调度指定组的容器到可用的工作节点上，调度是基于每组所需的计算资源，以及调度时每个节点未分配的资源。然后，那些节点上的Kubelet指示容器运行时(例如Docker)拉取所需的镜像并运行容器。仔细下图，可以更好地理解如何在Kubernetes中部署应用程序。应用描述符列出了四个容器，并将它们分为三组(这些集合被称为pod)。前两个nod只包含一个容器，而最后一个包含两个。这意味着两个容器都需要协作运行，不应该相互隔离。在每个pod旁边，还可以看到一个数字。表示需要并行运行的每个pod的副本数量。在向Kubernetes提交描述符之后，它将把每个pod的指定副本数量调度到可用的工作节点上。节点上的Kubelets将告知 Docker从镜像仓库中拉取容器镜像并运行容器。</p>
+<p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/Kubernetes%E4%BB%8B%E7%BB%8D/k8s_3.png?raw=true" alt=""></p>
+<h3 id="kubernetes管理容器运行">
+  Kubernetes管理容器运行
+  <a class="heading-link" href="#kubernetes%e7%ae%a1%e7%90%86%e5%ae%b9%e5%99%a8%e8%bf%90%e8%a1%8c">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<ul>
+<li>
+<p>保持容器运行，一旦应用程序运行起来，Kubernetes就会不断地确认应用程序的部署状态始终与你提供的描述相匹配。例如，如果你指出你需要运行五个web服务器实例，那么 Kubernetes总是保持正好运行五个实例。如果实例之一停止了正常工作，比如当进程崩溃或停止响应时，Kubernetes将自动重启它。
+同理，如果整个工作节点死亡或无法访问，Kubernetes将为在故障节点上运行的所有容器选择新节点，并在新选择的节点上运行它们。</p>
+</li>
+<li>
+<p>扩展副本数量，当应用程序运行时，可以决定要增加或减少副本量，而Kubernetes将分别增加附加的或停止多余的副本。甚至可以把决定最佳副本数目的工作交给Kubernetes。它可以根据实时指标(如CPU负载、内存消耗、每秒查询或应用程序公开的任何其他指标)自动调整副本数。</p>
+</li>
+<li>
+<p>命中移动目标，Kubernetes可能需要在集群中迁移你的容器。当它们运行的节点失败时，或者为了给其他容器腾出地方而从节点移除时，就会发生这种情况。如果容器向运行在集群中的其他容器或者外部客户端提供服务，那么当容器在集群内频繁调度时，它们该如何正确使用这个容器?当这些容器被复制并分布在整个集群中时，客户端如何连接到提供服务的容器呢?为了让客户能够轻松地找到提供特定服务的容器，可以告诉Kubernetes哪些容器提供相同的服务，而Kubernetes将通过一个静态IP地址暴露所有容器，并将该地址暴露给集群中运行的所有应用程序。这是通过环境变量完成的，但是客户端也可以通过良好的DNS查找服务IP。kube-proxy将确保到服务的连接可跨提供服务的容器实现负载均衡。服务的IP地址保持不变，因此客户端始终可以连接到它的容器即使它们在集群中移动。</p>
+</li>
+</ul>
+
+  </article>
+</section>
+
+  
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    ©
+    
+    2022
+     Alvinsu 
+    ·
+    
+    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+      
+      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>

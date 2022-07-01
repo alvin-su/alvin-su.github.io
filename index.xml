@@ -6,7 +6,24 @@
     <description>Recent content on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 30 Jun 2022 21:55:40 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 01 Jul 2022 08:37:54 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kubernetes介绍</title>
+      <link>https://alvin-su.github.io/post/kubernetes%E4%BB%8B%E7%BB%8D/</link>
+      <pubDate>Fri, 01 Jul 2022 08:37:54 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/kubernetes%E4%BB%8B%E7%BB%8D/</guid>
+      <description>随着系统可部署组件的数量增长，把他们都管理起来会变得越来越困难。需要一个更好的方式来部署和管理这些组件，并支持基础设施的全球性伸缩，谷歌是最开始意思到这一点的公司。
+Kubernetes 起源Kubernetes最早起源于一个谷歌的内部系统Borg，后来又出来一个新系统叫Omega。这两套系统帮助应用开发者和系统管理员管理那些数以千计的应用程序和服务器。简化了开发和部署，也提供了应用对基础设施的利用率。后来谷歌将Borg和Omega系统在2014年的时候开源了出来，这就是Kubernetes。
+深入浅出地了解 Kubernetes一个“容器”，实际上是一个由 Linux Namespace、Linux Cgroups 和 rootfs 三种技术构建出来的进程的隔离环境。从这个结构可以看出，一个正在运行的容器其实可以被一分为二地看待：
+ 一组联合挂载在 /var/lib/docker/aufs/mnt 上的rootfs。这一部分称为 容器镜像 ，是容器的静态视图。 一个由 Namespace+Cgroups构成的隔离环境，这一部分称为 容器运行时 ，是容器的动态视图。  作为一名开发者，我们并不关心容器运行时的差异。在整个“开发 - 测试 - 发布”的流程中，真正承载着容器信息进行传递的，是容器镜像，而不是容器运行时。这个重要假设，正是容器技术圈在 Docker 项目成功后不久，就迅速走向了“容器编排”这个“上层建筑”的主要原因：作为一家云服务商或者基础设施提供商，我只要能够将用户提交的 Docker 镜像以容器的方式运行起来，就能成为这个非常热闹的容器生态图上的一个承载点，从而将整个容器技术栈上的价值，沉淀在我的这个节点上。
+容器编排的工具就更加显得重要，这其中以Docker 公司的Compose+Swarm组合以及Google与RedHat公司共同主导的Kubernetes项目为代表。目前Kubernetes以及事实上成为了容器编排工具的不二选择。
+Kubernetes的核心功能下图展示了一幅最简单的Kubernetes系统图。整个系统由一个主节点和若干个工作节点组成。开发着把一个应用列表提交到主节点上，Kubernetes会将它们部署到集群的工作节点。应用被部署到哪个节点对于开发者和系统管理员来说都不关心。 开发着指定一些应用必须一起运行，Kubernetes将会在一个工作节点上部署它们。其它的将被分散部署到集群中，但是不管部署在哪，它们都以相同的方式互相通信。
+Kubernetes的集群架构Kubernetes可以被当做集群的一个操作系统来看待。在硬件级别，一个Kubernetes集群由很多节点组成，这些节点被分成以下两种类型：
+ 主节点，它承载着Kubernetes控制和管理整个集群系统的控制面板。 工作节点，他们运行用户实际部署的应用。  控制面板控制面板用于控制集群并使它工作。它包含多个组件，组件可以运行在单个主节点上或通过副本分别部署在多个主节点以确保高可用性。这些组件分别为：
+ Kubernetes API服务器，主要用于组件间的相互通信。 Scheculer，调度应用，为应用的每个可部署组件分配一个工作节点。 Controller Manager，它执行集群级别的功能，如复制组件、持续跟踪工作节点、处理节点失败等。 etcd，一个可靠的分布式数据存储，它能持久化存储集群配置。  这些控制面板的组件持有并控制集群的状态，但是它们不允许应用，这些由工作节点完成。</description>
+    </item>
+    
     <item>
       <title>安装k8s</title>
       <link>https://alvin-su.github.io/post/install_k8s/</link>
