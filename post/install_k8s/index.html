@@ -9,8 +9,8 @@
     
 
     <meta name="author" content="Alvinsu">
-    <meta name="description" content="本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows环境为例，介绍两种安装单节点k8s的方法。
-Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
+    <meta name="description" content="本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows和centos 7环境为例，介绍两种安装单节点k8s的方法。
+windows Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
 (https://github.com/AliyunContainerService/k8s-for-docker-desktop)
 下载 zip 文件k8s-for-docker-desktop-master.zip到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令： .\load_images.ps1。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：
 等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：
@@ -24,8 +24,8 @@ $TOKEN=((kubectl -n kube-system describe secret default | Select-String &#34;tok
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="安装k8s"/>
-<meta name="twitter:description" content="本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows环境为例，介绍两种安装单节点k8s的方法。
-Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
+<meta name="twitter:description" content="本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows和centos 7环境为例，介绍两种安装单节点k8s的方法。
+windows Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
 (https://github.com/AliyunContainerService/k8s-for-docker-desktop)
 下载 zip 文件k8s-for-docker-desktop-master.zip到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令： .\load_images.ps1。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：
 等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：
@@ -37,8 +37,8 @@ Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然�
 $TOKEN=((kubectl -n kube-system describe secret default | Select-String &#34;token:&#34;) -split &#34; &#43;&#34;)[1] kubectl config set-credentials docker-desktop --token=&#34;${TOKEN}&#34; echo $TOKEN 获取访问token。然后请自行妥善保管好该token。因为每次登录dashboard都会要输入。"/>
 
     <meta property="og:title" content="安装k8s" />
-<meta property="og:description" content="本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows环境为例，介绍两种安装单节点k8s的方法。
-Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
+<meta property="og:description" content="本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows和centos 7环境为例，介绍两种安装单节点k8s的方法。
+windows Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
 (https://github.com/AliyunContainerService/k8s-for-docker-desktop)
 下载 zip 文件k8s-for-docker-desktop-master.zip到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令： .\load_images.ps1。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：
 等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：
@@ -153,10 +153,10 @@ $TOKEN=((kubectl -n kube-system describe secret default | Select-String &#34;tok
       </h1>
     </header>
 
-    <p>本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows环境为例，介绍两种安装单节点k8s的方法。</p>
-<h1 id="docker-desktop-安装k8s">
-  Docker Desktop 安装k8s
-  <a class="heading-link" href="#docker-desktop-%e5%ae%89%e8%a3%85k8s">
+    <p>本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows和centos 7环境为例，介绍两种安装单节点k8s的方法。</p>
+<h1 id="windows-docker-desktop-安装k8s">
+  windows Docker Desktop 安装k8s
+  <a class="heading-link" href="#windows-docker-desktop-%e5%ae%89%e8%a3%85k8s">
     <i class="fa fa-link" aria-hidden="true"></i>
   </a>
 </h1>
@@ -199,6 +199,27 @@ $TOKEN=((kubectl -n kube-system describe secret default | Select-String &#34;tok
 </span></span><span style="display:flex;"><span>echo $TOKEN
 </span></span></code></pre></div><p>获取访问token。然后请自行妥善保管好该token。因为每次登录dashboard都会要输入。</p>
 <p>另外还有一种方式可以在 win10/win11上安装单机版k8s，就是使用rancher-desktop。</p>
+<h1 id="centos-7-安装-minikube">
+  centos 7 安装 minikube
+  <a class="heading-link" href="#centos-7-%e5%ae%89%e8%a3%85-minikube">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>前提是需要安装完docker。</p>
+<p>首先安装minikube，文档：(<a href="https://minikube.sigs.k8s.io/docs/start/">https://minikube.sigs.k8s.io/docs/start/</a>)</p>
+<p>命令：<code>curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64</code>
+命令:<code>sudo install minikube-linux-amd64 /usr/local/bin/minikube</code></p>
+<p>安装完后执行命令:<code>minikube version</code> ，验证是否安装成功，如下图：
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_6.png?raw=true" alt=""></p>
+<p>需要创建linux 用户，并加入 docker 组：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>useradd alvinsu
+</span></span><span style="display:flex;"><span>passwd [your pwd]
+</span></span><span style="display:flex;"><span>su alvinsu  //切换到 alvinsu用户
+</span></span><span style="display:flex;"><span>sudo usermod -aG docker $USER &amp;&amp; newgrp docker
+</span></span></code></pre></div><p>启动minikube 命令：<code>minikube start  --driver=docker --container-runtime=containerd  --image-mirror-country='cn'</code> 等待安装完成。安装完成后提示如下：
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_7.png?raw=true" alt=""></p>
+<p>验证是否安装成功，集群是否启动:<code>kubectl cluster-info</code>
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_8.png?raw=true" alt=""></p>
 
   </article>
 </section>

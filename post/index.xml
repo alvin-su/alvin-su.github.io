@@ -30,8 +30,8 @@ Kubernetes的集群架构Kubernetes可以被当做集群的一个操作系�
       <pubDate>Thu, 30 Jun 2022 21:55:40 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/install_k8s/</guid>
-      <description>本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows环境为例，介绍两种安装单节点k8s的方法。
-Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
+      <description>本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows和centos 7环境为例，介绍两种安装单节点k8s的方法。
+windows Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
 (https://github.com/AliyunContainerService/k8s-for-docker-desktop)
 下载 zip 文件k8s-for-docker-desktop-master.zip到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令： .\load_images.ps1。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：
 等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：
