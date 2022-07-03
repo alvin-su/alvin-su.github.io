@@ -220,6 +220,15 @@ $TOKEN=((kubectl -n kube-system describe secret default | Select-String &#34;tok
 <img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_7.png?raw=true" alt=""></p>
 <p>验证是否安装成功，集群是否启动:<code>kubectl cluster-info</code>
 <img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_8.png?raw=true" alt=""></p>
+<h2 id="minikube-dashboard">
+  minikube dashboard
+  <a class="heading-link" href="#minikube-dashboard">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>通过命令:<code>minikube dashboard</code>启动，启动成功的截图如下：
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/install_k8s/k8s_9.png?raw=true" alt=""></p>
+<p>这个时候只能内网或本机访问，外网或其它机器是访问不了的。需要通过 kubectl proxy 启动一个代理，命令如下：<code>kubectl proxy --port=8001 --address='0.0.0.0' --accept-hosts='^.*' &amp;</code>，然后通过浏览器访问：(http://外网IP:8001/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy) 可成功访问。</p>
 
   </article>
 </section>
