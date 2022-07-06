@@ -6,7 +6,20 @@
     <description>Recent content on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 01 Jul 2022 08:37:54 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Jul 2022 16:03:21 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>在Kubernetes中部署第一个应用</title>
+      <link>https://alvin-su.github.io/post/k8s%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/</link>
+      <pubDate>Wed, 06 Jul 2022 16:03:21 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/k8s%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/</guid>
+      <description>我们之前在Centos中成功部署了minikube，那么我们就基于minikube在k8s中部署第一个asp.net core应用。我们需要先容器化一个asp.net core应用，然后推送到Docker hub镜像仓库中，如下图： 部署应用我们现在就基于已经推送到Dockerhub中的镜像使用kubectl run 命令部署，该命令可以创建所有必要的组件而无需JSON或YAML文件。具体代码如下： kubectl run myk8swebapi --image=alvinsu/myk8swebapi --port=6001
+--image=alvinsu/myk8swebapi显示的是要从Dockerhub拉取和运行的容器镜像，--port=6001选项告诉Kubernetes应用正在监听6001端口。
+介绍pod一个pod是一组紧密相关的容器，它们总是一起运行在同一个工作节点上以及同一个Linux命名空间中。每个pod就像一个独立的逻辑机器，拥有自己的IP、主机名、进程等，运行一个独立的应用程序。应用程序可以是单个进程，运行在单个容器中，也可以是一个应用程序或者其它支持进程，每个进程都在自己的容器中运行。一个pod中的所有容器都运行在同一个逻辑机器上，而其它pod中的容器，即使运行在同一个工作节点上，也会出现在不同的工作节点上。如下图： 列出pod我们上面通过kubectl run命令已经创建了一个pod。下面我们通过命令kubectl get pods 列出所有pod。如下图： 当运行kubectl命令时，它通过向KubernetesAPI服务器发送一个 RESTHTTP请求，在集群中创建了一个新的pod，调度器将其调度到一个工作节点上 Kubelet看到pod被调度到节点上，就告知Docker从镜像中心中拉取指定的镜像，因为本地没有该镜像。下载镜像后，Docker创建并运行容器。整体流程如下图： 还可以使用命令:kubectl get pods -o wide 列出pod的IP和pod所在节点信息。
+访问web应用我们刚刚创建的pod如何访问？每个pod都有自己的IP，但是这个地址是集群内部的，不能从集群外部访问。要让pod能从外部访问，需要通过服务对象公开它，要创建一个service，可以通过下面的命令:kubectl expose pod myk8swebapi --type=NodePort
+我们可以通过命令:kubectl get services 列出刚创建的服务。 使用外网IP访问服务我们的minikube集群是部署在云服务器中，所以我们部署完服务后，只能在云服务器本机中使用 curl http://192.168.49.2:32246/WeatherForecast进行访问。如果要使用云服务器分配的外网ip访问，则需要进行转发，通过命令:kubectl port-forward svc/myk8swebapi 32246:6001，这样我们就能通过服务器外网IP,进行访问，因为之前配置 dashboard 可以外网访问，已经执行过命令：kubectl proxy --port=8001 --address=&#39;0.0.0.0&#39; --accept-hosts=&#39;^.*&#39; &amp;amp;。所以可以通过如下地址访问： http://外网IP:8001/api/v1/namespaces/default/services/myk8swebapi:/proxy/WeatherForecast</description>
+    </item>
+    
     <item>
       <title>Kubernetes介绍</title>
       <link>https://alvin-su.github.io/post/kubernetes%E4%BB%8B%E7%BB%8D/</link>

@@ -3,19 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://alvin-su.github.io/</loc>
-    <lastmod>2022-07-01T08:37:54+08:00</lastmod>
+    <lastmod>2022-07-06T16:03:21+08:00</lastmod>
+  </url><url>
+    <loc>https://alvin-su.github.io/tags/k8s/</loc>
+    <lastmod>2022-07-06T16:03:21+08:00</lastmod>
+  </url><url>
+    <loc>https://alvin-su.github.io/post/</loc>
+    <lastmod>2022-07-06T16:03:21+08:00</lastmod>
+  </url><url>
+    <loc>https://alvin-su.github.io/tags/</loc>
+    <lastmod>2022-07-06T16:03:21+08:00</lastmod>
+  </url><url>
+    <loc>https://alvin-su.github.io/post/k8s%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/</loc>
+    <lastmod>2022-07-06T16:03:21+08:00</lastmod>
   </url><url>
     <loc>https://alvin-su.github.io/post/kubernetes%E4%BB%8B%E7%BB%8D/</loc>
     <lastmod>2022-07-01T08:37:54+08:00</lastmod>
-  </url><url>
-    <loc>https://alvin-su.github.io/post/</loc>
-    <lastmod>2022-07-01T08:37:54+08:00</lastmod>
-  </url><url>
-    <loc>https://alvin-su.github.io/tags/k8s/</loc>
-    <lastmod>2022-06-30T21:55:40+08:00</lastmod>
-  </url><url>
-    <loc>https://alvin-su.github.io/tags/</loc>
-    <lastmod>2022-06-30T21:55:40+08:00</lastmod>
   </url><url>
     <loc>https://alvin-su.github.io/post/install_k8s/</loc>
     <lastmod>2022-06-30T21:55:40+08:00</lastmod>

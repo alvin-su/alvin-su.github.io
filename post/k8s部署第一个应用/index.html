@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+
+    
+
+    <meta name="author" content="Alvinsu">
+    <meta name="description" content="我们之前在Centos中成功部署了minikube，那么我们就基于minikube在k8s中部署第一个asp.net core应用。我们需要先容器化一个asp.net core应用，然后推送到Docker hub镜像仓库中，如下图： 部署应用我们现在就基于已经推送到Dockerhub中的镜像使用kubectl run 命令部署，该命令可以创建所有必要的组件而无需JSON或YAML文件。具体代码如下： kubectl run myk8swebapi --image=alvinsu/myk8swebapi --port=6001
+--image=alvinsu/myk8swebapi显示的是要从Dockerhub拉取和运行的容器镜像，--port=6001选项告诉Kubernetes应用正在监听6001端口。
+介绍pod一个pod是一组紧密相关的容器，它们总是一起运行在同一个工作节点上以及同一个Linux命名空间中。每个pod就像一个独立的逻辑机器，拥有自己的IP、主机名、进程等，运行一个独立的应用程序。应用程序可以是单个进程，运行在单个容器中，也可以是一个应用程序或者其它支持进程，每个进程都在自己的容器中运行。一个pod中的所有容器都运行在同一个逻辑机器上，而其它pod中的容器，即使运行在同一个工作节点上，也会出现在不同的工作节点上。如下图： 列出pod我们上面通过kubectl run命令已经创建了一个pod。下面我们通过命令kubectl get pods 列出所有pod。如下图： 当运行kubectl命令时，它通过向KubernetesAPI服务器发送一个 RESTHTTP请求，在集群中创建了一个新的pod，调度器将其调度到一个工作节点上 Kubelet看到pod被调度到节点上，就告知Docker从镜像中心中拉取指定的镜像，因为本地没有该镜像。下载镜像后，Docker创建并运行容器。整体流程如下图： 还可以使用命令:kubectl get pods -o wide 列出pod的IP和pod所在节点信息。
+访问web应用我们刚刚创建的pod如何访问？每个pod都有自己的IP，但是这个地址是集群内部的，不能从集群外部访问。要让pod能从外部访问，需要通过服务对象公开它，要创建一个service，可以通过下面的命令:kubectl expose pod myk8swebapi --type=NodePort
+我们可以通过命令:kubectl get services 列出刚创建的服务。 使用外网IP访问服务我们的minikube集群是部署在云服务器中，所以我们部署完服务后，只能在云服务器本机中使用 curl http://192.168.49.2:32246/WeatherForecast进行访问。如果要使用云服务器分配的外网ip访问，则需要进行转发，通过命令:kubectl port-forward svc/myk8swebapi 32246:6001，这样我们就能通过服务器外网IP,进行访问，因为之前配置 dashboard 可以外网访问，已经执行过命令：kubectl proxy --port=8001 --address=&#39;0.0.0.0&#39; --accept-hosts=&#39;^.*&#39; &amp;。所以可以通过如下地址访问： http://外网IP:8001/api/v1/namespaces/default/services/myk8swebapi:/proxy/WeatherForecast">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="在Kubernetes中部署第一个应用"/>
+<meta name="twitter:description" content="我们之前在Centos中成功部署了minikube，那么我们就基于minikube在k8s中部署第一个asp.net core应用。我们需要先容器化一个asp.net core应用，然后推送到Docker hub镜像仓库中，如下图： 部署应用我们现在就基于已经推送到Dockerhub中的镜像使用kubectl run 命令部署，该命令可以创建所有必要的组件而无需JSON或YAML文件。具体代码如下： kubectl run myk8swebapi --image=alvinsu/myk8swebapi --port=6001
+--image=alvinsu/myk8swebapi显示的是要从Dockerhub拉取和运行的容器镜像，--port=6001选项告诉Kubernetes应用正在监听6001端口。
+介绍pod一个pod是一组紧密相关的容器，它们总是一起运行在同一个工作节点上以及同一个Linux命名空间中。每个pod就像一个独立的逻辑机器，拥有自己的IP、主机名、进程等，运行一个独立的应用程序。应用程序可以是单个进程，运行在单个容器中，也可以是一个应用程序或者其它支持进程，每个进程都在自己的容器中运行。一个pod中的所有容器都运行在同一个逻辑机器上，而其它pod中的容器，即使运行在同一个工作节点上，也会出现在不同的工作节点上。如下图： 列出pod我们上面通过kubectl run命令已经创建了一个pod。下面我们通过命令kubectl get pods 列出所有pod。如下图： 当运行kubectl命令时，它通过向KubernetesAPI服务器发送一个 RESTHTTP请求，在集群中创建了一个新的pod，调度器将其调度到一个工作节点上 Kubelet看到pod被调度到节点上，就告知Docker从镜像中心中拉取指定的镜像，因为本地没有该镜像。下载镜像后，Docker创建并运行容器。整体流程如下图： 还可以使用命令:kubectl get pods -o wide 列出pod的IP和pod所在节点信息。
+访问web应用我们刚刚创建的pod如何访问？每个pod都有自己的IP，但是这个地址是集群内部的，不能从集群外部访问。要让pod能从外部访问，需要通过服务对象公开它，要创建一个service，可以通过下面的命令:kubectl expose pod myk8swebapi --type=NodePort
+我们可以通过命令:kubectl get services 列出刚创建的服务。 使用外网IP访问服务我们的minikube集群是部署在云服务器中，所以我们部署完服务后，只能在云服务器本机中使用 curl http://192.168.49.2:32246/WeatherForecast进行访问。如果要使用云服务器分配的外网ip访问，则需要进行转发，通过命令:kubectl port-forward svc/myk8swebapi 32246:6001，这样我们就能通过服务器外网IP,进行访问，因为之前配置 dashboard 可以外网访问，已经执行过命令：kubectl proxy --port=8001 --address=&#39;0.0.0.0&#39; --accept-hosts=&#39;^.*&#39; &amp;。所以可以通过如下地址访问： http://外网IP:8001/api/v1/namespaces/default/services/myk8swebapi:/proxy/WeatherForecast"/>
+
+    <meta property="og:title" content="在Kubernetes中部署第一个应用" />
+<meta property="og:description" content="我们之前在Centos中成功部署了minikube，那么我们就基于minikube在k8s中部署第一个asp.net core应用。我们需要先容器化一个asp.net core应用，然后推送到Docker hub镜像仓库中，如下图： 部署应用我们现在就基于已经推送到Dockerhub中的镜像使用kubectl run 命令部署，该命令可以创建所有必要的组件而无需JSON或YAML文件。具体代码如下： kubectl run myk8swebapi --image=alvinsu/myk8swebapi --port=6001
+--image=alvinsu/myk8swebapi显示的是要从Dockerhub拉取和运行的容器镜像，--port=6001选项告诉Kubernetes应用正在监听6001端口。
+介绍pod一个pod是一组紧密相关的容器，它们总是一起运行在同一个工作节点上以及同一个Linux命名空间中。每个pod就像一个独立的逻辑机器，拥有自己的IP、主机名、进程等，运行一个独立的应用程序。应用程序可以是单个进程，运行在单个容器中，也可以是一个应用程序或者其它支持进程，每个进程都在自己的容器中运行。一个pod中的所有容器都运行在同一个逻辑机器上，而其它pod中的容器，即使运行在同一个工作节点上，也会出现在不同的工作节点上。如下图： 列出pod我们上面通过kubectl run命令已经创建了一个pod。下面我们通过命令kubectl get pods 列出所有pod。如下图： 当运行kubectl命令时，它通过向KubernetesAPI服务器发送一个 RESTHTTP请求，在集群中创建了一个新的pod，调度器将其调度到一个工作节点上 Kubelet看到pod被调度到节点上，就告知Docker从镜像中心中拉取指定的镜像，因为本地没有该镜像。下载镜像后，Docker创建并运行容器。整体流程如下图： 还可以使用命令:kubectl get pods -o wide 列出pod的IP和pod所在节点信息。
+访问web应用我们刚刚创建的pod如何访问？每个pod都有自己的IP，但是这个地址是集群内部的，不能从集群外部访问。要让pod能从外部访问，需要通过服务对象公开它，要创建一个service，可以通过下面的命令:kubectl expose pod myk8swebapi --type=NodePort
+我们可以通过命令:kubectl get services 列出刚创建的服务。 使用外网IP访问服务我们的minikube集群是部署在云服务器中，所以我们部署完服务后，只能在云服务器本机中使用 curl http://192.168.49.2:32246/WeatherForecast进行访问。如果要使用云服务器分配的外网ip访问，则需要进行转发，通过命令:kubectl port-forward svc/myk8swebapi 32246:6001，这样我们就能通过服务器外网IP,进行访问，因为之前配置 dashboard 可以外网访问，已经执行过命令：kubectl proxy --port=8001 --address=&#39;0.0.0.0&#39; --accept-hosts=&#39;^.*&#39; &amp;。所以可以通过如下地址访问： http://外网IP:8001/api/v1/namespaces/default/services/myk8swebapi:/proxy/WeatherForecast" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://alvin-su.github.io/post/k8s%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-07-06T16:03:21+08:00" />
+<meta property="article:modified_time" content="2022-07-06T16:03:21+08:00" />
+
+
+
+    <title>
+  在Kubernetes中部署第一个应用 · Alvinsu Blog
+</title>
+
+    
+      <link rel="canonical" href="https://alvin-su.github.io/post/k8s%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/">
+    
+
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <meta name="generator" content="Hugo 0.99.1" />
+  </head>
+
+  
+  
+    
+  
+  <body class="preload-transitions colorscheme-auto">
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Alvinsu Blog
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/post/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">分类</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://alvin-su.github.io/post/k8s%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/">
+          在Kubernetes中部署第一个应用
+        </a>
+      </h1>
+    </header>
+
+    <p>我们之前在Centos中成功部署了<code>minikube</code>，那么我们就基于minikube在k8s中部署第一个asp.net core应用。我们需要先容器化一个asp.net core应用，然后推送到Docker hub镜像仓库中，如下图：
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E5%9C%A8k8s%E4%B8%AD%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/k8s1.png?raw=true" alt=""></p>
+<h1 id="部署应用">
+  部署应用
+  <a class="heading-link" href="#%e9%83%a8%e7%bd%b2%e5%ba%94%e7%94%a8">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>我们现在就基于已经推送到Dockerhub中的镜像使用<code>kubectl run</code> 命令部署，该命令可以创建所有必要的组件而无需<code>JSON</code>或<code>YAML</code>文件。具体代码如下：
+<code>kubectl run myk8swebapi --image=alvinsu/myk8swebapi --port=6001</code></p>
+<p><code>--image=alvinsu/myk8swebapi</code>显示的是要从Dockerhub拉取和运行的容器镜像，<code>--port=6001</code>选项告诉<code>Kubernetes</code>应用正在监听6001端口。</p>
+<h1 id="介绍pod">
+  介绍pod
+  <a class="heading-link" href="#%e4%bb%8b%e7%bb%8dpod">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>一个<code>pod</code>是一组紧密相关的容器，它们总是一起运行在同一个工作节点上以及同一个Linux命名空间中。每个<code>pod</code>就像一个独立的逻辑机器，拥有自己的IP、主机名、进程等，运行一个独立的应用程序。应用程序可以是单个进程，运行在单个容器中，也可以是一个应用程序或者其它支持进程，每个进程都在自己的容器中运行。一个<code>pod</code>中的所有容器都运行在同一个逻辑机器上，而其它<code>pod</code>中的容器，即使运行在同一个工作节点上，也会出现在不同的工作节点上。如下图：
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E5%9C%A8k8s%E4%B8%AD%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/k8s2.png?raw=true" alt=""></p>
+<h2 id="列出pod">
+  列出pod
+  <a class="heading-link" href="#%e5%88%97%e5%87%bapod">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>我们上面通过<code>kubectl run</code>命令已经创建了一个<code>pod</code>。下面我们通过命令<code>kubectl get pods</code> 列出所有<code>pod</code>。如下图：
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E5%9C%A8k8s%E4%B8%AD%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/k8s3.png?raw=true" alt=""></p>
+<p>当运行kubectl命令时，它通过向KubernetesAPI服务器发送一个 RESTHTTP请求，在集群中创建了一个新的pod，调度器将其调度到一个工作节点上 Kubelet看到pod被调度到节点上，就告知Docker从镜像中心中拉取指定的镜像，因为本地没有该镜像。下载镜像后，Docker创建并运行容器。整体流程如下图：
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E5%9C%A8k8s%E4%B8%AD%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/k8s4.png?raw=true" alt=""></p>
+<p>还可以使用命令:<code>kubectl get pods -o wide</code> 列出pod的IP和pod所在节点信息。</p>
+<h2 id="访问web应用">
+  访问web应用
+  <a class="heading-link" href="#%e8%ae%bf%e9%97%aeweb%e5%ba%94%e7%94%a8">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>我们刚刚创建的pod如何访问？每个pod都有自己的IP，但是这个地址是集群内部的，不能从集群外部访问。要让pod能从外部访问，需要通过服务对象公开它，要创建一个<code>service</code>，可以通过下面的命令:<code>kubectl expose pod myk8swebapi --type=NodePort</code></p>
+<p>我们可以通过命令:<code>kubectl get services</code> 列出刚创建的服务。
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E5%9C%A8k8s%E4%B8%AD%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/k8s5.png?raw=true" alt=""></p>
+<h2 id="使用外网ip访问服务">
+  使用外网IP访问服务
+  <a class="heading-link" href="#%e4%bd%bf%e7%94%a8%e5%a4%96%e7%bd%91ip%e8%ae%bf%e9%97%ae%e6%9c%8d%e5%8a%a1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>我们的<code>minikube</code>集群是部署在云服务器中，所以我们部署完服务后，只能在云服务器本机中使用 <code>curl http://192.168.49.2:32246/WeatherForecast</code>进行访问。如果要使用云服务器分配的外网ip访问，则需要进行转发，通过命令:<code>kubectl port-forward svc/myk8swebapi 32246:6001</code>，这样我们就能通过服务器外网IP,进行访问，因为之前配置 dashboard 可以外网访问，已经执行过命令：<code>kubectl proxy --port=8001 --address='0.0.0.0' --accept-hosts='^.*' &amp;</code>。所以可以通过如下地址访问：
+<code>http://外网IP:8001/api/v1/namespaces/default/services/myk8swebapi:/proxy/WeatherForecast</code></p>
+
+  </article>
+</section>
+
+  
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    ©
+    
+    2022
+     Alvinsu 
+    ·
+    
+    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+      
+      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
