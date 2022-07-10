@@ -6,7 +6,18 @@
     <description>Recent content on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 07 Jul 2022 09:40:09 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 10 Jul 2022 21:19:03 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>以YAML描述文件创建pod</title>
+      <link>https://alvin-su.github.io/post/%E4%BB%A5yaml%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/</link>
+      <pubDate>Sun, 10 Jul 2022 21:19:03 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/%E4%BB%A5yaml%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/</guid>
+      <description>之前是通过kubectl run 命令，来创建pod，但这些方法只允许配置一组有限的属性。pod和其它Kubernetes资源通常是通过向Kubernetes REST API提供YAML描述文件来创建的。
+检查现有pod的YAML描述文件我们之前创建了一些pod，可以通过命令kubectl get po myk8swebapi -o yaml,来获取pod的整个YAML定义。如下所示：
+# apiVersion 表示描述文件所使用的 Kubernetes API版本 apiVersion: v1 # kind 表示Kubernetes 对象或资源类型 kind: Pod # metadata 表示 pod 元数据（名称、标签和注解等） metadata:  creationTimestamp: &amp;#34;2022-07-05T15:16:53Z&amp;#34;  labels:  run: myk8swebapi  name: myk8swebapi  namespace: default  resourceVersion: &amp;#34;277178&amp;#34;  uid: 27c0c657-4329-474a-834b-f121af1aeaa7 # spec 表示 pod 规格/内容(pod 的容器列表，volumn等) spec:  containers:  - image: alvinsu/myk8swebapi:1.0  imagePullPolicy: IfNotPresent  name: myk8swebapi  ports:  - containerPort: 6001  protocol: TCP  resources: {}  terminationMessagePath: /dev/termination-log  terminationMessagePolicy: File  volumeMounts:  - mountPath: /var/run/secrets/kubernetes.</description>
+    </item>
+    
     <item>
       <title>Pod介绍</title>
       <link>https://alvin-su.github.io/post/pod%E4%BB%8B%E7%BB%8D/</link>

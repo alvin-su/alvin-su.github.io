@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+
+    
+
+    <meta name="author" content="Alvinsu">
+    <meta name="description" content="之前是通过kubectl run 命令，来创建pod，但这些方法只允许配置一组有限的属性。pod和其它Kubernetes资源通常是通过向Kubernetes REST API提供YAML描述文件来创建的。
+检查现有pod的YAML描述文件我们之前创建了一些pod，可以通过命令kubectl get po myk8swebapi -o yaml,来获取pod的整个YAML定义。如下所示：
+# apiVersion 表示描述文件所使用的 Kubernetes API版本 apiVersion: v1 # kind 表示Kubernetes 对象或资源类型 kind: Pod # metadata 表示 pod 元数据（名称、标签和注解等） metadata:  creationTimestamp: &#34;2022-07-05T15:16:53Z&#34;  labels:  run: myk8swebapi  name: myk8swebapi  namespace: default  resourceVersion: &#34;277178&#34;  uid: 27c0c657-4329-474a-834b-f121af1aeaa7 # spec 表示 pod 规格/内容(pod 的容器列表，volumn等) spec:  containers:  - image: alvinsu/myk8swebapi:1.0  imagePullPolicy: IfNotPresent  name: myk8swebapi  ports:  - containerPort: 6001  protocol: TCP  resources: {}  terminationMessagePath: /dev/termination-log  terminationMessagePolicy: File  volumeMounts:  - mountPath: /var/run/secrets/kubernetes.">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="以YAML描述文件创建pod"/>
+<meta name="twitter:description" content="之前是通过kubectl run 命令，来创建pod，但这些方法只允许配置一组有限的属性。pod和其它Kubernetes资源通常是通过向Kubernetes REST API提供YAML描述文件来创建的。
+检查现有pod的YAML描述文件我们之前创建了一些pod，可以通过命令kubectl get po myk8swebapi -o yaml,来获取pod的整个YAML定义。如下所示：
+# apiVersion 表示描述文件所使用的 Kubernetes API版本 apiVersion: v1 # kind 表示Kubernetes 对象或资源类型 kind: Pod # metadata 表示 pod 元数据（名称、标签和注解等） metadata:  creationTimestamp: &#34;2022-07-05T15:16:53Z&#34;  labels:  run: myk8swebapi  name: myk8swebapi  namespace: default  resourceVersion: &#34;277178&#34;  uid: 27c0c657-4329-474a-834b-f121af1aeaa7 # spec 表示 pod 规格/内容(pod 的容器列表，volumn等) spec:  containers:  - image: alvinsu/myk8swebapi:1.0  imagePullPolicy: IfNotPresent  name: myk8swebapi  ports:  - containerPort: 6001  protocol: TCP  resources: {}  terminationMessagePath: /dev/termination-log  terminationMessagePolicy: File  volumeMounts:  - mountPath: /var/run/secrets/kubernetes."/>
+
+    <meta property="og:title" content="以YAML描述文件创建pod" />
+<meta property="og:description" content="之前是通过kubectl run 命令，来创建pod，但这些方法只允许配置一组有限的属性。pod和其它Kubernetes资源通常是通过向Kubernetes REST API提供YAML描述文件来创建的。
+检查现有pod的YAML描述文件我们之前创建了一些pod，可以通过命令kubectl get po myk8swebapi -o yaml,来获取pod的整个YAML定义。如下所示：
+# apiVersion 表示描述文件所使用的 Kubernetes API版本 apiVersion: v1 # kind 表示Kubernetes 对象或资源类型 kind: Pod # metadata 表示 pod 元数据（名称、标签和注解等） metadata:  creationTimestamp: &#34;2022-07-05T15:16:53Z&#34;  labels:  run: myk8swebapi  name: myk8swebapi  namespace: default  resourceVersion: &#34;277178&#34;  uid: 27c0c657-4329-474a-834b-f121af1aeaa7 # spec 表示 pod 规格/内容(pod 的容器列表，volumn等) spec:  containers:  - image: alvinsu/myk8swebapi:1.0  imagePullPolicy: IfNotPresent  name: myk8swebapi  ports:  - containerPort: 6001  protocol: TCP  resources: {}  terminationMessagePath: /dev/termination-log  terminationMessagePolicy: File  volumeMounts:  - mountPath: /var/run/secrets/kubernetes." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://alvin-su.github.io/post/%E4%BB%A5yaml%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-07-10T21:19:03+08:00" />
+<meta property="article:modified_time" content="2022-07-10T21:19:03+08:00" />
+
+
+
+    <title>
+  以YAML描述文件创建pod · Alvinsu Blog
+</title>
+
+    
+      <link rel="canonical" href="https://alvin-su.github.io/post/%E4%BB%A5yaml%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/">
+    
+
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <meta name="generator" content="Hugo 0.99.1" />
+  </head>
+
+  
+  
+    
+  
+  <body class="preload-transitions colorscheme-auto">
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Alvinsu Blog
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/post/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">分类</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://alvin-su.github.io/post/%E4%BB%A5yaml%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/">
+          以YAML描述文件创建pod
+        </a>
+      </h1>
+    </header>
+
+    <p>之前是通过<code>kubectl run</code> 命令，来创建<code>pod</code>，但这些方法只允许配置一组有限的属性。<code>pod</code>和其它<code>Kubernetes</code>资源通常是通过向<code>Kubernetes REST API</code>提供<code>YAML</code>描述文件来创建的。</p>
+<h1 id="检查现有pod的yaml描述文件">
+  检查现有pod的YAML描述文件
+  <a class="heading-link" href="#%e6%a3%80%e6%9f%a5%e7%8e%b0%e6%9c%89pod%e7%9a%84yaml%e6%8f%8f%e8%bf%b0%e6%96%87%e4%bb%b6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>我们之前创建了一些<code>pod</code>，可以通过命令<code>kubectl get po myk8swebapi -o yaml</code>,来获取<code>pod</code>的整个<code>YAML</code>定义。如下所示：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-YAML" data-lang="YAML"><span style="display:flex;"><span><span style="font-style:italic"># apiVersion 表示描述文件所使用的 Kubernetes API版本</span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">apiVersion</span>: v1 
+</span></span><span style="display:flex;"><span><span style="font-style:italic"># kind 表示Kubernetes 对象或资源类型</span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">kind</span>: Pod
+</span></span><span style="display:flex;"><span><span style="font-style:italic"># metadata 表示 pod 元数据（名称、标签和注解等）</span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">creationTimestamp</span>: <span style="font-style:italic">&#34;2022-07-05T15:16:53Z&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">run</span>: myk8swebapi
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">name</span>: myk8swebapi
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">namespace</span>: default
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">resourceVersion</span>: <span style="font-style:italic">&#34;277178&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">uid</span>: 27c0c657-4329-474a-834b-f121af1aeaa7
+</span></span><span style="display:flex;"><span><span style="font-style:italic"># spec 表示 pod 规格/内容(pod 的容器列表，volumn等)</span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">containers</span>:
+</span></span><span style="display:flex;"><span>  - <span style="font-weight:bold">image</span>: alvinsu/myk8swebapi:1.0
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">imagePullPolicy</span>: IfNotPresent
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">name</span>: myk8swebapi
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">ports</span>:
+</span></span><span style="display:flex;"><span>    - <span style="font-weight:bold">containerPort</span>: 6001
+</span></span><span style="display:flex;"><span>      <span style="font-weight:bold">protocol</span>: TCP
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">resources</span>: {}
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">terminationMessagePath</span>: /dev/termination-log
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">terminationMessagePolicy</span>: File
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>    - <span style="font-weight:bold">mountPath</span>: /var/run/secrets/kubernetes.io/serviceaccount
+</span></span><span style="display:flex;"><span>      <span style="font-weight:bold">name</span>: kube-api-access-brpcd
+</span></span><span style="display:flex;"><span>      <span style="font-weight:bold">readOnly</span>: <span style="font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">dnsPolicy</span>: ClusterFirst
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">enableServiceLinks</span>: <span style="font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">nodeName</span>: minikube
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">preemptionPolicy</span>: PreemptLowerPriority
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">priority</span>: 0
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">restartPolicy</span>: Always
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">schedulerName</span>: default-scheduler
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">securityContext</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">serviceAccount</span>: default
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">serviceAccountName</span>: default
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">terminationGracePeriodSeconds</span>: 30
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">tolerations</span>:
+</span></span><span style="display:flex;"><span>  - <span style="font-weight:bold">effect</span>: NoExecute
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">key</span>: node.kubernetes.io/not-ready
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">operator</span>: Exists
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">tolerationSeconds</span>: 300
+</span></span><span style="display:flex;"><span>  - <span style="font-weight:bold">effect</span>: NoExecute
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">key</span>: node.kubernetes.io/unreachable
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">operator</span>: Exists
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">tolerationSeconds</span>: 300
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">volumes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="font-weight:bold">name</span>: kube-api-access-brpcd
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">projected</span>:
+</span></span><span style="display:flex;"><span>      <span style="font-weight:bold">defaultMode</span>: 420
+</span></span><span style="display:flex;"><span>      <span style="font-weight:bold">sources</span>:
+</span></span><span style="display:flex;"><span>      - <span style="font-weight:bold">serviceAccountToken</span>:
+</span></span><span style="display:flex;"><span>          <span style="font-weight:bold">expirationSeconds</span>: 3607
+</span></span><span style="display:flex;"><span>          <span style="font-weight:bold">path</span>: token
+</span></span><span style="display:flex;"><span>      - <span style="font-weight:bold">configMap</span>:
+</span></span><span style="display:flex;"><span>          <span style="font-weight:bold">items</span>:
+</span></span><span style="display:flex;"><span>          - <span style="font-weight:bold">key</span>: ca.crt
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">path</span>: ca.crt
+</span></span><span style="display:flex;"><span>          <span style="font-weight:bold">name</span>: kube-root-ca.crt
+</span></span><span style="display:flex;"><span>      - <span style="font-weight:bold">downwardAPI</span>:
+</span></span><span style="display:flex;"><span>          <span style="font-weight:bold">items</span>:
+</span></span><span style="display:flex;"><span>          - <span style="font-weight:bold">fieldRef</span>:
+</span></span><span style="display:flex;"><span>              <span style="font-weight:bold">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span>              <span style="font-weight:bold">fieldPath</span>: metadata.namespace
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">path</span>: namespace
+</span></span><span style="display:flex;"><span><span style="font-style:italic"># status 表示pod 及其内部容器的详细状态信息</span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">status</span>:
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">conditions</span>:
+</span></span><span style="display:flex;"><span>  - <span style="font-weight:bold">lastProbeTime</span>: <span style="font-weight:bold">null</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">lastTransitionTime</span>: <span style="font-style:italic">&#34;2022-07-05T15:16:53Z&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">status</span>: <span style="font-style:italic">&#34;True&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">type</span>: Initialized
+</span></span><span style="display:flex;"><span>  - <span style="font-weight:bold">lastProbeTime</span>: <span style="font-weight:bold">null</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">lastTransitionTime</span>: <span style="font-style:italic">&#34;2022-07-05T15:16:54Z&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">status</span>: <span style="font-style:italic">&#34;True&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">type</span>: Ready
+</span></span><span style="display:flex;"><span>  - <span style="font-weight:bold">lastProbeTime</span>: <span style="font-weight:bold">null</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">lastTransitionTime</span>: <span style="font-style:italic">&#34;2022-07-05T15:16:54Z&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">status</span>: <span style="font-style:italic">&#34;True&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">type</span>: ContainersReady
+</span></span><span style="display:flex;"><span>  - <span style="font-weight:bold">lastProbeTime</span>: <span style="font-weight:bold">null</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">lastTransitionTime</span>: <span style="font-style:italic">&#34;2022-07-05T15:16:53Z&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">status</span>: <span style="font-style:italic">&#34;True&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">type</span>: PodScheduled
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">containerStatuses</span>:
+</span></span><span style="display:flex;"><span>  - <span style="font-weight:bold">containerID</span>: containerd://c7d7b8cd88b6357e3edd37e3d8872e87f31590fde46d1f0d914c5c198fc427f4
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">image</span>: docker.io/alvinsu/myk8swebapi:1.0
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">imageID</span>: docker.io/alvinsu/myk8swebapi@sha256:2cb167e6f619ad6cdc51a4ce2017fa234356a4052a341c1a3f1b56eea504c433
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">lastState</span>: {}
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">name</span>: myk8swebapi
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">ready</span>: <span style="font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">restartCount</span>: 0
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">started</span>: <span style="font-weight:bold">true</span>
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">state</span>:
+</span></span><span style="display:flex;"><span>      <span style="font-weight:bold">running</span>:
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">startedAt</span>: <span style="font-style:italic">&#34;2022-07-05T15:16:53Z&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">hostIP</span>: 192.168.49.2
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">phase</span>: Running
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">podIP</span>: 10.244.0.9
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">podIPs</span>:
+</span></span><span style="display:flex;"><span>  - <span style="font-weight:bold">ip</span>: 10.244.0.9
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">qosClass</span>: BestEffort
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">startTime</span>: <span style="font-style:italic">&#34;2022-07-05T15:16:53Z&#34;</span>
+</span></span></code></pre></div><p>从上面的定义来看，<code>pod</code>定义主要由以下几个部分组成：</p>
+<ul>
+<li>apiVersion：YAML中使用的Kubernetes API版本</li>
+<li>kind：YAML描述的Kubernetes资源类型</li>
+<li>metadata：元数据信息，包括名称、命名空间、标签和关于该容器的其它信息</li>
+<li>spec：包含pod内容的实际说明，列如pod的容器、卷和其它数据</li>
+<li>status：包含运行中的pod的当前信息，列如pod所处的条件、每个容器的描述和状态，以及内部IP和其它基本信息。在创建pod时，永远不需要提供status部分。</li>
+</ul>
+<h1 id="通过ymal描述文件创建pod">
+  通过ymal描述文件创建pod
+  <a class="heading-link" href="#%e9%80%9a%e8%bf%87ymal%e6%8f%8f%e8%bf%b0%e6%96%87%e4%bb%b6%e5%88%9b%e5%bb%bapod">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>我们在<code>Docker hub</code>上push一个新的asp.net core 应用镜像，然后创建一个简单的<code>yaml</code>描述文件，如下：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="font-weight:bold">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">kind</span>: Pod
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">name</span>: mywebapi
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="font-weight:bold">containers</span>:
+</span></span><span style="display:flex;"><span>    - <span style="font-weight:bold">name</span>: mywebapi
+</span></span><span style="display:flex;"><span>      <span style="font-weight:bold">image</span>: alvinsu/mywebapi:1.0
+</span></span><span style="display:flex;"><span>      <span style="font-weight:bold">imagePullPolicy</span>: IfNotPresent
+</span></span><span style="display:flex;"><span>      <span style="font-weight:bold">ports</span>:
+</span></span><span style="display:flex;"><span>        - <span style="font-weight:bold">containerPort</span>: 6002
+</span></span><span style="display:flex;"><span>          <span style="font-weight:bold">protocol</span>: TCP
+</span></span></code></pre></div><p>使用命令：<code>kubectl create -f mywebapi.yaml</code>命令从<code>YAML</code>文件创建<code>pod</code>。如下图：
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E4%BB%A5YAML%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/yaml1.png?raw=true" alt=""></p>
+<p>使用命令<code>kubectl get pods</code>查看<code>pod</code>是否创建成功，如下图：
+<img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/%E4%BB%A5YAML%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/yaml2.png?raw=true" alt=""></p>
+
+  </article>
+</section>
+
+  
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    ©
+    
+    2022
+     Alvinsu 
+    ·
+    
+    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+      
+      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>

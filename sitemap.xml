@@ -3,18 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://alvin-su.github.io/</loc>
-    <lastmod>2022-07-07T09:40:09+08:00</lastmod>
+    <lastmod>2022-07-10T21:19:03+08:00</lastmod>
   </url><url>
     <loc>https://alvin-su.github.io/tags/k8s/</loc>
-    <lastmod>2022-07-07T09:40:09+08:00</lastmod>
-  </url><url>
-    <loc>https://alvin-su.github.io/post/pod%E4%BB%8B%E7%BB%8D/</loc>
-    <lastmod>2022-07-07T09:40:09+08:00</lastmod>
+    <lastmod>2022-07-10T21:19:03+08:00</lastmod>
   </url><url>
     <loc>https://alvin-su.github.io/post/</loc>
-    <lastmod>2022-07-07T09:40:09+08:00</lastmod>
+    <lastmod>2022-07-10T21:19:03+08:00</lastmod>
   </url><url>
     <loc>https://alvin-su.github.io/tags/</loc>
+    <lastmod>2022-07-10T21:19:03+08:00</lastmod>
+  </url><url>
+    <loc>https://alvin-su.github.io/post/%E4%BB%A5yaml%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/</loc>
+    <lastmod>2022-07-10T21:19:03+08:00</lastmod>
+  </url><url>
+    <loc>https://alvin-su.github.io/post/pod%E4%BB%8B%E7%BB%8D/</loc>
     <lastmod>2022-07-07T09:40:09+08:00</lastmod>
   </url><url>
     <loc>https://alvin-su.github.io/post/k8s%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/</loc>
