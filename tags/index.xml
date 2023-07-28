@@ -6,7 +6,16 @@
     <description>Recent content in Tags on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Jul 2022 21:19:03 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 28 Jul 2023 16:41:26 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dapr</title>
+      <link>https://alvin-su.github.io/tags/dapr/</link>
+      <pubDate>Fri, 28 Jul 2023 16:41:26 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/tags/dapr/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>k8s</title>
       <link>https://alvin-su.github.io/tags/k8s/</link>
@@ -40,15 +49,6 @@
       <pubDate>Thu, 09 Jun 2022 10:16:35 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/tags/ddd/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Dapr</title>
-      <link>https://alvin-su.github.io/tags/dapr/</link>
-      <pubDate>Fri, 27 May 2022 09:49:01 +0800</pubDate>
-      
-      <guid>https://alvin-su.github.io/tags/dapr/</guid>
       <description></description>
     </item>
     
