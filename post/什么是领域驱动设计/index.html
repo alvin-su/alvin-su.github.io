@@ -1,31 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-cn">
-
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
+    <title>什么是领域驱动设计 // Alvinsu Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.99.1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Alvinsu" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://alvin-su.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
 
     
-
-    <meta name="author" content="Alvinsu">
-    <meta name="description" content="什么是领域驱动设计2004 年埃里克·埃文斯（Eric Evans）发表了《领域驱动设计》（Domain-Driven Design –Tackling Complexity in the Heart of Software）这本书，从此领域驱动设计（Domain Driven Design，简称 DDD）诞生。DDD 核心思想是通过领域驱动设计方法定义领域模型，从而确定业务和应用边界，保证业务模型与代码模型的一致性。 领域驱动设计是一种通过将实现连接到持续进化的模型来满足复杂需求的软件开发方法。
-DDD设计的前提是：
- 把项目的主要重点放在核心领域 把复杂的设计放在有界域（bounded context）的模型上 发起一个创造性的合作之间的技术和域界专家以迭代地完善的概念模式，解决特定领域的问题。  领域驱动设计是一种由域模型来驱动着系统设计的思想，不是通过存储数据词典(DB表字段、ES Mapper字段等等)来驱动系统设计。领域模型是对业务模型的抽象，DDD是把业务模型翻译成系统架构设计的一种方式。
-微服务与DDD的关系DDD 提出后在软件开发领域一直都是“雷声大，雨点小”，直到 Martin Fowler 提出微服务架构，DDD 才真正迎来了自己的时代。
-有些熟悉 DDD 设计方法的软件工程师在进行微服务设计时，发现可以利用 DDD 设计方法来建立领域模型，划分领域边界，再根据这些领域边界从业务视角来划分微服务边界。而按照 DDD 方法设计出的微服务的业务和应用边界都非常合理，可以很好地实现微服务内部和外部的“高内聚、低耦合”。于是越来越多的人开始把 DDD 作为微服务设计的指导思想。
-DDD 是一种处理高度复杂领域的设计思想，它试图分离技术实现的复杂性，并围绕业务概念构建领域模型来控制业务的复杂性，以解决软件难以理解，难以演进的问题。DDD 不是架构，而是一种架构设计方法论，它通过边界划分将复杂业务领域简单化，帮我们设计出清晰的领域和应用边界，可以很容易地实现架构演进。
-DDD 是一种架构设计方法，微服务是一种架构风格，两者从本质上都是为了追求高响应力，而从业务视角去分离应用系统建设复杂度的手段。两者都强调从业务出发，其核心要义是强调根据业务发展，合理划分领域边界，持续调整现有架构，优化现有代码，以保持架构和代码的生命力，也就是我们常说的演进式架构。
-DDD 主要关注：从业务领域视角划分领域边界，构建通用语言进行高效沟通，通过业务抽象，建立领域模型，维持业务和代码的逻辑一致性。
-微服务主要关注：运行时的进程间通信、容错和故障隔离，实现去中心化数据管理和去中心化服务治理，关注微服务的独立开发、测试、构建和部署。 .">
-    <meta name="keywords" content="blog,developer,personal">
-
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="什么是领域驱动设计"/>
-<meta name="twitter:description" content="什么是领域驱动设计2004 年埃里克·埃文斯（Eric Evans）发表了《领域驱动设计》（Domain-Driven Design –Tackling Complexity in the Heart of Software）这本书，从此领域驱动设计（Domain Driven Design，简称 DDD）诞生。DDD 核心思想是通过领域驱动设计方法定义领域模型，从而确定业务和应用边界，保证业务模型与代码模型的一致性。 领域驱动设计是一种通过将实现连接到持续进化的模型来满足复杂需求的软件开发方法。
+<meta name="twitter:description" content="什么是领域驱动设计 2004 年埃里克·埃文斯（Eric Evans）发表了《领域驱动设计》（Domain-Driven Design –Tackling Complexity in the Heart of Software）这本书，从此领域驱动设计（Domain Driven Design，简称 DDD）诞生。DDD 核心思想是通过领域驱动设计方法定义领域模型，从而确定业务和应用边界，保证业务模型与代码模型的一致性。 领域驱动设计是一种通过将实现连接到持续进化的模型来满足复杂需求的软件开发方法。
 DDD设计的前提是：
  把项目的主要重点放在核心领域 把复杂的设计放在有界域（bounded context）的模型上 发起一个创造性的合作之间的技术和域界专家以迭代地完善的概念模式，解决特定领域的问题。  领域驱动设计是一种由域模型来驱动着系统设计的思想，不是通过存储数据词典(DB表字段、ES Mapper字段等等)来驱动系统设计。领域模型是对业务模型的抽象，DDD是把业务模型翻译成系统架构设计的一种方式。
-微服务与DDD的关系DDD 提出后在软件开发领域一直都是“雷声大，雨点小”，直到 Martin Fowler 提出微服务架构，DDD 才真正迎来了自己的时代。
+微服务与DDD的关系 DDD 提出后在软件开发领域一直都是“雷声大，雨点小”，直到 Martin Fowler 提出微服务架构，DDD 才真正迎来了自己的时代。
 有些熟悉 DDD 设计方法的软件工程师在进行微服务设计时，发现可以利用 DDD 设计方法来建立领域模型，划分领域边界，再根据这些领域边界从业务视角来划分微服务边界。而按照 DDD 方法设计出的微服务的业务和应用边界都非常合理，可以很好地实现微服务内部和外部的“高内聚、低耦合”。于是越来越多的人开始把 DDD 作为微服务设计的指导思想。
 DDD 是一种处理高度复杂领域的设计思想，它试图分离技术实现的复杂性，并围绕业务概念构建领域模型来控制业务的复杂性，以解决软件难以理解，难以演进的问题。DDD 不是架构，而是一种架构设计方法论，它通过边界划分将复杂业务领域简单化，帮我们设计出清晰的领域和应用边界，可以很容易地实现架构演进。
 DDD 是一种架构设计方法，微服务是一种架构风格，两者从本质上都是为了追求高响应力，而从业务视角去分离应用系统建设复杂度的手段。两者都强调从业务出发，其核心要义是强调根据业务发展，合理划分领域边界，持续调整现有架构，优化现有代码，以保持架构和代码的生命力，也就是我们常说的演进式架构。
@@ -33,10 +24,10 @@ DDD 主要关注：从业务领域视角划分领域边界，构建通用语言�
 微服务主要关注：运行时的进程间通信、容错和故障隔离，实现去中心化数据管理和去中心化服务治理，关注微服务的独立开发、测试、构建和部署。 ."/>
 
     <meta property="og:title" content="什么是领域驱动设计" />
-<meta property="og:description" content="什么是领域驱动设计2004 年埃里克·埃文斯（Eric Evans）发表了《领域驱动设计》（Domain-Driven Design –Tackling Complexity in the Heart of Software）这本书，从此领域驱动设计（Domain Driven Design，简称 DDD）诞生。DDD 核心思想是通过领域驱动设计方法定义领域模型，从而确定业务和应用边界，保证业务模型与代码模型的一致性。 领域驱动设计是一种通过将实现连接到持续进化的模型来满足复杂需求的软件开发方法。
+<meta property="og:description" content="什么是领域驱动设计 2004 年埃里克·埃文斯（Eric Evans）发表了《领域驱动设计》（Domain-Driven Design –Tackling Complexity in the Heart of Software）这本书，从此领域驱动设计（Domain Driven Design，简称 DDD）诞生。DDD 核心思想是通过领域驱动设计方法定义领域模型，从而确定业务和应用边界，保证业务模型与代码模型的一致性。 领域驱动设计是一种通过将实现连接到持续进化的模型来满足复杂需求的软件开发方法。
 DDD设计的前提是：
  把项目的主要重点放在核心领域 把复杂的设计放在有界域（bounded context）的模型上 发起一个创造性的合作之间的技术和域界专家以迭代地完善的概念模式，解决特定领域的问题。  领域驱动设计是一种由域模型来驱动着系统设计的思想，不是通过存储数据词典(DB表字段、ES Mapper字段等等)来驱动系统设计。领域模型是对业务模型的抽象，DDD是把业务模型翻译成系统架构设计的一种方式。
-微服务与DDD的关系DDD 提出后在软件开发领域一直都是“雷声大，雨点小”，直到 Martin Fowler 提出微服务架构，DDD 才真正迎来了自己的时代。
+微服务与DDD的关系 DDD 提出后在软件开发领域一直都是“雷声大，雨点小”，直到 Martin Fowler 提出微服务架构，DDD 才真正迎来了自己的时代。
 有些熟悉 DDD 设计方法的软件工程师在进行微服务设计时，发现可以利用 DDD 设计方法来建立领域模型，划分领域边界，再根据这些领域边界从业务视角来划分微服务边界。而按照 DDD 方法设计出的微服务的业务和应用边界都非常合理，可以很好地实现微服务内部和外部的“高内聚、低耦合”。于是越来越多的人开始把 DDD 作为微服务设计的指导思想。
 DDD 是一种处理高度复杂领域的设计思想，它试图分离技术实现的复杂性，并围绕业务概念构建领域模型来控制业务的复杂性，以解决软件难以理解，难以演进的问题。DDD 不是架构，而是一种架构设计方法论，它通过边界划分将复杂业务领域简单化，帮我们设计出清晰的领域和应用边界，可以很容易地实现架构演进。
 DDD 是一种架构设计方法，微服务是一种架构风格，两者从本质上都是为了追求高响应力，而从业务视角去分离应用系统建设复杂度的手段。两者都强调从业务出发，其核心要义是强调根据业务发展，合理划分领域边界，持续调整现有架构，优化现有代码，以保持架构和代码的生命力，也就是我们常说的演进式架构。
@@ -49,110 +40,63 @@ DDD 主要关注：从业务领域视角划分领域边界，构建通用语言�
 
 
 
-    <title>
-  什么是领域驱动设计 · Alvinsu Blog
-</title>
-
-    
-      <link rel="canonical" href="https://alvin-su.github.io/post/%E4%BB%80%E4%B9%88%E6%98%AF%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1/">
-    
-
-    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
-
-    
-      
-      
-      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
-    
-
-    
-
-    
-      
-        
-        
-        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
-      
-    
-
-    
-
-    
-
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
-
-    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-    <meta name="generator" content="Hugo 0.99.1" />
   </head>
-
-  
-  
-    
-  
-  <body class="preload-transitions colorscheme-auto">
-    
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-    <main class="wrapper">
-      <nav class="navigation">
-  <section class="container">
-    <a class="navigation-title" href="/">
-      Alvinsu Blog
-    </a>
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
+  <body>
+    <header class="app-header">
+      <a href="https://alvin-su.github.io"><img class="app-header-avatar" src="/avatar.jpg" alt="Alvinsu" /></a>
+      <h1>Alvinsu Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="post/">Blog</a>
+             - 
           
-            <li class="navigation-item">
-              <a class="navigation-link" href="/post/">Blog</a>
-            </li>
+          <a class="app-header-menu-item" href="tags/">分类</a>
+             - 
           
-            <li class="navigation-item">
-              <a class="navigation-link" href="/tags/">分类</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/about/">关于</a>
-            </li>
-          
+          <a class="app-header-menu-item" href="about/">关于</a>
+      </nav>
+      <p>Alvinsu&#39;s personal website</p>
+      <div class="app-header-social">
         
+          <a href="https://github.com/alvin-su/" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+          </a>
         
-      </ul>
-    
-  </section>
-</nav>
-
-
-      <div class="content">
-        
-  <section class="container page">
-  <article>
-    <header>
-      <h1 class="title">
-        <a class="title-link" href="https://alvin-su.github.io/post/%E4%BB%80%E4%B9%88%E6%98%AF%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1/">
-          什么是领域驱动设计
-        </a>
-      </h1>
+      </div>
     </header>
-
-    <h1 id="什么是领域驱动设计">
-  什么是领域驱动设计
-  <a class="heading-link" href="#%e4%bb%80%e4%b9%88%e6%98%af%e9%a2%86%e5%9f%9f%e9%a9%b1%e5%8a%a8%e8%ae%be%e8%ae%a1">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h1>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">什么是领域驱动设计</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          May 27, 2022
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://alvin-su.github.io/tags/ddd/">DDD</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="什么是领域驱动设计">什么是领域驱动设计</h1>
 <p>2004 年埃里克·埃文斯（Eric Evans）发表了《领域驱动设计》（Domain-Driven Design –Tackling Complexity in the Heart of Software）这本书，从此领域驱动设计（Domain Driven Design，简称 DDD）诞生。DDD 核心思想是通过领域驱动设计方法定义领域模型，从而确定业务和应用边界，保证业务模型与代码模型的一致性。
 领域驱动设计是一种通过将实现连接到持续进化的模型来满足复杂需求的软件开发方法。</p>
 <p>DDD设计的前提是：</p>
@@ -162,12 +106,7 @@ DDD 主要关注：从业务领域视角划分领域边界，构建通用语言�
 <li>发起一个创造性的合作之间的技术和域界专家以迭代地完善的概念模式，解决特定领域的问题。</li>
 </ul>
 <p>领域驱动设计是一种由域模型来驱动着系统设计的思想，不是通过存储数据词典(DB表字段、ES Mapper字段等等)来驱动系统设计。领域模型是对业务模型的抽象，DDD是把业务模型翻译成系统架构设计的一种方式。</p>
-<h1 id="微服务与ddd的关系">
-  微服务与DDD的关系
-  <a class="heading-link" href="#%e5%be%ae%e6%9c%8d%e5%8a%a1%e4%b8%8eddd%e7%9a%84%e5%85%b3%e7%b3%bb">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h1>
+<h1 id="微服务与ddd的关系">微服务与DDD的关系</h1>
 <p>DDD 提出后在软件开发领域一直都是“雷声大，雨点小”，直到 Martin Fowler 提出微服务架构，DDD 才真正迎来了自己的时代。</p>
 <p>有些熟悉 DDD 设计方法的软件工程师在进行微服务设计时，发现可以利用 DDD 设计方法来建立领域模型，划分领域边界，再根据这些领域边界从业务视角来划分微服务边界。而按照 DDD 方法设计出的微服务的业务和应用边界都非常合理，可以很好地实现微服务内部和外部的“高内聚、低耦合”。于是越来越多的人开始把 DDD 作为微服务设计的指导思想。</p>
 <p>DDD 是一种处理高度复杂领域的设计思想，它试图分离技术实现的复杂性，并围绕业务概念构建领域模型来控制业务的复杂性，以解决软件难以理解，难以演进的问题。DDD 不是架构，而是一种架构设计方法论，它通过边界划分将复杂业务领域简单化，帮我们设计出清晰的领域和应用边界，可以很容易地实现架构演进。</p>
@@ -176,48 +115,12 @@ DDD 主要关注：从业务领域视角划分领域边界，构建通用语言�
 <em><strong>微服务主要关注</strong></em>：运行时的进程间通信、容错和故障隔离，实现去中心化数据管理和去中心化服务治理，关注微服务的独立开发、测试、构建和部署。
 .</p>
 
+    </div>
+    <div class="post-footer">
+      
+    </div>
   </article>
-</section>
-
-  
-
-      </div>
-
-      <footer class="footer">
-  <section class="container">
-    ©
-    
-    2022
-     Alvinsu 
-    ·
-    
-    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
-    
-  </section>
-</footer>
 
     </main>
-
-    
-      
-      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
   </body>
-
 </html>

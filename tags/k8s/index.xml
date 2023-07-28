@@ -14,7 +14,7 @@
       
       <guid>https://alvin-su.github.io/post/%E4%BB%A5yaml%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/</guid>
       <description>之前是通过kubectl run 命令，来创建pod，但这些方法只允许配置一组有限的属性。pod和其它Kubernetes资源通常是通过向Kubernetes REST API提供YAML描述文件来创建的。
-检查现有pod的YAML描述文件我们之前创建了一些pod，可以通过命令kubectl get po myk8swebapi -o yaml,来获取pod的整个YAML定义。如下所示：
+检查现有pod的YAML描述文件 我们之前创建了一些pod，可以通过命令kubectl get po myk8swebapi -o yaml,来获取pod的整个YAML定义。如下所示：
 # apiVersion 表示描述文件所使用的 Kubernetes API版本 apiVersion: v1 # kind 表示Kubernetes 对象或资源类型 kind: Pod # metadata 表示 pod 元数据（名称、标签和注解等） metadata:  creationTimestamp: &amp;#34;2022-07-05T15:16:53Z&amp;#34;  labels:  run: myk8swebapi  name: myk8swebapi  namespace: default  resourceVersion: &amp;#34;277178&amp;#34;  uid: 27c0c657-4329-474a-834b-f121af1aeaa7 # spec 表示 pod 规格/内容(pod 的容器列表，volumn等) spec:  containers:  - image: alvinsu/myk8swebapi:1.0  imagePullPolicy: IfNotPresent  name: myk8swebapi  ports:  - containerPort: 6001  protocol: TCP  resources: {}  terminationMessagePath: /dev/termination-log  terminationMessagePolicy: File  volumeMounts:  - mountPath: /var/run/secrets/kubernetes.</description>
     </item>
     
@@ -25,15 +25,15 @@
       
       <guid>https://alvin-su.github.io/post/pod%E4%BB%8B%E7%BB%8D/</guid>
       <description>pod是Kubernetes中最为重要的核心概念，而其它对象仅仅是在管理、暴露pod或被pod使用。
-介绍podpod是一组并置的容器，代表了Kubernetes中的基本构建模块。在实际应用中我们并不会单独部署容器，更多的是针对一组pod的容器进行部署和操作。但是也存在这只包含一个容器的pod。当一个pod包含多个容器时，这些容器总是运行在同一个工作节点上。一个pod绝不会跨越多个工作节点。如下图： 为何需要pod为什么不直接使用容器？为什么不能把多个进程都放到一个单独的容器中去？下面我们将回答这些问题。
+介绍pod pod是一组并置的容器，代表了Kubernetes中的基本构建模块。在实际应用中我们并不会单独部署容器，更多的是针对一组pod的容器进行部署和操作。但是也存在这只包含一个容器的pod。当一个pod包含多个容器时，这些容器总是运行在同一个工作节点上。一个pod绝不会跨越多个工作节点。如下图： 为何需要pod 为什么不直接使用容器？为什么不能把多个进程都放到一个单独的容器中去？下面我们将回答这些问题。
 在Kubernetes中，我们经常在容器中运行进程，由于每一个容器都非常像一台独立的机器，此时我们可能认为单个容器运行多个进程是合乎逻辑的，但是在实践中这种做法并不合理。
 容器被设计为每个容器只运行一个进程，如果在单个容器中运行多个不相关的进程，那么保持所有进程的运行和管理它们的日志等将会是我们的责任。但是我们很难区分在进程崩溃产生日志时，每个进程分别记录了什么。所以我们需要让每个进程运行在自己单独的容器中，而这也是Docker和Kubernetes期望使用的方式。
-了解pod由于不能将多个进程聚集在一个单独的容器中，我们需要另外一个更高级的结构来讲容器绑定在一起，并将它们作为一个单元进行管理，这就是pod背后的根本原理。
+了解pod 由于不能将多个进程聚集在一个单独的容器中，我们需要另外一个更高级的结构来讲容器绑定在一起，并将它们作为一个单元进行管理，这就是pod背后的根本原理。
 在pod中，我们可以同时运行一些密切相关的进程，并为它们提供几乎相同的环境，此时这些进程就好像运行在单个容器中一样，同时又保持着一定的隔离。这样一来，我们便能全面的利用容器所提供的特性，同时对这些进程来说它们就像运行在一起一样，实现两全其美。
-同一个pod容器之间的部分隔离我们已经知道容器之间彼此是完全隔离的，但此时我们期望的隔离容器组，而不是单个容器，并让每个容器组内的容器共享一些资源，而不是全部。Kubernetes通过配置Docker来让一个pod内的所有容器共享相同的Linux命名空间。由于一个pod中的所有容器都在相同的network和命名空间下，所以它们都共享相同的主机名和网络接口。同样地这些容器也都在相同的IPC命令空间下运行，因此能够通过IPC进行通信。
+同一个pod容器之间的部分隔离 我们已经知道容器之间彼此是完全隔离的，但此时我们期望的隔离容器组，而不是单个容器，并让每个容器组内的容器共享一些资源，而不是全部。Kubernetes通过配置Docker来让一个pod内的所有容器共享相同的Linux命名空间。由于一个pod中的所有容器都在相同的network和命名空间下，所以它们都共享相同的主机名和网络接口。同样地这些容器也都在相同的IPC命令空间下运行，因此能够通过IPC进行通信。
 但是文件系统有所不同，由于大多数容器的文件系统来自容器镜像，因此默认情况下，每个容器镜像的文件系统与其他容器完全隔离。但我们可以使用名为 Vloume的kubernetes资源来共享文件目录。
 同一个pod中的容器共享相同的IP和端口，此外，一个pod中的所有容器也都具有相同的loopback网络接口，因此容器可以通过localhost与同一个pod中的其它容器进行通信。
-pod间网络Kubernetes集群中的所有pod都在同一个共享的网络地址空间中，这意味着每个pod都可以通过其它pod的IP地址来实现互相的访问。两个pod彼此之间发送数据包时，它们都会将对方的实际IP地址看作数据包中的源IP，无NAT网络地址转换。</description>
+pod间网络 Kubernetes集群中的所有pod都在同一个共享的网络地址空间中，这意味着每个pod都可以通过其它pod的IP地址来实现互相的访问。两个pod彼此之间发送数据包时，它们都会将对方的实际IP地址看作数据包中的源IP，无NAT网络地址转换。</description>
     </item>
     
     <item>
@@ -42,11 +42,11 @@ pod间网络Kubernetes集群中的所有pod都在同一个共享的网络地
       <pubDate>Wed, 06 Jul 2022 16:03:21 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/k8s%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/</guid>
-      <description>我们之前在Centos中成功部署了minikube，那么我们就基于minikube在k8s中部署第一个asp.net core应用。我们需要先容器化一个asp.net core应用，然后推送到Docker hub镜像仓库中，如下图： 部署应用我们现在就基于已经推送到Dockerhub中的镜像使用kubectl run 命令部署，该命令可以创建所有必要的组件而无需JSON或YAML文件。具体代码如下： kubectl run myk8swebapi --image=alvinsu/myk8swebapi --port=6001
+      <description>我们之前在Centos中成功部署了minikube，那么我们就基于minikube在k8s中部署第一个asp.net core应用。我们需要先容器化一个asp.net core应用，然后推送到Docker hub镜像仓库中，如下图： 部署应用 我们现在就基于已经推送到Dockerhub中的镜像使用kubectl run 命令部署，该命令可以创建所有必要的组件而无需JSON或YAML文件。具体代码如下： kubectl run myk8swebapi --image=alvinsu/myk8swebapi --port=6001
 --image=alvinsu/myk8swebapi显示的是要从Dockerhub拉取和运行的容器镜像，--port=6001选项告诉Kubernetes应用正在监听6001端口。
-介绍pod一个pod是一组紧密相关的容器，它们总是一起运行在同一个工作节点上以及同一个Linux命名空间中。每个pod就像一个独立的逻辑机器，拥有自己的IP、主机名、进程等，运行一个独立的应用程序。应用程序可以是单个进程，运行在单个容器中，也可以是一个应用程序或者其它支持进程，每个进程都在自己的容器中运行。一个pod中的所有容器都运行在同一个逻辑机器上，而其它pod中的容器，即使运行在同一个工作节点上，也会出现在不同的工作节点上。如下图： 列出pod我们上面通过kubectl run命令已经创建了一个pod。下面我们通过命令kubectl get pods 列出所有pod。如下图： 当运行kubectl命令时，它通过向KubernetesAPI服务器发送一个 RESTHTTP请求，在集群中创建了一个新的pod，调度器将其调度到一个工作节点上 Kubelet看到pod被调度到节点上，就告知Docker从镜像中心中拉取指定的镜像，因为本地没有该镜像。下载镜像后，Docker创建并运行容器。整体流程如下图： 还可以使用命令:kubectl get pods -o wide 列出pod的IP和pod所在节点信息。
-访问web应用我们刚刚创建的pod如何访问？每个pod都有自己的IP，但是这个地址是集群内部的，不能从集群外部访问。要让pod能从外部访问，需要通过服务对象公开它，要创建一个service，可以通过下面的命令:kubectl expose pod myk8swebapi --type=NodePort
-我们可以通过命令:kubectl get services 列出刚创建的服务。 使用外网IP访问服务我们的minikube集群是部署在云服务器中，所以我们部署完服务后，只能在云服务器本机中使用 curl http://192.168.49.2:32246/WeatherForecast进行访问。如果要使用云服务器分配的外网ip访问，则需要进行转发，通过命令:kubectl port-forward svc/myk8swebapi 32246:6001，这样我们就能通过服务器外网IP,进行访问，因为之前配置 dashboard 可以外网访问，已经执行过命令：kubectl proxy --port=8001 --address=&#39;0.0.0.0&#39; --accept-hosts=&#39;^.*&#39; &amp;amp;。所以可以通过如下地址访问： http://外网IP:8001/api/v1/namespaces/default/services/myk8swebapi:/proxy/WeatherForecast</description>
+介绍pod 一个pod是一组紧密相关的容器，它们总是一起运行在同一个工作节点上以及同一个Linux命名空间中。每个pod就像一个独立的逻辑机器，拥有自己的IP、主机名、进程等，运行一个独立的应用程序。应用程序可以是单个进程，运行在单个容器中，也可以是一个应用程序或者其它支持进程，每个进程都在自己的容器中运行。一个pod中的所有容器都运行在同一个逻辑机器上，而其它pod中的容器，即使运行在同一个工作节点上，也会出现在不同的工作节点上。如下图： 列出pod 我们上面通过kubectl run命令已经创建了一个pod。下面我们通过命令kubectl get pods 列出所有pod。如下图： 当运行kubectl命令时，它通过向KubernetesAPI服务器发送一个 RESTHTTP请求，在集群中创建了一个新的pod，调度器将其调度到一个工作节点上 Kubelet看到pod被调度到节点上，就告知Docker从镜像中心中拉取指定的镜像，因为本地没有该镜像。下载镜像后，Docker创建并运行容器。整体流程如下图： 还可以使用命令:kubectl get pods -o wide 列出pod的IP和pod所在节点信息。
+访问web应用 我们刚刚创建的pod如何访问？每个pod都有自己的IP，但是这个地址是集群内部的，不能从集群外部访问。要让pod能从外部访问，需要通过服务对象公开它，要创建一个service，可以通过下面的命令:kubectl expose pod myk8swebapi --type=NodePort
+我们可以通过命令:kubectl get services 列出刚创建的服务。 使用外网IP访问服务 我们的minikube集群是部署在云服务器中，所以我们部署完服务后，只能在云服务器本机中使用 curl http://192.168.49.2:32246/WeatherForecast进行访问。如果要使用云服务器分配的外网ip访问，则需要进行转发，通过命令:kubectl port-forward svc/myk8swebapi 32246:6001，这样我们就能通过服务器外网IP,进行访问，因为之前配置 dashboard 可以外网访问，已经执行过命令：kubectl proxy --port=8001 --address=&#39;0.0.0.0&#39; --accept-hosts=&#39;^.*&#39; &amp;amp;。所以可以通过如下地址访问： http://外网IP:8001/api/v1/namespaces/default/services/myk8swebapi:/proxy/WeatherForecast</description>
     </item>
     
     <item>
@@ -56,14 +56,18 @@ pod间网络Kubernetes集群中的所有pod都在同一个共享的网络地
       
       <guid>https://alvin-su.github.io/post/kubernetes%E4%BB%8B%E7%BB%8D/</guid>
       <description>随着系统可部署组件的数量增长，把他们都管理起来会变得越来越困难。需要一个更好的方式来部署和管理这些组件，并支持基础设施的全球性伸缩，谷歌是最开始意思到这一点的公司。
-Kubernetes 起源Kubernetes最早起源于一个谷歌的内部系统Borg，后来又出来一个新系统叫Omega。这两套系统帮助应用开发者和系统管理员管理那些数以千计的应用程序和服务器。简化了开发和部署，也提供了应用对基础设施的利用率。后来谷歌将Borg和Omega系统在2014年的时候开源了出来，这就是Kubernetes。
-深入浅出地了解 Kubernetes一个“容器”，实际上是一个由 Linux Namespace、Linux Cgroups 和 rootfs 三种技术构建出来的进程的隔离环境。从这个结构可以看出，一个正在运行的容器其实可以被一分为二地看待：
+Kubernetes 起源 Kubernetes最早起源于一个谷歌的内部系统Borg，后来又出来一个新系统叫Omega。这两套系统帮助应用开发者和系统管理员管理那些数以千计的应用程序和服务器。简化了开发和部署，也提供了应用对基础设施的利用率。后来谷歌将Borg和Omega系统在2014年的时候开源了出来，这就是Kubernetes。
+深入浅出地了解 Kubernetes 一个“容器”，实际上是一个由 Linux Namespace、Linux Cgroups 和 rootfs 三种技术构建出来的进程的隔离环境。从这个结构可以看出，一个正在运行的容器其实可以被一分为二地看待：
  一组联合挂载在 /var/lib/docker/aufs/mnt 上的rootfs。这一部分称为 容器镜像 ，是容器的静态视图。 一个由 Namespace+Cgroups构成的隔离环境，这一部分称为 容器运行时 ，是容器的动态视图。  作为一名开发者，我们并不关心容器运行时的差异。在整个“开发 - 测试 - 发布”的流程中，真正承载着容器信息进行传递的，是容器镜像，而不是容器运行时。这个重要假设，正是容器技术圈在 Docker 项目成功后不久，就迅速走向了“容器编排”这个“上层建筑”的主要原因：作为一家云服务商或者基础设施提供商，我只要能够将用户提交的 Docker 镜像以容器的方式运行起来，就能成为这个非常热闹的容器生态图上的一个承载点，从而将整个容器技术栈上的价值，沉淀在我的这个节点上。
 容器编排的工具就更加显得重要，这其中以Docker 公司的Compose+Swarm组合以及Google与RedHat公司共同主导的Kubernetes项目为代表。目前Kubernetes以及事实上成为了容器编排工具的不二选择。
-Kubernetes的核心功能下图展示了一幅最简单的Kubernetes系统图。整个系统由一个主节点和若干个工作节点组成。开发着把一个应用列表提交到主节点上，Kubernetes会将它们部署到集群的工作节点。应用被部署到哪个节点对于开发者和系统管理员来说都不关心。 开发着指定一些应用必须一起运行，Kubernetes将会在一个工作节点上部署它们。其它的将被分散部署到集群中，但是不管部署在哪，它们都以相同的方式互相通信。
-Kubernetes的集群架构Kubernetes可以被当做集群的一个操作系统来看待。在硬件级别，一个Kubernetes集群由很多节点组成，这些节点被分成以下两种类型：
- 主节点，它承载着Kubernetes控制和管理整个集群系统的控制面板。 工作节点，他们运行用户实际部署的应用。  控制面板控制面板用于控制集群并使它工作。它包含多个组件，组件可以运行在单个主节点上或通过副本分别部署在多个主节点以确保高可用性。这些组件分别为：
- Kubernetes API服务器，主要用于组件间的相互通信。 Scheculer，调度应用，为应用的每个可部署组件分配一个工作节点。 Controller Manager，它执行集群级别的功能，如复制组件、持续跟踪工作节点、处理节点失败等。 etcd，一个可靠的分布式数据存储，它能持久化存储集群配置。  这些控制面板的组件持有并控制集群的状态，但是它们不允许应用，这些由工作节点完成。</description>
+Kubernetes的核心功能 下图展示了一幅最简单的Kubernetes系统图。整个系统由一个主节点和若干个工作节点组成。开发着把一个应用列表提交到主节点上，Kubernetes会将它们部署到集群的工作节点。应用被部署到哪个节点对于开发者和系统管理员来说都不关心。 开发着指定一些应用必须一起运行，Kubernetes将会在一个工作节点上部署它们。其它的将被分散部署到集群中，但是不管部署在哪，它们都以相同的方式互相通信。
+Kubernetes的集群架构 Kubernetes可以被当做集群的一个操作系统来看待。在硬件级别，一个Kubernetes集群由很多节点组成，这些节点被分成以下两种类型：
+ 主节点，它承载着Kubernetes控制和管理整个集群系统的控制面板。 工作节点，他们运行用户实际部署的应用。  控制面板 控制面板用于控制集群并使它工作。它包含多个组件，组件可以运行在单个主节点上或通过副本分别部署在多个主节点以确保高可用性。这些组件分别为：
+ Kubernetes API服务器，主要用于组件间的相互通信。 Scheculer，调度应用，为应用的每个可部署组件分配一个工作节点。 Controller Manager，它执行集群级别的功能，如复制组件、持续跟踪工作节点、处理节点失败等。 etcd，一个可靠的分布式数据存储，它能持久化存储集群配置。  这些控制面板的组件持有并控制集群的状态，但是它们不允许应用，这些由工作节点完成。
+工作节点 工作节点是运行容器化应用的机器。运行、监控和管理应用服务的任务是由以下组件完成：
+ Docker、rtk或其它的容器类型。 Kubelet，它由API服务器通信，并管理它所在节点的容器。 Kubernetes Service Proxy，简称kube-proxy，它负责组件之间的负载均衡网络流量。  在Kubernetes中运行应用 为了在Kubernetes中运行应用，首先需要将应用打包进一个或多个容器镜像，再将那些镜像推送到镜像仓库，然后将应用的描述发布到KubernetesAPI服务器。该描述包括诸如容器镜像或者包含应用程序组件的容器镜像、这些组件如何相互关联，以及哪些组件需要同时运行在同一个节点上和哪些组件不需要同时运行等信息。此外，该描述还包括哪些组件为内部或外部客户提供服务且应该通过单个IP地址暴露，并使其他组件可以发现。
+描述信息是怎样成为一个运行的容器 当API服务器处理应用的描述时，调度器调度指定组的容器到可用的工作节点上，调度是基于每组所需的计算资源，以及调度时每个节点未分配的资源。然后，那些节点上的Kubelet指示容器运行时(例如Docker)拉取所需的镜像并运行容器。仔细下图，可以更好地理解如何在Kubernetes中部署应用程序。应用描述符列出了四个容器，并将它们分为三组(这些集合被称为pod)。前两个nod只包含一个容器，而最后一个包含两个。这意味着两个容器都需要协作运行，不应该相互隔离。在每个pod旁边，还可以看到一个数字。表示需要并行运行的每个pod的副本数量。在向Kubernetes提交描述符之后，它将把每个pod的指定副本数量调度到可用的工作节点上。节点上的Kubelets将告知 Docker从镜像仓库中拉取容器镜像并运行容器。
+Kubernetes管理容器运行   保持容器运行，一旦应用程序运行起来，Kubernetes就会不断地确认应用程序的部署状态始终与你提供的描述相匹配。例如，如果你指出你需要运行五个web服务器实例，那么 Kubernetes总是保持正好运行五个实例。如果实例之一停止了正常工作，比如当进程崩溃或停止响应时，Kubernetes将自动重启它。 同理，如果整个工作节点死亡或无法访问，Kubernetes将为在故障节点上运行的所有容器选择新节点，并在新选择的节点上运行它们。</description>
     </item>
     
     <item>
@@ -73,15 +77,15 @@ Kubernetes的集群架构Kubernetes可以被当做集群的一个操作系�
       
       <guid>https://alvin-su.github.io/post/install_k8s/</guid>
       <description>本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows和centos 7环境为例，介绍两种安装单节点k8s的方法。
-windows Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
+windows Docker Desktop 安装k8s 首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
 (https://github.com/AliyunContainerService/k8s-for-docker-desktop)
 下载 zip 文件k8s-for-docker-desktop-master.zip到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令： .\load_images.ps1。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：
 等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：
-验证 Kubernetes 集群状态运行命令： kubectl cluster-info 显示结果如下：
-配置 Dashboard在之前的解压目录k8s-for-docker-desktop-master中有一个 kubernetes-dashboard.yaml 文件，用powershell进入到解压目录，执行下面的命令：kubectl apply -f kubernetes-dashboard.yaml,该命令会安装管理控制台。
+验证 Kubernetes 集群状态 运行命令： kubectl cluster-info 显示结果如下：
+配置 Dashboard 在之前的解压目录k8s-for-docker-desktop-master中有一个 kubernetes-dashboard.yaml 文件，用powershell进入到解压目录，执行下面的命令：kubectl apply -f kubernetes-dashboard.yaml,该命令会安装管理控制台。
 通过命令:kubectl proxy 开启 API Server 访问代理。如下图：
 然后通过以下 url 进行访问：(http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
-访问会提示需要认证才能登录： 配置控制台访问令牌在之前的解压目录k8s-for-docker-desktop-master中有一个kube-system-default.yaml文件，进入到解压目录，执行如下命令：kubectl apply -f kube-system-default.yaml。然后执行:
+访问会提示需要认证才能登录： 配置控制台访问令牌 在之前的解压目录k8s-for-docker-desktop-master中有一个kube-system-default.yaml文件，进入到解压目录，执行如下命令：kubectl apply -f kube-system-default.yaml。然后执行:
 $TOKEN=((kubectl -n kube-system describe secret default | Select-String &amp;#34;token:&amp;#34;) -split &amp;#34; +&amp;#34;)[1] kubectl config set-credentials docker-desktop --token=&amp;#34;${TOKEN}&amp;#34; echo $TOKEN 获取访问token。然后请自行妥善保管好该token。因为每次登录dashboard都会要输入。</description>
     </item>
     

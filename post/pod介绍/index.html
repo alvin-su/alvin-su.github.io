@@ -1,50 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-cn">
-
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
+    <title>Pod介绍 // Alvinsu Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.99.1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Alvinsu" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://alvin-su.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
 
     
-
-    <meta name="author" content="Alvinsu">
-    <meta name="description" content="pod是Kubernetes中最为重要的核心概念，而其它对象仅仅是在管理、暴露pod或被pod使用。
-介绍podpod是一组并置的容器，代表了Kubernetes中的基本构建模块。在实际应用中我们并不会单独部署容器，更多的是针对一组pod的容器进行部署和操作。但是也存在这只包含一个容器的pod。当一个pod包含多个容器时，这些容器总是运行在同一个工作节点上。一个pod绝不会跨越多个工作节点。如下图： 为何需要pod为什么不直接使用容器？为什么不能把多个进程都放到一个单独的容器中去？下面我们将回答这些问题。
-在Kubernetes中，我们经常在容器中运行进程，由于每一个容器都非常像一台独立的机器，此时我们可能认为单个容器运行多个进程是合乎逻辑的，但是在实践中这种做法并不合理。
-容器被设计为每个容器只运行一个进程，如果在单个容器中运行多个不相关的进程，那么保持所有进程的运行和管理它们的日志等将会是我们的责任。但是我们很难区分在进程崩溃产生日志时，每个进程分别记录了什么。所以我们需要让每个进程运行在自己单独的容器中，而这也是Docker和Kubernetes期望使用的方式。
-了解pod由于不能将多个进程聚集在一个单独的容器中，我们需要另外一个更高级的结构来讲容器绑定在一起，并将它们作为一个单元进行管理，这就是pod背后的根本原理。
-在pod中，我们可以同时运行一些密切相关的进程，并为它们提供几乎相同的环境，此时这些进程就好像运行在单个容器中一样，同时又保持着一定的隔离。这样一来，我们便能全面的利用容器所提供的特性，同时对这些进程来说它们就像运行在一起一样，实现两全其美。
-同一个pod容器之间的部分隔离我们已经知道容器之间彼此是完全隔离的，但此时我们期望的隔离容器组，而不是单个容器，并让每个容器组内的容器共享一些资源，而不是全部。Kubernetes通过配置Docker来让一个pod内的所有容器共享相同的Linux命名空间。由于一个pod中的所有容器都在相同的network和命名空间下，所以它们都共享相同的主机名和网络接口。同样地这些容器也都在相同的IPC命令空间下运行，因此能够通过IPC进行通信。
-但是文件系统有所不同，由于大多数容器的文件系统来自容器镜像，因此默认情况下，每个容器镜像的文件系统与其他容器完全隔离。但我们可以使用名为 Vloume的kubernetes资源来共享文件目录。
-同一个pod中的容器共享相同的IP和端口，此外，一个pod中的所有容器也都具有相同的loopback网络接口，因此容器可以通过localhost与同一个pod中的其它容器进行通信。
-pod间网络Kubernetes集群中的所有pod都在同一个共享的网络地址空间中，这意味着每个pod都可以通过其它pod的IP地址来实现互相的访问。两个pod彼此之间发送数据包时，它们都会将对方的实际IP地址看作数据包中的源IP，无NAT网络地址转换。">
-    <meta name="keywords" content="blog,developer,personal">
-
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Pod介绍"/>
 <meta name="twitter:description" content="pod是Kubernetes中最为重要的核心概念，而其它对象仅仅是在管理、暴露pod或被pod使用。
-介绍podpod是一组并置的容器，代表了Kubernetes中的基本构建模块。在实际应用中我们并不会单独部署容器，更多的是针对一组pod的容器进行部署和操作。但是也存在这只包含一个容器的pod。当一个pod包含多个容器时，这些容器总是运行在同一个工作节点上。一个pod绝不会跨越多个工作节点。如下图： 为何需要pod为什么不直接使用容器？为什么不能把多个进程都放到一个单独的容器中去？下面我们将回答这些问题。
+介绍pod pod是一组并置的容器，代表了Kubernetes中的基本构建模块。在实际应用中我们并不会单独部署容器，更多的是针对一组pod的容器进行部署和操作。但是也存在这只包含一个容器的pod。当一个pod包含多个容器时，这些容器总是运行在同一个工作节点上。一个pod绝不会跨越多个工作节点。如下图： 为何需要pod 为什么不直接使用容器？为什么不能把多个进程都放到一个单独的容器中去？下面我们将回答这些问题。
 在Kubernetes中，我们经常在容器中运行进程，由于每一个容器都非常像一台独立的机器，此时我们可能认为单个容器运行多个进程是合乎逻辑的，但是在实践中这种做法并不合理。
 容器被设计为每个容器只运行一个进程，如果在单个容器中运行多个不相关的进程，那么保持所有进程的运行和管理它们的日志等将会是我们的责任。但是我们很难区分在进程崩溃产生日志时，每个进程分别记录了什么。所以我们需要让每个进程运行在自己单独的容器中，而这也是Docker和Kubernetes期望使用的方式。
-了解pod由于不能将多个进程聚集在一个单独的容器中，我们需要另外一个更高级的结构来讲容器绑定在一起，并将它们作为一个单元进行管理，这就是pod背后的根本原理。
+了解pod 由于不能将多个进程聚集在一个单独的容器中，我们需要另外一个更高级的结构来讲容器绑定在一起，并将它们作为一个单元进行管理，这就是pod背后的根本原理。
 在pod中，我们可以同时运行一些密切相关的进程，并为它们提供几乎相同的环境，此时这些进程就好像运行在单个容器中一样，同时又保持着一定的隔离。这样一来，我们便能全面的利用容器所提供的特性，同时对这些进程来说它们就像运行在一起一样，实现两全其美。
-同一个pod容器之间的部分隔离我们已经知道容器之间彼此是完全隔离的，但此时我们期望的隔离容器组，而不是单个容器，并让每个容器组内的容器共享一些资源，而不是全部。Kubernetes通过配置Docker来让一个pod内的所有容器共享相同的Linux命名空间。由于一个pod中的所有容器都在相同的network和命名空间下，所以它们都共享相同的主机名和网络接口。同样地这些容器也都在相同的IPC命令空间下运行，因此能够通过IPC进行通信。
+同一个pod容器之间的部分隔离 我们已经知道容器之间彼此是完全隔离的，但此时我们期望的隔离容器组，而不是单个容器，并让每个容器组内的容器共享一些资源，而不是全部。Kubernetes通过配置Docker来让一个pod内的所有容器共享相同的Linux命名空间。由于一个pod中的所有容器都在相同的network和命名空间下，所以它们都共享相同的主机名和网络接口。同样地这些容器也都在相同的IPC命令空间下运行，因此能够通过IPC进行通信。
 但是文件系统有所不同，由于大多数容器的文件系统来自容器镜像，因此默认情况下，每个容器镜像的文件系统与其他容器完全隔离。但我们可以使用名为 Vloume的kubernetes资源来共享文件目录。
 同一个pod中的容器共享相同的IP和端口，此外，一个pod中的所有容器也都具有相同的loopback网络接口，因此容器可以通过localhost与同一个pod中的其它容器进行通信。
-pod间网络Kubernetes集群中的所有pod都在同一个共享的网络地址空间中，这意味着每个pod都可以通过其它pod的IP地址来实现互相的访问。两个pod彼此之间发送数据包时，它们都会将对方的实际IP地址看作数据包中的源IP，无NAT网络地址转换。"/>
+pod间网络 Kubernetes集群中的所有pod都在同一个共享的网络地址空间中，这意味着每个pod都可以通过其它pod的IP地址来实现互相的访问。两个pod彼此之间发送数据包时，它们都会将对方的实际IP地址看作数据包中的源IP，无NAT网络地址转换。"/>
 
     <meta property="og:title" content="Pod介绍" />
 <meta property="og:description" content="pod是Kubernetes中最为重要的核心概念，而其它对象仅仅是在管理、暴露pod或被pod使用。
-介绍podpod是一组并置的容器，代表了Kubernetes中的基本构建模块。在实际应用中我们并不会单独部署容器，更多的是针对一组pod的容器进行部署和操作。但是也存在这只包含一个容器的pod。当一个pod包含多个容器时，这些容器总是运行在同一个工作节点上。一个pod绝不会跨越多个工作节点。如下图： 为何需要pod为什么不直接使用容器？为什么不能把多个进程都放到一个单独的容器中去？下面我们将回答这些问题。
+介绍pod pod是一组并置的容器，代表了Kubernetes中的基本构建模块。在实际应用中我们并不会单独部署容器，更多的是针对一组pod的容器进行部署和操作。但是也存在这只包含一个容器的pod。当一个pod包含多个容器时，这些容器总是运行在同一个工作节点上。一个pod绝不会跨越多个工作节点。如下图： 为何需要pod 为什么不直接使用容器？为什么不能把多个进程都放到一个单独的容器中去？下面我们将回答这些问题。
 在Kubernetes中，我们经常在容器中运行进程，由于每一个容器都非常像一台独立的机器，此时我们可能认为单个容器运行多个进程是合乎逻辑的，但是在实践中这种做法并不合理。
 容器被设计为每个容器只运行一个进程，如果在单个容器中运行多个不相关的进程，那么保持所有进程的运行和管理它们的日志等将会是我们的责任。但是我们很难区分在进程崩溃产生日志时，每个进程分别记录了什么。所以我们需要让每个进程运行在自己单独的容器中，而这也是Docker和Kubernetes期望使用的方式。
-了解pod由于不能将多个进程聚集在一个单独的容器中，我们需要另外一个更高级的结构来讲容器绑定在一起，并将它们作为一个单元进行管理，这就是pod背后的根本原理。
+了解pod 由于不能将多个进程聚集在一个单独的容器中，我们需要另外一个更高级的结构来讲容器绑定在一起，并将它们作为一个单元进行管理，这就是pod背后的根本原理。
 在pod中，我们可以同时运行一些密切相关的进程，并为它们提供几乎相同的环境，此时这些进程就好像运行在单个容器中一样，同时又保持着一定的隔离。这样一来，我们便能全面的利用容器所提供的特性，同时对这些进程来说它们就像运行在一起一样，实现两全其美。
-同一个pod容器之间的部分隔离我们已经知道容器之间彼此是完全隔离的，但此时我们期望的隔离容器组，而不是单个容器，并让每个容器组内的容器共享一些资源，而不是全部。Kubernetes通过配置Docker来让一个pod内的所有容器共享相同的Linux命名空间。由于一个pod中的所有容器都在相同的network和命名空间下，所以它们都共享相同的主机名和网络接口。同样地这些容器也都在相同的IPC命令空间下运行，因此能够通过IPC进行通信。
+同一个pod容器之间的部分隔离 我们已经知道容器之间彼此是完全隔离的，但此时我们期望的隔离容器组，而不是单个容器，并让每个容器组内的容器共享一些资源，而不是全部。Kubernetes通过配置Docker来让一个pod内的所有容器共享相同的Linux命名空间。由于一个pod中的所有容器都在相同的network和命名空间下，所以它们都共享相同的主机名和网络接口。同样地这些容器也都在相同的IPC命令空间下运行，因此能够通过IPC进行通信。
 但是文件系统有所不同，由于大多数容器的文件系统来自容器镜像，因此默认情况下，每个容器镜像的文件系统与其他容器完全隔离。但我们可以使用名为 Vloume的kubernetes资源来共享文件目录。
 同一个pod中的容器共享相同的IP和端口，此外，一个pod中的所有容器也都具有相同的loopback网络接口，因此容器可以通过localhost与同一个pod中的其它容器进行通信。
-pod间网络Kubernetes集群中的所有pod都在同一个共享的网络地址空间中，这意味着每个pod都可以通过其它pod的IP地址来实现互相的访问。两个pod彼此之间发送数据包时，它们都会将对方的实际IP地址看作数据包中的源IP，无NAT网络地址转换。" />
+pod间网络 Kubernetes集群中的所有pod都在同一个共享的网络地址空间中，这意味着每个pod都可以通过其它pod的IP地址来实现互相的访问。两个pod彼此之间发送数据包时，它们都会将对方的实际IP地址看作数据包中的源IP，无NAT网络地址转换。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://alvin-su.github.io/post/pod%E4%BB%8B%E7%BB%8D/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2022-07-07T09:40:09+08:00" />
@@ -52,190 +42,87 @@ pod间网络Kubernetes集群中的所有pod都在同一个共享的网络地
 
 
 
-    <title>
-  Pod介绍 · Alvinsu Blog
-</title>
-
-    
-      <link rel="canonical" href="https://alvin-su.github.io/post/pod%E4%BB%8B%E7%BB%8D/">
-    
-
-    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
-
-    
-      
-      
-      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
-    
-
-    
-
-    
-      
-        
-        
-        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
-      
-    
-
-    
-
-    
-
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
-
-    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-    <meta name="generator" content="Hugo 0.99.1" />
   </head>
-
-  
-  
-    
-  
-  <body class="preload-transitions colorscheme-auto">
-    
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-    <main class="wrapper">
-      <nav class="navigation">
-  <section class="container">
-    <a class="navigation-title" href="/">
-      Alvinsu Blog
-    </a>
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
+  <body>
+    <header class="app-header">
+      <a href="https://alvin-su.github.io"><img class="app-header-avatar" src="/avatar.jpg" alt="Alvinsu" /></a>
+      <h1>Alvinsu Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="post/">Blog</a>
+             - 
           
-            <li class="navigation-item">
-              <a class="navigation-link" href="/post/">Blog</a>
-            </li>
+          <a class="app-header-menu-item" href="tags/">分类</a>
+             - 
           
-            <li class="navigation-item">
-              <a class="navigation-link" href="/tags/">分类</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/about/">关于</a>
-            </li>
-          
+          <a class="app-header-menu-item" href="about/">关于</a>
+      </nav>
+      <p>Alvinsu&#39;s personal website</p>
+      <div class="app-header-social">
         
+          <a href="https://github.com/alvin-su/" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+          </a>
         
-      </ul>
-    
-  </section>
-</nav>
-
-
-      <div class="content">
-        
-  <section class="container page">
-  <article>
-    <header>
-      <h1 class="title">
-        <a class="title-link" href="https://alvin-su.github.io/post/pod%E4%BB%8B%E7%BB%8D/">
-          Pod介绍
-        </a>
-      </h1>
+      </div>
     </header>
-
-    <p><code>pod</code>是<code>Kubernetes</code>中最为重要的核心概念，而其它对象仅仅是在管理、暴露<code>pod</code>或被<code>pod</code>使用。</p>
-<h1 id="介绍pod">
-  介绍pod
-  <a class="heading-link" href="#%e4%bb%8b%e7%bb%8dpod">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h1>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Pod介绍</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jul 7, 2022
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://alvin-su.github.io/tags/k8s/">k8s</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p><code>pod</code>是<code>Kubernetes</code>中最为重要的核心概念，而其它对象仅仅是在管理、暴露<code>pod</code>或被<code>pod</code>使用。</p>
+<h1 id="介绍pod">介绍pod</h1>
 <p><code>pod</code>是一组并置的容器，代表了<code>Kubernetes</code>中的基本构建模块。在实际应用中我们并不会单独部署容器，更多的是针对一组<code>pod</code>的容器进行部署和操作。但是也存在这只包含一个容器的<code>pod</code>。当一个<code>pod</code>包含多个容器时，这些容器总是运行在同一个工作节点上。一个<code>pod</code>绝不会跨越多个工作节点。如下图：
 <img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/pod%E4%BB%8B%E7%BB%8D/pod1.png?raw=true" alt=""></p>
-<h2 id="为何需要pod">
-  为何需要pod
-  <a class="heading-link" href="#%e4%b8%ba%e4%bd%95%e9%9c%80%e8%a6%81pod">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h2>
+<h2 id="为何需要pod">为何需要pod</h2>
 <p>为什么不直接使用容器？为什么不能把多个进程都放到一个单独的容器中去？下面我们将回答这些问题。</p>
 <p>在<code>Kubernetes</code>中，我们经常在容器中运行进程，由于每一个容器都非常像一台独立的机器，此时我们可能认为单个容器运行多个进程是合乎逻辑的，但是在实践中这种做法并不合理。</p>
 <p>容器被设计为每个容器只运行一个进程，如果在单个容器中运行多个不相关的进程，那么保持所有进程的运行和管理它们的日志等将会是我们的责任。但是我们很难区分在进程崩溃产生日志时，每个进程分别记录了什么。所以我们需要让每个进程运行在自己单独的容器中，而这也是<code>Docker</code>和<code>Kubernetes</code>期望使用的方式。</p>
-<h2 id="了解pod">
-  了解pod
-  <a class="heading-link" href="#%e4%ba%86%e8%a7%a3pod">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h2>
+<h2 id="了解pod">了解pod</h2>
 <p>由于不能将多个进程聚集在一个单独的容器中，我们需要另外一个更高级的结构来讲容器绑定在一起，并将它们作为一个单元进行管理，这就是<code>pod</code>背后的根本原理。</p>
 <p>在<code>pod</code>中，我们可以同时运行一些密切相关的进程，并为它们提供几乎相同的环境，此时这些进程就好像运行在单个容器中一样，同时又保持着一定的隔离。这样一来，我们便能全面的利用容器所提供的特性，同时对这些进程来说它们就像运行在一起一样，实现两全其美。</p>
-<h3 id="同一个pod容器之间的部分隔离">
-  同一个pod容器之间的部分隔离
-  <a class="heading-link" href="#%e5%90%8c%e4%b8%80%e4%b8%aapod%e5%ae%b9%e5%99%a8%e4%b9%8b%e9%97%b4%e7%9a%84%e9%83%a8%e5%88%86%e9%9a%94%e7%a6%bb">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="同一个pod容器之间的部分隔离">同一个pod容器之间的部分隔离</h3>
 <p>我们已经知道容器之间彼此是完全隔离的，但此时我们期望的隔离容器组，而不是单个容器，并让每个容器组内的容器共享一些资源，而不是全部。<code>Kubernetes</code>通过配置<code>Docker</code>来让一个<code>pod</code>内的所有容器共享相同的Linux命名空间。由于一个<code>pod</code>中的所有容器都在相同的network和命名空间下，所以它们都共享相同的主机名和网络接口。同样地这些容器也都在相同的IPC命令空间下运行，因此能够通过IPC进行通信。</p>
 <p>但是文件系统有所不同，由于大多数容器的文件系统来自容器镜像，因此默认情况下，每个容器镜像的文件系统与其他容器完全隔离。但我们可以使用名为 <code>Vloume</code>的<code>kubernetes</code>资源来共享文件目录。</p>
 <p>同一个<code>pod</code>中的容器共享相同的IP和端口，此外，一个<code>pod</code>中的所有容器也都具有相同的<code>loopback</code>网络接口，因此容器可以通过<code>localhost</code>与同一个<code>pod</code>中的其它容器进行通信。</p>
-<h3 id="pod间网络">
-  pod间网络
-  <a class="heading-link" href="#pod%e9%97%b4%e7%bd%91%e7%bb%9c">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="pod间网络">pod间网络</h3>
 <p><code>Kubernetes</code>集群中的所有<code>pod</code>都在同一个共享的网络地址空间中，这意味着每个<code>pod</code>都可以通过其它<code>pod</code>的IP地址来实现互相的访问。两个<code>pod</code>彼此之间发送数据包时，它们都会将对方的实际IP地址看作数据包中的源IP，无NAT网络地址转换。</p>
 <p><img src="https://github.com/alvin-su/alvin-su.github.io/blob/master/blogimages/pod%E4%BB%8B%E7%BB%8D/pod2.png?raw=true" alt=""></p>
 
+    </div>
+    <div class="post-footer">
+      
+    </div>
   </article>
-</section>
-
-  
-
-      </div>
-
-      <footer class="footer">
-  <section class="container">
-    ©
-    
-    2022
-     Alvinsu 
-    ·
-    
-    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
-    
-  </section>
-</footer>
 
     </main>
-
-    
-      
-      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
   </body>
-
 </html>

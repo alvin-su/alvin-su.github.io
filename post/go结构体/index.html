@@ -1,38 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-cn">
-
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
+    <title>Go结构体 // Alvinsu Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.99.1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Alvinsu" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://alvin-su.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
 
     
-
-    <meta name="author" content="Alvinsu">
-    <meta name="description" content="Go结构体数组、切片以及映射（字典）只能保存一种数据类型。如果需要一个保存多种数据类型的结构，这个时候就需要用到 struct 结构体。
-什么是结构体一个struct是一个由其他不同的多种值构造出来的。一个struct可以保存string、int、float64等多种类型。使用struct关键字来声明一个struct，后面跟着{}花括号。在括号中可以定义一个或多个字段，每一个字段定义在一个单独的行中，由字段名称、后面跟着字段需要保存的值的类型组成。
-struct {  field1 string,  field2 int } 可以使用一个struct类型来作为定义的变量的类型。下面的代码定义了一个名为myStruct的变量，它保存float64类型的number字段、string类型的word字段和bool类型的toggle字段。
-var myStruct struct {  number float64  word string  toggle bool } fmt.Printf(&#34;%#v\n&#34;,myStruct) 使用Printf函数中的%#v将myStruct变量作为字面量打印。
-定义类型和struct上面定义一个struct类型的变量是比较麻烦的，如果我们需要定义多个myStruct变量，那么就需要重复整个struct声明，如下：
-var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct2 struct {  number float64  word string  toggle bool } 为了解决上面的问题，可以创建自己的类型。类型定义允许你创建新的类型，可以基于基础类型来创建新的定义类型。我们可以使用任何基础类型来创建自己的类型，比如int、string等。但是我们现在专注于struct作为基础类型。">
-    <meta name="keywords" content="blog,developer,personal">
-
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Go结构体"/>
-<meta name="twitter:description" content="Go结构体数组、切片以及映射（字典）只能保存一种数据类型。如果需要一个保存多种数据类型的结构，这个时候就需要用到 struct 结构体。
-什么是结构体一个struct是一个由其他不同的多种值构造出来的。一个struct可以保存string、int、float64等多种类型。使用struct关键字来声明一个struct，后面跟着{}花括号。在括号中可以定义一个或多个字段，每一个字段定义在一个单独的行中，由字段名称、后面跟着字段需要保存的值的类型组成。
+<meta name="twitter:description" content="Go结构体 数组、切片以及映射（字典）只能保存一种数据类型。如果需要一个保存多种数据类型的结构，这个时候就需要用到 struct 结构体。
+什么是结构体 一个struct是一个由其他不同的多种值构造出来的。一个struct可以保存string、int、float64等多种类型。使用struct关键字来声明一个struct，后面跟着{}花括号。在括号中可以定义一个或多个字段，每一个字段定义在一个单独的行中，由字段名称、后面跟着字段需要保存的值的类型组成。
 struct {  field1 string,  field2 int } 可以使用一个struct类型来作为定义的变量的类型。下面的代码定义了一个名为myStruct的变量，它保存float64类型的number字段、string类型的word字段和bool类型的toggle字段。
 var myStruct struct {  number float64  word string  toggle bool } fmt.Printf(&#34;%#v\n&#34;,myStruct) 使用Printf函数中的%#v将myStruct变量作为字面量打印。
-定义类型和struct上面定义一个struct类型的变量是比较麻烦的，如果我们需要定义多个myStruct变量，那么就需要重复整个struct声明，如下：
-var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct2 struct {  number float64  word string  toggle bool } 为了解决上面的问题，可以创建自己的类型。类型定义允许你创建新的类型，可以基于基础类型来创建新的定义类型。我们可以使用任何基础类型来创建自己的类型，比如int、string等。但是我们现在专注于struct作为基础类型。"/>
+定义类型和struct 上面定义一个struct类型的变量是比较麻烦的，如果我们需要定义多个myStruct变量，那么就需要重复整个struct声明，如下：
+var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct2 struct {  number float64  word string  toggle bool } 为了解决上面的问题，可以创建自己的类型。类型定义允许你创建新的类型，可以基于基础类型来创建新的定义类型。我们可以使用任何基础类型来创建自己的类型，比如int、string等。但是我们现在专注于struct作为基础类型。
+定于一个类型需要使用type关键字，后面跟着新类型的名称，然后是你希望基于的基础类型。如果使用struct类型作为基础类型，就需要使用struct关键字，后面跟着{}花括号包裹的一组字段定义。
+type myType struct {  field1 string  field2 int } 下面的代码定义了一个 park类型和一个car类型，都是使用struct作为基础类型，然后在main函数中，声明这两个类型的变量，我们看到声明这两个类型变量的时候，不需要再重复整个struct的声明。我们仅仅使用已定义类型的名称。"/>
 
     <meta property="og:title" content="Go结构体" />
-<meta property="og:description" content="Go结构体数组、切片以及映射（字典）只能保存一种数据类型。如果需要一个保存多种数据类型的结构，这个时候就需要用到 struct 结构体。
-什么是结构体一个struct是一个由其他不同的多种值构造出来的。一个struct可以保存string、int、float64等多种类型。使用struct关键字来声明一个struct，后面跟着{}花括号。在括号中可以定义一个或多个字段，每一个字段定义在一个单独的行中，由字段名称、后面跟着字段需要保存的值的类型组成。
+<meta property="og:description" content="Go结构体 数组、切片以及映射（字典）只能保存一种数据类型。如果需要一个保存多种数据类型的结构，这个时候就需要用到 struct 结构体。
+什么是结构体 一个struct是一个由其他不同的多种值构造出来的。一个struct可以保存string、int、float64等多种类型。使用struct关键字来声明一个struct，后面跟着{}花括号。在括号中可以定义一个或多个字段，每一个字段定义在一个单独的行中，由字段名称、后面跟着字段需要保存的值的类型组成。
 struct {  field1 string,  field2 int } 可以使用一个struct类型来作为定义的变量的类型。下面的代码定义了一个名为myStruct的变量，它保存float64类型的number字段、string类型的word字段和bool类型的toggle字段。
 var myStruct struct {  number float64  word string  toggle bool } fmt.Printf(&#34;%#v\n&#34;,myStruct) 使用Printf函数中的%#v将myStruct变量作为字面量打印。
-定义类型和struct上面定义一个struct类型的变量是比较麻烦的，如果我们需要定义多个myStruct变量，那么就需要重复整个struct声明，如下：
-var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct2 struct {  number float64  word string  toggle bool } 为了解决上面的问题，可以创建自己的类型。类型定义允许你创建新的类型，可以基于基础类型来创建新的定义类型。我们可以使用任何基础类型来创建自己的类型，比如int、string等。但是我们现在专注于struct作为基础类型。" />
+定义类型和struct 上面定义一个struct类型的变量是比较麻烦的，如果我们需要定义多个myStruct变量，那么就需要重复整个struct声明，如下：
+var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct2 struct {  number float64  word string  toggle bool } 为了解决上面的问题，可以创建自己的类型。类型定义允许你创建新的类型，可以基于基础类型来创建新的定义类型。我们可以使用任何基础类型来创建自己的类型，比如int、string等。但是我们现在专注于struct作为基础类型。
+定于一个类型需要使用type关键字，后面跟着新类型的名称，然后是你希望基于的基础类型。如果使用struct类型作为基础类型，就需要使用struct关键字，后面跟着{}花括号包裹的一组字段定义。
+type myType struct {  field1 string  field2 int } 下面的代码定义了一个 park类型和一个car类型，都是使用struct作为基础类型，然后在main函数中，声明这两个类型的变量，我们看到声明这两个类型变量的时候，不需要再重复整个struct的声明。我们仅仅使用已定义类型的名称。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://alvin-su.github.io/post/go%E7%BB%93%E6%9E%84%E4%BD%93/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2022-06-20T09:15:49+08:00" />
@@ -40,117 +38,65 @@ var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct
 
 
 
-    <title>
-  Go结构体 · Alvinsu Blog
-</title>
-
-    
-      <link rel="canonical" href="https://alvin-su.github.io/post/go%E7%BB%93%E6%9E%84%E4%BD%93/">
-    
-
-    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
-
-    
-      
-      
-      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
-    
-
-    
-
-    
-      
-        
-        
-        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
-      
-    
-
-    
-
-    
-
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
-
-    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-    <meta name="generator" content="Hugo 0.99.1" />
   </head>
-
-  
-  
-    
-  
-  <body class="preload-transitions colorscheme-auto">
-    
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-    <main class="wrapper">
-      <nav class="navigation">
-  <section class="container">
-    <a class="navigation-title" href="/">
-      Alvinsu Blog
-    </a>
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
+  <body>
+    <header class="app-header">
+      <a href="https://alvin-su.github.io"><img class="app-header-avatar" src="/avatar.jpg" alt="Alvinsu" /></a>
+      <h1>Alvinsu Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="post/">Blog</a>
+             - 
           
-            <li class="navigation-item">
-              <a class="navigation-link" href="/post/">Blog</a>
-            </li>
+          <a class="app-header-menu-item" href="tags/">分类</a>
+             - 
           
-            <li class="navigation-item">
-              <a class="navigation-link" href="/tags/">分类</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/about/">关于</a>
-            </li>
-          
+          <a class="app-header-menu-item" href="about/">关于</a>
+      </nav>
+      <p>Alvinsu&#39;s personal website</p>
+      <div class="app-header-social">
         
+          <a href="https://github.com/alvin-su/" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+          </a>
         
-      </ul>
-    
-  </section>
-</nav>
-
-
-      <div class="content">
-        
-  <section class="container page">
-  <article>
-    <header>
-      <h1 class="title">
-        <a class="title-link" href="https://alvin-su.github.io/post/go%E7%BB%93%E6%9E%84%E4%BD%93/">
-          Go结构体
-        </a>
-      </h1>
+      </div>
     </header>
-
-    <h1 id="go结构体">
-  Go结构体
-  <a class="heading-link" href="#go%e7%bb%93%e6%9e%84%e4%bd%93">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h1>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Go结构体</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jun 20, 2022
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://alvin-su.github.io/tags/go/">Go</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="go结构体">Go结构体</h1>
 <p>数组、切片以及映射（字典）只能保存一种数据类型。如果需要一个保存多种数据类型的结构，这个时候就需要用到 <code>struct</code> 结构体。</p>
-<h2 id="什么是结构体">
-  什么是结构体
-  <a class="heading-link" href="#%e4%bb%80%e4%b9%88%e6%98%af%e7%bb%93%e6%9e%84%e4%bd%93">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h2>
+<h2 id="什么是结构体">什么是结构体</h2>
 <p>一个<code>struct</code>是一个由其他不同的多种值构造出来的。一个<code>struct</code>可以保存<code>string</code>、<code>int</code>、<code>float64</code>等多种类型。使用<code>struct</code>关键字来声明一个<code>struct</code>，后面跟着<code>{}</code>花括号。在括号中可以定义一个或多个字段，每一个字段定义在一个单独的行中，由字段名称、后面跟着字段需要保存的值的类型组成。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">struct</span> {
 </span></span><span style="display:flex;"><span>    field1 <span style="">string</span>,
@@ -164,12 +110,7 @@ var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>fmt.Printf(<span style="font-style:italic">&#34;%#v\n&#34;</span>,myStruct)
 </span></span></code></pre></div><p>使用<code>Printf</code>函数中的<code>%#v</code>将<code>myStruct</code>变量作为字面量打印。</p>
-<h2 id="定义类型和struct">
-  定义类型和struct
-  <a class="heading-link" href="#%e5%ae%9a%e4%b9%89%e7%b1%bb%e5%9e%8b%e5%92%8cstruct">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h2>
+<h2 id="定义类型和struct">定义类型和struct</h2>
 <p>上面定义一个<code>struct</code>类型的变量是比较麻烦的，如果我们需要定义多个myStruct变量，那么就需要重复整个<code>struct</code>声明，如下：</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">var</span> myStruct1 <span style="font-weight:bold">struct</span> {
 </span></span><span style="display:flex;"><span>    number <span style="">float64</span>
@@ -217,12 +158,7 @@ var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct
 </span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;Desc:&#34;</span>,myPark.desc)
 </span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;Count:&#34;</span>,myPark.count)
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="使用函数修改-struct">
-  使用函数修改 struct
-  <a class="heading-link" href="#%e4%bd%bf%e7%94%a8%e5%87%bd%e6%95%b0%e4%bf%ae%e6%94%b9-struct">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h2>
+</span></span></code></pre></div><h2 id="使用函数修改-struct">使用函数修改 struct</h2>
 <p>我们看下面一段代码：</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
 </span></span><span style="display:flex;"><span>
@@ -252,20 +188,10 @@ var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> applyCount(p *park){
 </span></span><span style="display:flex;"><span>    p.count=200
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="struct-字面量">
-  struct 字面量
-  <a class="heading-link" href="#struct-%e5%ad%97%e9%9d%a2%e9%87%8f">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h2>
+</span></span></code></pre></div><h2 id="struct-字面量">struct 字面量</h2>
 <p><code>struct</code>提供字面量声明的方式，在创建一个<code>struct</code>的同时给它的字段赋值。这个语法和映射<code>map</code>类似，类型列在前面，跟着一对花括号。在花括号内部可以给一些或所有的<code>struct</code>字段赋值。使用字段名称、冒号和值，多个字段用逗号分隔。
 <code>myCar:=car{name:&quot;car1&quot;,topSpeed:180}</code></p>
-<h2 id="嵌入struct">
-  嵌入struct
-  <a class="heading-link" href="#%e5%b5%8c%e5%85%a5struct">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h2>
+<h2 id="嵌入struct">嵌入struct</h2>
 <p>一个 <code>struct</code> 可以嵌入到另一个<code>struct</code>中，如下：</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">type</span> Employee <span style="font-weight:bold">struct</span> {
 </span></span><span style="display:flex;"><span>	Name <span style="">string</span>
@@ -286,48 +212,12 @@ var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct
 </span></span><span style="display:flex;"><span>    fmt.Println(emp.City)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div>
+    </div>
+    <div class="post-footer">
+      
+    </div>
   </article>
-</section>
-
-  
-
-      </div>
-
-      <footer class="footer">
-  <section class="container">
-    ©
-    
-    2022
-     Alvinsu 
-    ·
-    
-    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
-    
-  </section>
-</footer>
 
     </main>
-
-    
-      
-      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
   </body>
-
 </html>

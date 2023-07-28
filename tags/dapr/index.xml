@@ -13,10 +13,13 @@
       <pubDate>Fri, 27 May 2022 09:49:01 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/dapr_k8s/</guid>
-      <description>在 Kubernetes集群中部署 DaprKubernetes 上的Dapr概述Dapr 可以配置为在任何受支持的Kubernetes版本上运行。主要通过 dapr-sidecar-inject、dapr-operator、dapr-placement和dapr-sentry k8s服务为dapr在k8s中运行提供支持。
- dapr-operator 为Dapr管理组件更新和kubernetes服务端点 (状态存储、发布/订阅等) dapr-sidecar-injector 将Dapr 注入带注解的deployment pods中，并添加环境变量 DAPR_HTTP_PORT 和 DAPR_GRPC_PORT，以使用户定义的应用程序能够轻松地与Dapr通信，而无需硬编码Dapr端口。 dapr-placement 仅用于actor，创建映射表，将actor实例映射到pod。 dapr-sentry 管理服务之间的mTLS 并充当证书的颁发机构。  在kubernetes 集群上部署 Dapr在K8s中安装Dapr有两种方式，一种是使用Dapr CLI,另外一种是使用Helm 在 kubernetes中部署Dapr。我这里主要介绍使用Helm的方式部署Dapr。
-在centos7中安装K3sk3s概述k3s是一个高可用的、经过CNCF认证的Kubernetes发行版，专为物联网及边缘计算设计。k3s被打包成单个小于60MB的二进制文件，从而减少了运行安装、运行和自动更新生产Kubernetes集群所需的依赖性和步骤。k3s在小到树莓派或大到 AWS a1.4xlarge 32GiB服务器的环境中均能出色工作。
-安装k3s安装命令: curl -sfL https://get.k3s.io | sh -s - server &amp;ndash;docker 最好指定 容器运行时为docker，否则默认的容器运行时为containerd</description>
+      <description>在 Kubernetes集群中部署 Dapr Kubernetes 上的Dapr概述 Dapr 可以配置为在任何受支持的Kubernetes版本上运行。主要通过 dapr-sidecar-inject、dapr-operator、dapr-placement和dapr-sentry k8s服务为dapr在k8s中运行提供支持。
+ dapr-operator 为Dapr管理组件更新和kubernetes服务端点 (状态存储、发布/订阅等) dapr-sidecar-injector 将Dapr 注入带注解的deployment pods中，并添加环境变量 DAPR_HTTP_PORT 和 DAPR_GRPC_PORT，以使用户定义的应用程序能够轻松地与Dapr通信，而无需硬编码Dapr端口。 dapr-placement 仅用于actor，创建映射表，将actor实例映射到pod。 dapr-sentry 管理服务之间的mTLS 并充当证书的颁发机构。  在kubernetes 集群上部署 Dapr 在K8s中安装Dapr有两种方式，一种是使用Dapr CLI,另外一种是使用Helm 在 kubernetes中部署Dapr。我这里主要介绍使用Helm的方式部署Dapr。
+在centos7中安装K3s k3s概述 k3s是一个高可用的、经过CNCF认证的Kubernetes发行版，专为物联网及边缘计算设计。k3s被打包成单个小于60MB的二进制文件，从而减少了运行安装、运行和自动更新生产Kubernetes集群所需的依赖性和步骤。k3s在小到树莓派或大到 AWS a1.4xlarge 32GiB服务器的环境中均能出色工作。
+安装k3s 安装命令: curl -sfL https://get.k3s.io | sh -s - server &amp;ndash;docker 最好指定 容器运行时为docker，否则默认的容器运行时为containerd
+安装完成后会显示如下的说明： 安装 Helm Helm 是 Kubernetes 的包管理器 helm 最新下载地址：https://github.com/helm/helm/releases 下载对应的版本：helm-v3.9.0-linux-amd64.tar.gz
+解压:helm-v3.9.0-linux-amd64.tar.gz,将helm移至 /usr/local/bin 目录 mv linux-amd64/helm /usr/local/bin/helm
+helm version 查看版本号</description>
     </item>
     
   </channel>

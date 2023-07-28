@@ -6,7 +6,22 @@
     <description>Recent content in Posts on Alvinsu Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Jul 2022 21:19:03 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 28 Jul 2023 16:41:26 +0800</lastBuildDate><atom:link href="https://alvin-su.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dapr离线安装</title>
+      <link>https://alvin-su.github.io/post/dapr%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85/</link>
+      <pubDate>Fri, 28 Jul 2023 16:41:26 +0800</pubDate>
+      
+      <guid>https://alvin-su.github.io/post/dapr%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85/</guid>
+      <description>Dapr离线安装 windows环境 文档英文版才有入口
+dapr离线安装文档：How-To: Run Dapr in an offline or airgap environment | Dapr Docs
+ dapr安装  github下载地址：Releases · dapr/installer-bundle · GitHub
+ 配置dapr.exe的环境变量
+  执行安装命令
+  dapr uninstall # 清空之前的 dapr init --from-dir . # 根据本目录下进行离线初始化  注：执行命令时要开启docker
+离线启动redis和ziplink容器，init并没有启动redis和ziplink  docker run --name &amp;#34;dapr_zipkin&amp;#34; --restart always -d -p 9411:9411 openzipkin/zipkin  docker run --name &amp;#34;dapr_redis&amp;#34; --restart always -d -p 6379:6379 redislabs/rejson </description>
+    </item>
+    
     <item>
       <title>以YAML描述文件创建pod</title>
       <link>https://alvin-su.github.io/post/%E4%BB%A5yaml%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/</link>
@@ -14,7 +29,7 @@
       
       <guid>https://alvin-su.github.io/post/%E4%BB%A5yaml%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BApod/</guid>
       <description>之前是通过kubectl run 命令，来创建pod，但这些方法只允许配置一组有限的属性。pod和其它Kubernetes资源通常是通过向Kubernetes REST API提供YAML描述文件来创建的。
-检查现有pod的YAML描述文件我们之前创建了一些pod，可以通过命令kubectl get po myk8swebapi -o yaml,来获取pod的整个YAML定义。如下所示：
+检查现有pod的YAML描述文件 我们之前创建了一些pod，可以通过命令kubectl get po myk8swebapi -o yaml,来获取pod的整个YAML定义。如下所示：
 # apiVersion 表示描述文件所使用的 Kubernetes API版本 apiVersion: v1 # kind 表示Kubernetes 对象或资源类型 kind: Pod # metadata 表示 pod 元数据（名称、标签和注解等） metadata:  creationTimestamp: &amp;#34;2022-07-05T15:16:53Z&amp;#34;  labels:  run: myk8swebapi  name: myk8swebapi  namespace: default  resourceVersion: &amp;#34;277178&amp;#34;  uid: 27c0c657-4329-474a-834b-f121af1aeaa7 # spec 表示 pod 规格/内容(pod 的容器列表，volumn等) spec:  containers:  - image: alvinsu/myk8swebapi:1.0  imagePullPolicy: IfNotPresent  name: myk8swebapi  ports:  - containerPort: 6001  protocol: TCP  resources: {}  terminationMessagePath: /dev/termination-log  terminationMessagePolicy: File  volumeMounts:  - mountPath: /var/run/secrets/kubernetes.</description>
     </item>
     
@@ -25,15 +40,15 @@
       
       <guid>https://alvin-su.github.io/post/pod%E4%BB%8B%E7%BB%8D/</guid>
       <description>pod是Kubernetes中最为重要的核心概念，而其它对象仅仅是在管理、暴露pod或被pod使用。
-介绍podpod是一组并置的容器，代表了Kubernetes中的基本构建模块。在实际应用中我们并不会单独部署容器，更多的是针对一组pod的容器进行部署和操作。但是也存在这只包含一个容器的pod。当一个pod包含多个容器时，这些容器总是运行在同一个工作节点上。一个pod绝不会跨越多个工作节点。如下图： 为何需要pod为什么不直接使用容器？为什么不能把多个进程都放到一个单独的容器中去？下面我们将回答这些问题。
+介绍pod pod是一组并置的容器，代表了Kubernetes中的基本构建模块。在实际应用中我们并不会单独部署容器，更多的是针对一组pod的容器进行部署和操作。但是也存在这只包含一个容器的pod。当一个pod包含多个容器时，这些容器总是运行在同一个工作节点上。一个pod绝不会跨越多个工作节点。如下图： 为何需要pod 为什么不直接使用容器？为什么不能把多个进程都放到一个单独的容器中去？下面我们将回答这些问题。
 在Kubernetes中，我们经常在容器中运行进程，由于每一个容器都非常像一台独立的机器，此时我们可能认为单个容器运行多个进程是合乎逻辑的，但是在实践中这种做法并不合理。
 容器被设计为每个容器只运行一个进程，如果在单个容器中运行多个不相关的进程，那么保持所有进程的运行和管理它们的日志等将会是我们的责任。但是我们很难区分在进程崩溃产生日志时，每个进程分别记录了什么。所以我们需要让每个进程运行在自己单独的容器中，而这也是Docker和Kubernetes期望使用的方式。
-了解pod由于不能将多个进程聚集在一个单独的容器中，我们需要另外一个更高级的结构来讲容器绑定在一起，并将它们作为一个单元进行管理，这就是pod背后的根本原理。
+了解pod 由于不能将多个进程聚集在一个单独的容器中，我们需要另外一个更高级的结构来讲容器绑定在一起，并将它们作为一个单元进行管理，这就是pod背后的根本原理。
 在pod中，我们可以同时运行一些密切相关的进程，并为它们提供几乎相同的环境，此时这些进程就好像运行在单个容器中一样，同时又保持着一定的隔离。这样一来，我们便能全面的利用容器所提供的特性，同时对这些进程来说它们就像运行在一起一样，实现两全其美。
-同一个pod容器之间的部分隔离我们已经知道容器之间彼此是完全隔离的，但此时我们期望的隔离容器组，而不是单个容器，并让每个容器组内的容器共享一些资源，而不是全部。Kubernetes通过配置Docker来让一个pod内的所有容器共享相同的Linux命名空间。由于一个pod中的所有容器都在相同的network和命名空间下，所以它们都共享相同的主机名和网络接口。同样地这些容器也都在相同的IPC命令空间下运行，因此能够通过IPC进行通信。
+同一个pod容器之间的部分隔离 我们已经知道容器之间彼此是完全隔离的，但此时我们期望的隔离容器组，而不是单个容器，并让每个容器组内的容器共享一些资源，而不是全部。Kubernetes通过配置Docker来让一个pod内的所有容器共享相同的Linux命名空间。由于一个pod中的所有容器都在相同的network和命名空间下，所以它们都共享相同的主机名和网络接口。同样地这些容器也都在相同的IPC命令空间下运行，因此能够通过IPC进行通信。
 但是文件系统有所不同，由于大多数容器的文件系统来自容器镜像，因此默认情况下，每个容器镜像的文件系统与其他容器完全隔离。但我们可以使用名为 Vloume的kubernetes资源来共享文件目录。
 同一个pod中的容器共享相同的IP和端口，此外，一个pod中的所有容器也都具有相同的loopback网络接口，因此容器可以通过localhost与同一个pod中的其它容器进行通信。
-pod间网络Kubernetes集群中的所有pod都在同一个共享的网络地址空间中，这意味着每个pod都可以通过其它pod的IP地址来实现互相的访问。两个pod彼此之间发送数据包时，它们都会将对方的实际IP地址看作数据包中的源IP，无NAT网络地址转换。</description>
+pod间网络 Kubernetes集群中的所有pod都在同一个共享的网络地址空间中，这意味着每个pod都可以通过其它pod的IP地址来实现互相的访问。两个pod彼此之间发送数据包时，它们都会将对方的实际IP地址看作数据包中的源IP，无NAT网络地址转换。</description>
     </item>
     
     <item>
@@ -42,11 +57,11 @@ pod间网络Kubernetes集群中的所有pod都在同一个共享的网络地
       <pubDate>Wed, 06 Jul 2022 16:03:21 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/k8s%E9%83%A8%E7%BD%B2%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/</guid>
-      <description>我们之前在Centos中成功部署了minikube，那么我们就基于minikube在k8s中部署第一个asp.net core应用。我们需要先容器化一个asp.net core应用，然后推送到Docker hub镜像仓库中，如下图： 部署应用我们现在就基于已经推送到Dockerhub中的镜像使用kubectl run 命令部署，该命令可以创建所有必要的组件而无需JSON或YAML文件。具体代码如下： kubectl run myk8swebapi --image=alvinsu/myk8swebapi --port=6001
+      <description>我们之前在Centos中成功部署了minikube，那么我们就基于minikube在k8s中部署第一个asp.net core应用。我们需要先容器化一个asp.net core应用，然后推送到Docker hub镜像仓库中，如下图： 部署应用 我们现在就基于已经推送到Dockerhub中的镜像使用kubectl run 命令部署，该命令可以创建所有必要的组件而无需JSON或YAML文件。具体代码如下： kubectl run myk8swebapi --image=alvinsu/myk8swebapi --port=6001
 --image=alvinsu/myk8swebapi显示的是要从Dockerhub拉取和运行的容器镜像，--port=6001选项告诉Kubernetes应用正在监听6001端口。
-介绍pod一个pod是一组紧密相关的容器，它们总是一起运行在同一个工作节点上以及同一个Linux命名空间中。每个pod就像一个独立的逻辑机器，拥有自己的IP、主机名、进程等，运行一个独立的应用程序。应用程序可以是单个进程，运行在单个容器中，也可以是一个应用程序或者其它支持进程，每个进程都在自己的容器中运行。一个pod中的所有容器都运行在同一个逻辑机器上，而其它pod中的容器，即使运行在同一个工作节点上，也会出现在不同的工作节点上。如下图： 列出pod我们上面通过kubectl run命令已经创建了一个pod。下面我们通过命令kubectl get pods 列出所有pod。如下图： 当运行kubectl命令时，它通过向KubernetesAPI服务器发送一个 RESTHTTP请求，在集群中创建了一个新的pod，调度器将其调度到一个工作节点上 Kubelet看到pod被调度到节点上，就告知Docker从镜像中心中拉取指定的镜像，因为本地没有该镜像。下载镜像后，Docker创建并运行容器。整体流程如下图： 还可以使用命令:kubectl get pods -o wide 列出pod的IP和pod所在节点信息。
-访问web应用我们刚刚创建的pod如何访问？每个pod都有自己的IP，但是这个地址是集群内部的，不能从集群外部访问。要让pod能从外部访问，需要通过服务对象公开它，要创建一个service，可以通过下面的命令:kubectl expose pod myk8swebapi --type=NodePort
-我们可以通过命令:kubectl get services 列出刚创建的服务。 使用外网IP访问服务我们的minikube集群是部署在云服务器中，所以我们部署完服务后，只能在云服务器本机中使用 curl http://192.168.49.2:32246/WeatherForecast进行访问。如果要使用云服务器分配的外网ip访问，则需要进行转发，通过命令:kubectl port-forward svc/myk8swebapi 32246:6001，这样我们就能通过服务器外网IP,进行访问，因为之前配置 dashboard 可以外网访问，已经执行过命令：kubectl proxy --port=8001 --address=&#39;0.0.0.0&#39; --accept-hosts=&#39;^.*&#39; &amp;amp;。所以可以通过如下地址访问： http://外网IP:8001/api/v1/namespaces/default/services/myk8swebapi:/proxy/WeatherForecast</description>
+介绍pod 一个pod是一组紧密相关的容器，它们总是一起运行在同一个工作节点上以及同一个Linux命名空间中。每个pod就像一个独立的逻辑机器，拥有自己的IP、主机名、进程等，运行一个独立的应用程序。应用程序可以是单个进程，运行在单个容器中，也可以是一个应用程序或者其它支持进程，每个进程都在自己的容器中运行。一个pod中的所有容器都运行在同一个逻辑机器上，而其它pod中的容器，即使运行在同一个工作节点上，也会出现在不同的工作节点上。如下图： 列出pod 我们上面通过kubectl run命令已经创建了一个pod。下面我们通过命令kubectl get pods 列出所有pod。如下图： 当运行kubectl命令时，它通过向KubernetesAPI服务器发送一个 RESTHTTP请求，在集群中创建了一个新的pod，调度器将其调度到一个工作节点上 Kubelet看到pod被调度到节点上，就告知Docker从镜像中心中拉取指定的镜像，因为本地没有该镜像。下载镜像后，Docker创建并运行容器。整体流程如下图： 还可以使用命令:kubectl get pods -o wide 列出pod的IP和pod所在节点信息。
+访问web应用 我们刚刚创建的pod如何访问？每个pod都有自己的IP，但是这个地址是集群内部的，不能从集群外部访问。要让pod能从外部访问，需要通过服务对象公开它，要创建一个service，可以通过下面的命令:kubectl expose pod myk8swebapi --type=NodePort
+我们可以通过命令:kubectl get services 列出刚创建的服务。 使用外网IP访问服务 我们的minikube集群是部署在云服务器中，所以我们部署完服务后，只能在云服务器本机中使用 curl http://192.168.49.2:32246/WeatherForecast进行访问。如果要使用云服务器分配的外网ip访问，则需要进行转发，通过命令:kubectl port-forward svc/myk8swebapi 32246:6001，这样我们就能通过服务器外网IP,进行访问，因为之前配置 dashboard 可以外网访问，已经执行过命令：kubectl proxy --port=8001 --address=&#39;0.0.0.0&#39; --accept-hosts=&#39;^.*&#39; &amp;amp;。所以可以通过如下地址访问： http://外网IP:8001/api/v1/namespaces/default/services/myk8swebapi:/proxy/WeatherForecast</description>
     </item>
     
     <item>
@@ -56,14 +71,18 @@ pod间网络Kubernetes集群中的所有pod都在同一个共享的网络地
       
       <guid>https://alvin-su.github.io/post/kubernetes%E4%BB%8B%E7%BB%8D/</guid>
       <description>随着系统可部署组件的数量增长，把他们都管理起来会变得越来越困难。需要一个更好的方式来部署和管理这些组件，并支持基础设施的全球性伸缩，谷歌是最开始意思到这一点的公司。
-Kubernetes 起源Kubernetes最早起源于一个谷歌的内部系统Borg，后来又出来一个新系统叫Omega。这两套系统帮助应用开发者和系统管理员管理那些数以千计的应用程序和服务器。简化了开发和部署，也提供了应用对基础设施的利用率。后来谷歌将Borg和Omega系统在2014年的时候开源了出来，这就是Kubernetes。
-深入浅出地了解 Kubernetes一个“容器”，实际上是一个由 Linux Namespace、Linux Cgroups 和 rootfs 三种技术构建出来的进程的隔离环境。从这个结构可以看出，一个正在运行的容器其实可以被一分为二地看待：
+Kubernetes 起源 Kubernetes最早起源于一个谷歌的内部系统Borg，后来又出来一个新系统叫Omega。这两套系统帮助应用开发者和系统管理员管理那些数以千计的应用程序和服务器。简化了开发和部署，也提供了应用对基础设施的利用率。后来谷歌将Borg和Omega系统在2014年的时候开源了出来，这就是Kubernetes。
+深入浅出地了解 Kubernetes 一个“容器”，实际上是一个由 Linux Namespace、Linux Cgroups 和 rootfs 三种技术构建出来的进程的隔离环境。从这个结构可以看出，一个正在运行的容器其实可以被一分为二地看待：
  一组联合挂载在 /var/lib/docker/aufs/mnt 上的rootfs。这一部分称为 容器镜像 ，是容器的静态视图。 一个由 Namespace+Cgroups构成的隔离环境，这一部分称为 容器运行时 ，是容器的动态视图。  作为一名开发者，我们并不关心容器运行时的差异。在整个“开发 - 测试 - 发布”的流程中，真正承载着容器信息进行传递的，是容器镜像，而不是容器运行时。这个重要假设，正是容器技术圈在 Docker 项目成功后不久，就迅速走向了“容器编排”这个“上层建筑”的主要原因：作为一家云服务商或者基础设施提供商，我只要能够将用户提交的 Docker 镜像以容器的方式运行起来，就能成为这个非常热闹的容器生态图上的一个承载点，从而将整个容器技术栈上的价值，沉淀在我的这个节点上。
 容器编排的工具就更加显得重要，这其中以Docker 公司的Compose+Swarm组合以及Google与RedHat公司共同主导的Kubernetes项目为代表。目前Kubernetes以及事实上成为了容器编排工具的不二选择。
-Kubernetes的核心功能下图展示了一幅最简单的Kubernetes系统图。整个系统由一个主节点和若干个工作节点组成。开发着把一个应用列表提交到主节点上，Kubernetes会将它们部署到集群的工作节点。应用被部署到哪个节点对于开发者和系统管理员来说都不关心。 开发着指定一些应用必须一起运行，Kubernetes将会在一个工作节点上部署它们。其它的将被分散部署到集群中，但是不管部署在哪，它们都以相同的方式互相通信。
-Kubernetes的集群架构Kubernetes可以被当做集群的一个操作系统来看待。在硬件级别，一个Kubernetes集群由很多节点组成，这些节点被分成以下两种类型：
- 主节点，它承载着Kubernetes控制和管理整个集群系统的控制面板。 工作节点，他们运行用户实际部署的应用。  控制面板控制面板用于控制集群并使它工作。它包含多个组件，组件可以运行在单个主节点上或通过副本分别部署在多个主节点以确保高可用性。这些组件分别为：
- Kubernetes API服务器，主要用于组件间的相互通信。 Scheculer，调度应用，为应用的每个可部署组件分配一个工作节点。 Controller Manager，它执行集群级别的功能，如复制组件、持续跟踪工作节点、处理节点失败等。 etcd，一个可靠的分布式数据存储，它能持久化存储集群配置。  这些控制面板的组件持有并控制集群的状态，但是它们不允许应用，这些由工作节点完成。</description>
+Kubernetes的核心功能 下图展示了一幅最简单的Kubernetes系统图。整个系统由一个主节点和若干个工作节点组成。开发着把一个应用列表提交到主节点上，Kubernetes会将它们部署到集群的工作节点。应用被部署到哪个节点对于开发者和系统管理员来说都不关心。 开发着指定一些应用必须一起运行，Kubernetes将会在一个工作节点上部署它们。其它的将被分散部署到集群中，但是不管部署在哪，它们都以相同的方式互相通信。
+Kubernetes的集群架构 Kubernetes可以被当做集群的一个操作系统来看待。在硬件级别，一个Kubernetes集群由很多节点组成，这些节点被分成以下两种类型：
+ 主节点，它承载着Kubernetes控制和管理整个集群系统的控制面板。 工作节点，他们运行用户实际部署的应用。  控制面板 控制面板用于控制集群并使它工作。它包含多个组件，组件可以运行在单个主节点上或通过副本分别部署在多个主节点以确保高可用性。这些组件分别为：
+ Kubernetes API服务器，主要用于组件间的相互通信。 Scheculer，调度应用，为应用的每个可部署组件分配一个工作节点。 Controller Manager，它执行集群级别的功能，如复制组件、持续跟踪工作节点、处理节点失败等。 etcd，一个可靠的分布式数据存储，它能持久化存储集群配置。  这些控制面板的组件持有并控制集群的状态，但是它们不允许应用，这些由工作节点完成。
+工作节点 工作节点是运行容器化应用的机器。运行、监控和管理应用服务的任务是由以下组件完成：
+ Docker、rtk或其它的容器类型。 Kubelet，它由API服务器通信，并管理它所在节点的容器。 Kubernetes Service Proxy，简称kube-proxy，它负责组件之间的负载均衡网络流量。  在Kubernetes中运行应用 为了在Kubernetes中运行应用，首先需要将应用打包进一个或多个容器镜像，再将那些镜像推送到镜像仓库，然后将应用的描述发布到KubernetesAPI服务器。该描述包括诸如容器镜像或者包含应用程序组件的容器镜像、这些组件如何相互关联，以及哪些组件需要同时运行在同一个节点上和哪些组件不需要同时运行等信息。此外，该描述还包括哪些组件为内部或外部客户提供服务且应该通过单个IP地址暴露，并使其他组件可以发现。
+描述信息是怎样成为一个运行的容器 当API服务器处理应用的描述时，调度器调度指定组的容器到可用的工作节点上，调度是基于每组所需的计算资源，以及调度时每个节点未分配的资源。然后，那些节点上的Kubelet指示容器运行时(例如Docker)拉取所需的镜像并运行容器。仔细下图，可以更好地理解如何在Kubernetes中部署应用程序。应用描述符列出了四个容器，并将它们分为三组(这些集合被称为pod)。前两个nod只包含一个容器，而最后一个包含两个。这意味着两个容器都需要协作运行，不应该相互隔离。在每个pod旁边，还可以看到一个数字。表示需要并行运行的每个pod的副本数量。在向Kubernetes提交描述符之后，它将把每个pod的指定副本数量调度到可用的工作节点上。节点上的Kubelets将告知 Docker从镜像仓库中拉取容器镜像并运行容器。
+Kubernetes管理容器运行   保持容器运行，一旦应用程序运行起来，Kubernetes就会不断地确认应用程序的部署状态始终与你提供的描述相匹配。例如，如果你指出你需要运行五个web服务器实例，那么 Kubernetes总是保持正好运行五个实例。如果实例之一停止了正常工作，比如当进程崩溃或停止响应时，Kubernetes将自动重启它。 同理，如果整个工作节点死亡或无法访问，Kubernetes将为在故障节点上运行的所有容器选择新节点，并在新选择的节点上运行它们。</description>
     </item>
     
     <item>
@@ -73,15 +92,15 @@ Kubernetes的集群架构Kubernetes可以被当做集群的一个操作系�
       
       <guid>https://alvin-su.github.io/post/install_k8s/</guid>
       <description>本文主要介绍如何在本地学习环境安装单节点k8s环境，以windows和centos 7环境为例，介绍两种安装单节点k8s的方法。
-windows Docker Desktop 安装k8s首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
+windows Docker Desktop 安装k8s 首先需要基于 wsl 2 正确安装 Docker。然后下载阿里云开源的基于Docker Desktop 的k8s镜像。如下：
 (https://github.com/AliyunContainerService/k8s-for-docker-desktop)
 下载 zip 文件k8s-for-docker-desktop-master.zip到本地并解压。用管理员方式打开 powershell，然后进入刚解压的目录，执行如下命令： .\load_images.ps1。该命令会自动下载k8s需要的镜像。等镜像下载完毕后，打开 Docker Desktop 进入设置，开启kubernetes选项，如下图：
 等待k8s启动，启动完成后，Docker Desktop 上会显示 k8s正在运行，如下图：
-验证 Kubernetes 集群状态运行命令： kubectl cluster-info 显示结果如下：
-配置 Dashboard在之前的解压目录k8s-for-docker-desktop-master中有一个 kubernetes-dashboard.yaml 文件，用powershell进入到解压目录，执行下面的命令：kubectl apply -f kubernetes-dashboard.yaml,该命令会安装管理控制台。
+验证 Kubernetes 集群状态 运行命令： kubectl cluster-info 显示结果如下：
+配置 Dashboard 在之前的解压目录k8s-for-docker-desktop-master中有一个 kubernetes-dashboard.yaml 文件，用powershell进入到解压目录，执行下面的命令：kubectl apply -f kubernetes-dashboard.yaml,该命令会安装管理控制台。
 通过命令:kubectl proxy 开启 API Server 访问代理。如下图：
 然后通过以下 url 进行访问：(http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
-访问会提示需要认证才能登录： 配置控制台访问令牌在之前的解压目录k8s-for-docker-desktop-master中有一个kube-system-default.yaml文件，进入到解压目录，执行如下命令：kubectl apply -f kube-system-default.yaml。然后执行:
+访问会提示需要认证才能登录： 配置控制台访问令牌 在之前的解压目录k8s-for-docker-desktop-master中有一个kube-system-default.yaml文件，进入到解压目录，执行如下命令：kubectl apply -f kube-system-default.yaml。然后执行:
 $TOKEN=((kubectl -n kube-system describe secret default | Select-String &amp;#34;token:&amp;#34;) -split &amp;#34; +&amp;#34;)[1] kubectl config set-credentials docker-desktop --token=&amp;#34;${TOKEN}&amp;#34; echo $TOKEN 获取访问token。然后请自行妥善保管好该token。因为每次登录dashboard都会要输入。</description>
     </item>
     
@@ -91,12 +110,14 @@ $TOKEN=((kubectl -n kube-system describe secret default | Select-String &amp;#34
       <pubDate>Mon, 20 Jun 2022 09:15:49 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/go%E7%BB%93%E6%9E%84%E4%BD%93/</guid>
-      <description>Go结构体数组、切片以及映射（字典）只能保存一种数据类型。如果需要一个保存多种数据类型的结构，这个时候就需要用到 struct 结构体。
-什么是结构体一个struct是一个由其他不同的多种值构造出来的。一个struct可以保存string、int、float64等多种类型。使用struct关键字来声明一个struct，后面跟着{}花括号。在括号中可以定义一个或多个字段，每一个字段定义在一个单独的行中，由字段名称、后面跟着字段需要保存的值的类型组成。
+      <description>Go结构体 数组、切片以及映射（字典）只能保存一种数据类型。如果需要一个保存多种数据类型的结构，这个时候就需要用到 struct 结构体。
+什么是结构体 一个struct是一个由其他不同的多种值构造出来的。一个struct可以保存string、int、float64等多种类型。使用struct关键字来声明一个struct，后面跟着{}花括号。在括号中可以定义一个或多个字段，每一个字段定义在一个单独的行中，由字段名称、后面跟着字段需要保存的值的类型组成。
 struct {  field1 string,  field2 int } 可以使用一个struct类型来作为定义的变量的类型。下面的代码定义了一个名为myStruct的变量，它保存float64类型的number字段、string类型的word字段和bool类型的toggle字段。
 var myStruct struct {  number float64  word string  toggle bool } fmt.Printf(&amp;#34;%#v\n&amp;#34;,myStruct) 使用Printf函数中的%#v将myStruct变量作为字面量打印。
-定义类型和struct上面定义一个struct类型的变量是比较麻烦的，如果我们需要定义多个myStruct变量，那么就需要重复整个struct声明，如下：
-var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct2 struct {  number float64  word string  toggle bool } 为了解决上面的问题，可以创建自己的类型。类型定义允许你创建新的类型，可以基于基础类型来创建新的定义类型。我们可以使用任何基础类型来创建自己的类型，比如int、string等。但是我们现在专注于struct作为基础类型。</description>
+定义类型和struct 上面定义一个struct类型的变量是比较麻烦的，如果我们需要定义多个myStruct变量，那么就需要重复整个struct声明，如下：
+var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct2 struct {  number float64  word string  toggle bool } 为了解决上面的问题，可以创建自己的类型。类型定义允许你创建新的类型，可以基于基础类型来创建新的定义类型。我们可以使用任何基础类型来创建自己的类型，比如int、string等。但是我们现在专注于struct作为基础类型。
+定于一个类型需要使用type关键字，后面跟着新类型的名称，然后是你希望基于的基础类型。如果使用struct类型作为基础类型，就需要使用struct关键字，后面跟着{}花括号包裹的一组字段定义。
+type myType struct {  field1 string  field2 int } 下面的代码定义了一个 park类型和一个car类型，都是使用struct作为基础类型，然后在main函数中，声明这两个类型的变量，我们看到声明这两个类型变量的时候，不需要再重复整个struct的声明。我们仅仅使用已定义类型的名称。</description>
     </item>
     
     <item>
@@ -105,18 +126,21 @@ var myStruct1 struct {  number float64  word string  toggle bool }  var myStruct
       <pubDate>Wed, 15 Jun 2022 09:19:17 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/docker%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%8A%80%E6%9C%AF/</guid>
-      <description>Docker基本介绍在介绍Docker技术之前，我们先来看一下容器的发展之路
-容器的发展之路现在容器无疑成为了一种潮流，为了我们更全面的了解Docker，我们需要先了解容器技术的发展。
- 容器为什么会出现 容器的作用 容器的应用场景  落后的旧时代这个时代也就是服务器时代，业务是基于应用运转的，如果应用出现故障，业务也就无法正常运行，而大部分应用运行在服务器之上，曾经是每个服务器只能运行单一应用。windows和linux系统都无法保证稳定而安全的运行多个应用。在那个时代，经常会出现业务部分需要一个新的应用时，IT部分就去采购一台服务器，往往采购的服务器都是性能比较好的，因为你无法提前知道该应用所需的服务器性能究竟是怎样的。其实这是对公司资产的极大浪费。、
-虚拟机时代VMware 公司带来了虚拟机 VM。虚拟机是一种划时代的技术！现在每当业务部分需要增加应用的时候，IT部分无须再采购新的服务器。只需要在现有的空闲的服务器上启用一个新的虚拟机来部署应用。
+      <description>Docker基本介绍 在介绍Docker技术之前，我们先来看一下容器的发展之路
+容器的发展之路 现在容器无疑成为了一种潮流，为了我们更全面的了解Docker，我们需要先了解容器技术的发展。
+ 容器为什么会出现 容器的作用 容器的应用场景  落后的旧时代 这个时代也就是服务器时代，业务是基于应用运转的，如果应用出现故障，业务也就无法正常运行，而大部分应用运行在服务器之上，曾经是每个服务器只能运行单一应用。windows和linux系统都无法保证稳定而安全的运行多个应用。在那个时代，经常会出现业务部分需要一个新的应用时，IT部分就去采购一台服务器，往往采购的服务器都是性能比较好的，因为你无法提前知道该应用所需的服务器性能究竟是怎样的。其实这是对公司资产的极大浪费。、
+虚拟机时代 VMware 公司带来了虚拟机 VM。虚拟机是一种划时代的技术！现在每当业务部分需要增加应用的时候，IT部分无须再采购新的服务器。只需要在现有的空闲的服务器上启用一个新的虚拟机来部署应用。
 但是虚拟机也有非常多的不足之处。虚拟机需要依赖其专用的操作系统，操作系统会占用额外的CPU、RAM和存储，每个操作系统都需要补丁和监控。如果是 widnows 操作系统还需要付费购买许可证。虚拟机启动也比较慢，并且可移植性比较差。
-容器时代容器完美的解决了虚拟机的不足之处，容器运行不会独占操作系统。实际上，运行在相同宿主机上的容器是共享一个操作系统的，这样能够节省大量的系统资源，如CPU、RAM以及存储。容器还节省了操作系统的许可证，以及操作系统打补丁等运维成本。容器还具有启动速度快和便于迁移等优势。
+容器时代 容器完美的解决了虚拟机的不足之处，容器运行不会独占操作系统。实际上，运行在相同宿主机上的容器是共享一个操作系统的，这样能够节省大量的系统资源，如CPU、RAM以及存储。容器还节省了操作系统的许可证，以及操作系统打补丁等运维成本。容器还具有启动速度快和便于迁移等优势。
 容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰；而被装进集装箱的应用，也可以被方便地搬来搬去。
 容器技术的核心功能，就是通过约束和修改进程的动态表现，从而为其创造出一个“边界”。Cgroups 技术是用来制造约束的主要手段，而 Namespace 技术则是用来修改进程视图的主要方法。Linux Cgroups 就是 Linux 内核中用来为进程设置资源限制的一个重要功能。Linux Cgroups 的全称是 Linux Control Group它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。
 现代容器技术起源于linux时代，容器技术已经非常出色，但是对于大部分公司来说还是比较复杂，比如，内核命名空间、Control Group、Union File System，容器技术的复杂度是阻止其实际运用的主要原因。
-Docker 时代Docker技术的出现，让容器技术变的简单，容器才真正被大众所接受。我们也可以说是 Dcoker这家公司让容器变得简单。
-Dokcer简介Dokcer 是一种运行于Linux和windows上的软件，用于创建、管理和编排容器。Docker是在Github上开发的Moby开源项目的一部分。 (https://github.com/moby/moby)
-容器编排容器本身没有价值，有价值的是容器编排。正因为如此，容器技术生态才爆发了一场关于“容器编排”的“战争”。而这次战争，最终以 Kubernetes 项目和 CNCF 社区的胜利而告终。</description>
+Docker 时代 Docker技术的出现，让容器技术变的简单，容器才真正被大众所接受。我们也可以说是 Dcoker这家公司让容器变得简单。
+Dokcer简介 Dokcer 是一种运行于Linux和windows上的软件，用于创建、管理和编排容器。Docker是在Github上开发的Moby开源项目的一部分。 (https://github.com/moby/moby)
+容器编排 容器本身没有价值，有价值的是容器编排。正因为如此，容器技术生态才爆发了一场关于“容器编排”的“战争”。而这次战争，最终以 Kubernetes 项目和 CNCF 社区的胜利而告终。
+开发容器计划 开放容器计划&amp;mdash;OCI，OCI是一个旨在对容器基础架构中的基础组件进行标准化的管理委员会。OCI目前已经发布了两份规范：镜像规范和运行时规范。 containerd是容器虚拟化技术，从docker中剥离出来，形成开放容器接口（OCI）标准的一部分。还有 podman 也是满足OCI规范的一种容器化技术。
+Dokcer技术 Docker 引擎 Docker 引擎是用来运行和管理容器的核心软件。基于OCI标准的要求，Docker引擎是采用了模块化的设计原则，其组件是可替换的。Docker 引擎是由多个专用的工具协调工作，从而可以创建和运行容器。Docker引擎主要有以下组件构成：
+ Docker客户端 (Docker Client) Docker 守护进程 (Docker daenmon) containerd runc  Dokcker 总体逻辑图如下： Docker引擎架构图如下：</description>
     </item>
     
     <item>
@@ -125,8 +149,8 @@ Dokcer简介Dokcer 是一种运行于Linux和windows上的软件，用于创
       <pubDate>Thu, 09 Jun 2022 10:16:35 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E5%92%8Cddd%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84/</guid>
-      <description>领域事件和DDD分层架构在理解领域事件之前，我们先来看看什么是领域服务
-领域服务我们先来看聚合存在的三个问题：
+      <description>领域事件和DDD分层架构 在理解领域事件之前，我们先来看看什么是领域服务
+领域服务 我们先来看聚合存在的三个问题：
   聚合无法封装不稳定的领域行为
 聚合封装了多个实体和值对象，聚合根是访问聚合的唯一入口点。领域行为被固化在聚合之中，问题在于，虽然一些领域行为需要访问集合封装的信息，它的实现却不稳定，常常随着需求的变化而变化。无法将领域行为分配到一个固定的对象。
   两个聚合之间的协作该由谁发起负责？
@@ -135,7 +159,7 @@ Dokcer简介Dokcer 是一种运行于Linux和windows上的软件，用于创
 聚合是领域层的自治设计单元，封装了系统最为核心的业务功能。为了保证领域模型的纯粹性，会分离领域逻辑与技术实现，但是为了满足完整业务需要，二者又需要有机的结合起来。
   为了解决上面三个问题，需要引入领域服务的概念。领域服务 与实体、值对象一样，表示了领域模型。它封装了领域行为，前提是改领域行为在实体和值对象中找不到栖息之地。领域服务是领域设计建模的最后选择。
 为了限制领域服务的范围，防止削弱聚合内实体和值对象的领域行为，我们需要控制领域服务的粒度，保证领域服务实现一个单一职责的领域行为，领域服务并不反映真实世界的领域概念（名词），而是单纯的体现一种领域行为（动词）。所以在领域服务的命名上必须包含动词，比如：OrderDeletionService这样的类，体现了领域服务的行为本质。
-领域服务的运用场景领域服务是为了解决聚合的三个问题的
+领域服务的运用场景 领域服务是为了解决聚合的三个问题的
   聚合无法封装不稳定的领域行为
 比如一个调查问卷的聚合，业务需求现在要求将调查问卷导出为CSV格式，隔一段时间又要求导出为JSON格式。转换行为操作由调查问卷聚合拥有，但是转换行为存在着多种变化，不同的格式代表了不同的实现。显然，该行为的变化原因与调查问卷的结构无关，所以我们需要将转换行为和聚合分开，分离变化与不变，变化的领域行为从聚合中分离出来，形成领域服务。
   两个聚合之间的协作该由谁负责?
@@ -144,8 +168,13 @@ Dokcer简介Dokcer 是一种运行于Linux和windows上的软件，用于创
 领域服务调用资源库获得聚合，发起它们之间的行为协作。
  聚合如何与外部组件的协作?  在业务系统中，几乎不可能让领域逻辑完全不依赖于任何外部资源，如果领域行为突破了聚合的粒度，就需要与外部资源进行协作，比如访问南北向的网关，这个协作就交由领域服务来实现，
   哪些领域行为要分配给聚合，哪些因为聚合无法做到，才会考虑分配给领域服务？
- 与状态无关的领域行为 变化方向与聚合不一致的领域行为 聚合之间协作的领域行为 聚合和端口之间协作的领域行为  领域事件领域事件重点关注 状态 这两个字，在进行领域建模时，状态往往作为对象的属性被定义，例如，订单对象定义的订单状态的属性Created、Registered、Canceled等等。领域驱动设计将状态赋予它 领域事件 的身份。领域事件具有如下特征：
- 领域事件代表了领域概念 领域事件是已经发送的事实 领域事件是不可变的领域对象 领域事件会基于某个条件而触发  领域事件的命名应采用动词的过去时态，如订单完成的事件命名为OrderCompleted。作为不变事实的领域事件可以参考值对象的定义要求，定义为不变类。</description>
+ 与状态无关的领域行为 变化方向与聚合不一致的领域行为 聚合之间协作的领域行为 聚合和端口之间协作的领域行为  领域事件 领域事件重点关注 状态 这两个字，在进行领域建模时，状态往往作为对象的属性被定义，例如，订单对象定义的订单状态的属性Created、Registered、Canceled等等。领域驱动设计将状态赋予它 领域事件 的身份。领域事件具有如下特征：
+ 领域事件代表了领域概念 领域事件是已经发送的事实 领域事件是不可变的领域对象 领域事件会基于某个条件而触发  领域事件的命名应采用动词的过去时态，如订单完成的事件命名为OrderCompleted。作为不变事实的领域事件可以参考值对象的定义要求，定义为不变类。
+领域事件表达了实体的状态变更和迁移，可以以领域事件为核心进行领域建模，称为 事件驱动模型 。
+领域事件分以下几种：
+  微服务内的领域事件
+当领域事件发生在微服务内的聚合之间，领域事件发生后完成事件实体构建和事件数据持久化，发布方聚合将事件发布到事件总线，订阅方接收事件数据完成后续业务操作。
+  微服务之间的领域事件</description>
     </item>
     
     <item>
@@ -154,12 +183,14 @@ Dokcer简介Dokcer 是一种运行于Linux和windows上的软件，用于创
       <pubDate>Sat, 04 Jun 2022 22:32:06 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0/</guid>
-      <description>调用函数本章学习创建自定义函数，包括声明参数和返回单个值、多个值。我们还将学习指针，以便进行高效的内存函数调用。
-一些重复的代码我们需要计算两面墙的面积，看下面的代码：
+      <description>调用函数 本章学习创建自定义函数，包括声明参数和返回单个值、多个值。我们还将学习指针，以便进行高效的内存函数调用。
+一些重复的代码 我们需要计算两面墙的面积，看下面的代码：
 func main(){  var width,height,area float64  //第一面墙的面积计算  width = 4.2  height = 3.0  area = width*height  fmt.Println(area/10,&amp;#34;liters needes&amp;#34;)  //第二面墙的面积计算  width=5.2  heigth=3.5  area=width*height  fmt.Println(area/10,&amp;#34;liters needes&amp;#34;) } 上面的代码存在两个问题：
  计算结果有异常精确的浮点值，我们只需要精确到两位小数。 有相当多的重复代码，如果需要计算十面墙的面积，那么代码量很可观。  下面我们就解决上面代码中存在的这两个问题，先看浮点数值得问题。
-使用 Printf 和 Sprintf 格式化代码Go的 fmt 包提供了 Printf函数。Printf代表 带格式的打印 。它接受一个字符串并将一个或多个值插入其中，以特定的方式进行格式化。然后打印结果字符串: fmt.Printf(&amp;quot;About one-third:%0.2f\n&amp;quot;,1.0/3.0)。
-Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似，只是它是返回格式化后的字符串而不是打印它。 resultString := fmt.</description>
+使用 Printf 和 Sprintf 格式化代码 Go的 fmt 包提供了 Printf函数。Printf代表 带格式的打印 。它接受一个字符串并将一个或多个值插入其中，以特定的方式进行格式化。然后打印结果字符串: fmt.Printf(&amp;quot;About one-third:%0.2f\n&amp;quot;,1.0/3.0)。
+Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似，只是它是返回格式化后的字符串而不是打印它。 resultString := fmt.Sprintf(&amp;quot;About one-third:%0.2f\n&amp;quot;,1.0/3.0)。
+Printf函数有以下两个特性：
+ 格式化动词(上面字符串中的%0.2f是动词) 值得宽度(也就是动词中间的0.2)  格式化动词 Printf函数的第一个参数是一个字符串，用于格式化输出。它的大部分格式与字符串中显示的格式完全相同。但是，任何 (%)号都被视为格式化动词的开始 ,字符串的一部分将被特定格式的值所替换。其余的参数用作这些动词的值。</description>
     </item>
     
     <item>
@@ -168,17 +199,21 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
       <pubDate>Wed, 01 Jun 2022 22:16:25 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/%E5%AE%9E%E4%BD%93%E5%92%8C%E5%80%BC%E5%AF%B9%E8%B1%A1%E4%BB%A5%E5%8F%8A%E8%81%9A%E5%90%88/</guid>
-      <description>实体、值对象以及聚合实体和值对象都是DDD战术设计中的两个重要概念。这两个概念都是领域模型中的领域对象。
-实体拥有唯一标识符，且标识符在历经各种状态变更后仍能保持一致。对这些对象而言，重要的不是其属性，而是其延续性和标识，对象的延续性和标识会跨越甚至超出软件的生命周期。我们把这样的对象称为实体。
+      <description>实体、值对象以及聚合 实体和值对象都是DDD战术设计中的两个重要概念。这两个概念都是领域模型中的领域对象。
+实体 拥有唯一标识符，且标识符在历经各种状态变更后仍能保持一致。对这些对象而言，重要的不是其属性，而是其延续性和标识，对象的延续性和标识会跨越甚至超出软件的生命周期。我们把这样的对象称为实体。
 一个实体是一个唯一的东西，并且可以在相当长的一段时间内持续地变化。我们可以对实体做多次修改，故一个实体对象可能和它先前的状态大不相同。但是，由于它们拥有相同的身份标识(identity)，它们依然是同一个实体。
-为什么需要实体CRUD&amp;ndash;面向数据库表建模开发的系统有时候并不能满足我们的业务需求，特别是随着业务的复杂性和多变带来的软件复杂性的增加，我们就越能体会现有 CRUD方式的不足。CRUD系统是不能创建出好的业务模型的。
+为什么需要实体 CRUD&amp;ndash;面向数据库表建模开发的系统有时候并不能满足我们的业务需求，特别是随着业务的复杂性和多变带来的软件复杂性的增加，我们就越能体会现有 CRUD方式的不足。CRUD系统是不能创建出好的业务模型的。
 在使用DDD的情况下，我们可以把原来的数据模型转变为实体模型。我们通过 标识 对对象进行区分，而不是属性，此时我们应该将标识作为主要的模型定义。同时我们需要保持简单的类定义，并且关注对象在其生命周期中的连续性和唯一标识性。我们不应该通过对象的状态形式和历史来区分不同的实体对象……对于什么是相同的东西，模型应该给出定义。
-身份标识身份标识 (identity)是实体对象的必要标志，在DDD中，没用ID的领域对象就不是实体。实体的状态值可以变更，我们不能依据实体的属性值去判断其身份，如果没有唯一的ID我们就无法跟踪实体的状态变更。
-属性实体的属性用来说明它的 静态特征 ，并持有数据与状态。我们又可以将属性进一步分为:原子属性 和 组合属性 。我们来看一断代码：
+身份标识 身份标识 (identity)是实体对象的必要标志，在DDD中，没用ID的领域对象就不是实体。实体的状态值可以变更，我们不能依据实体的属性值去判断其身份，如果没有唯一的ID我们就无法跟踪实体的状态变更。
+属性 实体的属性用来说明它的 静态特征 ，并持有数据与状态。我们又可以将属性进一步分为:原子属性 和 组合属性 。我们来看一断代码：
 public class Product extends Entity&amp;lt;ProductId&amp;gt; {  private String name;  private int quantity;  private Category category; } 在上面的代码中 name和qunatity 是原子属性，分别被定义为 String和int类型，原子属性通常用开发语言（java或者C#）的内建类型。表达了不可再分性。Category为组合属性，通常用自定义类来表现，可以封装高内聚的一系列属性。
-领域行为实体佣有领域行为，可以更好的说明它的动态特征。领域行为分为以下几种：
+领域行为 实体佣有领域行为，可以更好的说明它的动态特征。领域行为分为以下几种：
   变更状态的领域行为
-实体对象允许调用者更改其状态，不仅仅是通过 get和 set访问器，应该让方法名满足业务含义，比如修改产品价格的领域行为应该定义为 ：changePriceTo(newPrice)的方法名，而非setPrice(newPrice)。</description>
+实体对象允许调用者更改其状态，不仅仅是通过 get和 set访问器，应该让方法名满足业务含义，比如修改产品价格的领域行为应该定义为 ：changePriceTo(newPrice)的方法名，而非setPrice(newPrice)。
+  自给自足的领域行为 这意味着实体只操作了自己的属性，不外求别的对象，不会和别的对象产生依赖。
+  相互协作的领域行为 实体不可能完全做到自给自足，有时也需要调用者提供必要的信息。这些信息往往通过参数传入，这就形成了领域对象之间相互协作的领域行为。
+  实体拥有的变更状态的领域行为，变更的只是对象的内存状态，与持久化无关，对实体的增删改查这些涉及持久化的操作在DDD的设计中分配给了专门的资源库(repository)对象，实体无需承担 增删改查 。资源库(repository) 分离了聚合的领域行为和持久化行为，保证了领域模型对象的业务纯粹性，成为了隔离业务复杂度和技术复杂度的关键。
+值对象 值对象（value object） 通常作为实体的属性，值对象是不可变的，唯一的身份标识(ID)和可变性特征将实体和值对象区分开来。</description>
     </item>
     
     <item>
@@ -187,10 +222,11 @@ public class Product extends Entity&amp;lt;ProductId&amp;gt; {  private String n
       <pubDate>Sun, 29 May 2022 09:51:35 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/go_%E6%9D%A1%E4%BB%B6%E5%92%8C%E5%BE%AA%E7%8E%AF/</guid>
-      <description>调用方法在 Go中，可以定义方法，方法其实是与特定 类型的值 关联的函数。看下面的代码，我们将调用 time 包中的方法。
+      <description>调用方法 在 Go中，可以定义方法，方法其实是与特定 类型的值 关联的函数。看下面的代码，我们将调用 time 包中的方法。
 package main  import (  &amp;#34;fmt&amp;#34;  &amp;#34;time&amp;#34; )  func main(){  var now time.Time = time.Now() //time.Now方法返回代表当前日期和时间的 time.Time值  var year int = now.Year() //返回年份的 Year方法  fmt.Println(year) } 上面看到调用方法的语法看起来很像调用不同包中的函数的语法，两者的区别是，函数属于一个包，而方法属于一个单独的值。这个值出现在圆点的左边。
 下面使用 strings包中的Replacer类型中的Replace方法，替换字符串中的指定的要替换的字符串。
-package main  import (  &amp;#34;fmt&amp;#34;  &amp;#34;strings&amp;#34;  &amp;#34;strings&amp;#34; )  func main(){  broken:=&amp;#34;G# r#cks&amp;#34;  replacer:=strings.NewReplacer(&amp;#34;#&amp;#34;,&amp;#34;o&amp;#34;)  fixed:=replacer.Replace(broken)  fmt.Println(fixed) } 获取用户输入的分数在控制台中获取用户输入的分数并打印出来。</description>
+package main  import (  &amp;#34;fmt&amp;#34;  &amp;#34;strings&amp;#34;  &amp;#34;strings&amp;#34; )  func main(){  broken:=&amp;#34;G# r#cks&amp;#34;  replacer:=strings.NewReplacer(&amp;#34;#&amp;#34;,&amp;#34;o&amp;#34;)  fixed:=replacer.Replace(broken)  fmt.Println(fixed) } 获取用户输入的分数 在控制台中获取用户输入的分数并打印出来。
+package main  import (  &amp;#34;bufio&amp;#34;  &amp;#34;fmt&amp;#34;  &amp;#34;os&amp;#34; )  func main(){  fmt.</description>
     </item>
     
     <item>
@@ -199,12 +235,14 @@ package main  import (  &amp;#34;fmt&amp;#34;  &amp;#34;strings&amp;#34;  &amp;#
       <pubDate>Fri, 27 May 2022 21:18:02 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/go_begin/</guid>
-      <description>语法基础Go 是一种注重简单性和速度的编程语言。Go 语言的目标：
- 快速编译 不太笨重的代码（语法简单） 自动释放未使用的内存（垃圾回收） 易于编写同时执行多个操作的软件（并发\协程） 很好的支持多核处理器  Go 程序代码结构package main  import &amp;#34;fmt&amp;#34;  func main(){  fmt.Println(&amp;#34;Hello,Go!&amp;#34;) } 上面是典型的Go文件代码布局，主要分三部分：
- package main 子句，表示该代码文件中的所有其余代码都属于 main 包。 import &amp;quot;fmt&amp;quot; 子句，表示我们导入了 fmt 包，可以使用里面公开的文本格式代码。 实际代码 每个Go文件的最后一部分都是实际代码，它通常被分割成一个或多个 function(函数)。main 包和main函数是 Go 程序的入口点。  调用函数调用函数的格式是：包名.函数名，比如 fmt.Println(),一个包中的函数可被其它包调用，前提是该函数是大写字母开头，表示是可导出的。
+      <description>语法基础 Go 是一种注重简单性和速度的编程语言。Go 语言的目标：
+ 快速编译 不太笨重的代码（语法简单） 自动释放未使用的内存（垃圾回收） 易于编写同时执行多个操作的软件（并发\协程） 很好的支持多核处理器  Go 程序代码结构 package main  import &amp;#34;fmt&amp;#34;  func main(){  fmt.Println(&amp;#34;Hello,Go!&amp;#34;) } 上面是典型的Go文件代码布局，主要分三部分：
+ package main 子句，表示该代码文件中的所有其余代码都属于 main 包。 import &amp;quot;fmt&amp;quot; 子句，表示我们导入了 fmt 包，可以使用里面公开的文本格式代码。 实际代码 每个Go文件的最后一部分都是实际代码，它通常被分割成一个或多个 function(函数)。main 包和main函数是 Go 程序的入口点。  调用函数 调用函数的格式是：包名.函数名，比如 fmt.Println(),一个包中的函数可被其它包调用，前提是该函数是大写字母开头，表示是可导出的。
 在代码中要使用其它包中的函数，首先要导入其它包，通过impport 子句。
 import (  &amp;#34;fmt&amp;#34;  &amp;#34;math&amp;#34; ) 上面这种格式表示导入了两个包。
-字符串字符串是一系列字节，通常表示文本字符，通过字面量定义字符：双引号之间的文本，Go将把他们视为字符串,&amp;quot;Hello,Go&amp;quot;。</description>
+字符串 字符串是一系列字节，通常表示文本字符，通过字面量定义字符：双引号之间的文本，Go将把他们视为字符串,&amp;quot;Hello,Go&amp;quot;。
+在字符串中，换行符、制表符和其它难以包含在程序中的字符可以用转义序列来表示：反斜杠(\)后跟表示另一个字符的字符。
+   转义序列 值     \n 换行符   \t 制表符   \&amp;quot; 双引号   \|反斜杠     符文 字符串通常用于表示一系列文本字符，而Go的符文(rune)则用于表示单个字符。 字符串字面量由双引号(&amp;quot;)包围，单 rune 字面量由单引号(&amp;rsquo;)包围。 Go 使用 Unicode 标准来存储rune。rune被保存为数字代码，而不是字符本身。</description>
     </item>
     
     <item>
@@ -213,10 +251,13 @@ import (  &amp;#34;fmt&amp;#34;  &amp;#34;math&amp;#34; ) 上面这种格式表�
       <pubDate>Fri, 27 May 2022 09:49:01 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/dapr_k8s/</guid>
-      <description>在 Kubernetes集群中部署 DaprKubernetes 上的Dapr概述Dapr 可以配置为在任何受支持的Kubernetes版本上运行。主要通过 dapr-sidecar-inject、dapr-operator、dapr-placement和dapr-sentry k8s服务为dapr在k8s中运行提供支持。
- dapr-operator 为Dapr管理组件更新和kubernetes服务端点 (状态存储、发布/订阅等) dapr-sidecar-injector 将Dapr 注入带注解的deployment pods中，并添加环境变量 DAPR_HTTP_PORT 和 DAPR_GRPC_PORT，以使用户定义的应用程序能够轻松地与Dapr通信，而无需硬编码Dapr端口。 dapr-placement 仅用于actor，创建映射表，将actor实例映射到pod。 dapr-sentry 管理服务之间的mTLS 并充当证书的颁发机构。  在kubernetes 集群上部署 Dapr在K8s中安装Dapr有两种方式，一种是使用Dapr CLI,另外一种是使用Helm 在 kubernetes中部署Dapr。我这里主要介绍使用Helm的方式部署Dapr。
-在centos7中安装K3sk3s概述k3s是一个高可用的、经过CNCF认证的Kubernetes发行版，专为物联网及边缘计算设计。k3s被打包成单个小于60MB的二进制文件，从而减少了运行安装、运行和自动更新生产Kubernetes集群所需的依赖性和步骤。k3s在小到树莓派或大到 AWS a1.4xlarge 32GiB服务器的环境中均能出色工作。
-安装k3s安装命令: curl -sfL https://get.k3s.io | sh -s - server &amp;ndash;docker 最好指定 容器运行时为docker，否则默认的容器运行时为containerd</description>
+      <description>在 Kubernetes集群中部署 Dapr Kubernetes 上的Dapr概述 Dapr 可以配置为在任何受支持的Kubernetes版本上运行。主要通过 dapr-sidecar-inject、dapr-operator、dapr-placement和dapr-sentry k8s服务为dapr在k8s中运行提供支持。
+ dapr-operator 为Dapr管理组件更新和kubernetes服务端点 (状态存储、发布/订阅等) dapr-sidecar-injector 将Dapr 注入带注解的deployment pods中，并添加环境变量 DAPR_HTTP_PORT 和 DAPR_GRPC_PORT，以使用户定义的应用程序能够轻松地与Dapr通信，而无需硬编码Dapr端口。 dapr-placement 仅用于actor，创建映射表，将actor实例映射到pod。 dapr-sentry 管理服务之间的mTLS 并充当证书的颁发机构。  在kubernetes 集群上部署 Dapr 在K8s中安装Dapr有两种方式，一种是使用Dapr CLI,另外一种是使用Helm 在 kubernetes中部署Dapr。我这里主要介绍使用Helm的方式部署Dapr。
+在centos7中安装K3s k3s概述 k3s是一个高可用的、经过CNCF认证的Kubernetes发行版，专为物联网及边缘计算设计。k3s被打包成单个小于60MB的二进制文件，从而减少了运行安装、运行和自动更新生产Kubernetes集群所需的依赖性和步骤。k3s在小到树莓派或大到 AWS a1.4xlarge 32GiB服务器的环境中均能出色工作。
+安装k3s 安装命令: curl -sfL https://get.k3s.io | sh -s - server &amp;ndash;docker 最好指定 容器运行时为docker，否则默认的容器运行时为containerd
+安装完成后会显示如下的说明： 安装 Helm Helm 是 Kubernetes 的包管理器 helm 最新下载地址：https://github.com/helm/helm/releases 下载对应的版本：helm-v3.9.0-linux-amd64.tar.gz
+解压:helm-v3.9.0-linux-amd64.tar.gz,将helm移至 /usr/local/bin 目录 mv linux-amd64/helm /usr/local/bin/helm
+helm version 查看版本号</description>
     </item>
     
     <item>
@@ -225,17 +266,24 @@ import (  &amp;#34;fmt&amp;#34;  &amp;#34;math&amp;#34; ) 上面这种格式表�
       <pubDate>Fri, 27 May 2022 09:46:32 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/domain/</guid>
-      <description>DDD 领域、限界上下文领域学习领域驱动设计首先要理解里面的一些核心概念，DDD既然是以 领域 为核心概念，那么理解DDD里面的各种以 域 为概念的名词就非常的关键，是学习DDD的第一步和前提。
-领域和子域  领域是从事一种专门活动或事业的 范围 、部类或部门，是指一种特定的 范围 或区域。领域其实就是来确定范围的，范围即边界。
+      <description>DDD 领域、限界上下文 领域 学习领域驱动设计首先要理解里面的一些核心概念，DDD既然是以 领域 为核心概念，那么理解DDD里面的各种以 域 为概念的名词就非常的关键，是学习DDD的第一步和前提。
+领域和子域   领域是从事一种专门活动或事业的 范围 、部类或部门，是指一种特定的 范围 或区域。领域其实就是来确定范围的，范围即边界。
   范围有大小之分，所以领域也有大小之分，根据领域确定的边界的大小可以将领域进一步划分出子域，每个子域对应一个更小的问题域或更小的业务范围。
   领域中存在着 问题空间 和 解决方案空间 在问题空间中我们思考的是业务面临的挑战，在解决方案空间中，我们思考如何实现软件以解决这些业务面临的挑战。
   一般我们研究一个比较大的问题，通常的做法就是将该问题拆分出几个小问题，对每一个小问题研究透了，那么我们就建立了整个大的问题域的知识体系，也就是建立了整个全域的领域模型。所以领域建模的核心思想是将问题域逐步分解，降低业务理解和系统实现的复杂度。
-  核心域、通用域和支撑域在领域不断的划分的过程中（对问题空间的逐步分解），领域会细分为不同的子域，子域可以根据对业务的重要性和功能属性划分为三类子域：核心域、通用域和支撑域。
+  核心域、通用域和支撑域 在领域不断的划分的过程中（对问题空间的逐步分解），领域会细分为不同的子域，子域可以根据对业务的重要性和功能属性划分为三类子域：核心域、通用域和支撑域。
  核心域 在这三类子域中，核心域 是最重要的，我们应该投入最多的资源在核心域上。 支撑域 是指在关注于业务的某一个方面，但确不是核心，他们专注于业务的某个方面。比如数据字典等。 通用域 是指一个子域被用于整个业务系统，比如认证、权限等。  在系统建设过程中，由于预算和资源的有限，对于不同类型的子域应有不同的关注度和资源投入策略。
 在微服务系统建设的过程中，技术团队要将核心域的建设排在首位，需要有绝对的掌控能力和自主研发能力。
-限界上下文在DDD 领域建模和系统建设过程中，有很多的参与者，对于同样的领域知识，不同的参与者可能会有不同的理解，因此DDD就出现了 通用语言 和 限界上下文 这两个重要的概念。
+限界上下文 在DDD 领域建模和系统建设过程中，有很多的参与者，对于同样的领域知识，不同的参与者可能会有不同的理解，因此DDD就出现了 通用语言 和 限界上下文 这两个重要的概念。
 限界上下文是一个显示的边界，领域模型便存在于这个边界之内。领域模型把通用语言表达成软件模型。创建边界的含义在于，每一个模型的概念，包括它的属性和操作，在边界之内都有特殊的含义，每一个参与者都应该知道确切的含义。
-通用语言通用语言 是团队统一的语言，不管你在团队中承担什么角色，在同一个领域的软件生命周期里都使用统一的语言进行交流。</description>
+通用语言 通用语言 是团队统一的语言，不管你在团队中承担什么角色，在同一个领域的软件生命周期里都使用统一的语言进行交流。
+通用语言可以解决交流障碍这个问题，使领域专家和开发人员能够协同合作，从而确保业务需求的正确表达。
+通用语言还包含术语和用例场景，并且能够直接反映在代码中。通用语言中的 名词 可以给领域对象命名，如商品、订单等，对应实体对象。动词 则表示一个动作或事件，如商品已下单、订单已付款等，对应领域事件或者命令。
+通用语言贯穿DDD的整个设计过程。在事件风暴过程中，通过团队交流达成共识的、能够简单、清晰、准确描述业务涵义和规则的语言。
+限界上下文 限界上下文是一个显示边界，限界上下文可以理解为两个词：限界 和 上下文 。限界就是领域的边界，而上下文则是语义环境。通过领域的限界上下文，我们就可以在统一的领域边界内用统一的语言进行交流。
+限界上下文 的定义就是：用来封装通用语言和领域对象，提供上下文环境，保证在领域之内的一些术语、业务相关对象等（通用语言）有一个确切的含义，没有二义性。这个边界定义了模型的适用范围，使团队所有成员能够明确地知道什么应该在模型中实现，什么不应该在模型中实现。
+领域可以拆分为多个子领域。一个领域相当于一个问题域，领域拆分为子域的过程就是大问题拆分为小问题的过程.每个领域模型都有它对应的限界上下文，团队在限界上下文内用通用语言交流。领域内所有限界上下文的领域模型构成整个领域的领域模型。理论上限界上下文就是微服务的边界。我们将限界上下文内的领域模型映射到微服务，就完成了从问题域到软件的解决方案。
+可以说，限界上下文是微服务设计和拆分的主要依据。在领域模型中，如果不考虑技术异构、团队沟通等其它外部因素，一个限界上下文理论上就可以设计为一个微服务。</description>
     </item>
     
     <item>
@@ -244,10 +292,10 @@ import (  &amp;#34;fmt&amp;#34;  &amp;#34;math&amp;#34; ) 上面这种格式表�
       <pubDate>Fri, 27 May 2022 09:26:30 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/%E4%BB%80%E4%B9%88%E6%98%AF%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1/</guid>
-      <description>什么是领域驱动设计2004 年埃里克·埃文斯（Eric Evans）发表了《领域驱动设计》（Domain-Driven Design –Tackling Complexity in the Heart of Software）这本书，从此领域驱动设计（Domain Driven Design，简称 DDD）诞生。DDD 核心思想是通过领域驱动设计方法定义领域模型，从而确定业务和应用边界，保证业务模型与代码模型的一致性。 领域驱动设计是一种通过将实现连接到持续进化的模型来满足复杂需求的软件开发方法。
+      <description>什么是领域驱动设计 2004 年埃里克·埃文斯（Eric Evans）发表了《领域驱动设计》（Domain-Driven Design –Tackling Complexity in the Heart of Software）这本书，从此领域驱动设计（Domain Driven Design，简称 DDD）诞生。DDD 核心思想是通过领域驱动设计方法定义领域模型，从而确定业务和应用边界，保证业务模型与代码模型的一致性。 领域驱动设计是一种通过将实现连接到持续进化的模型来满足复杂需求的软件开发方法。
 DDD设计的前提是：
  把项目的主要重点放在核心领域 把复杂的设计放在有界域（bounded context）的模型上 发起一个创造性的合作之间的技术和域界专家以迭代地完善的概念模式，解决特定领域的问题。  领域驱动设计是一种由域模型来驱动着系统设计的思想，不是通过存储数据词典(DB表字段、ES Mapper字段等等)来驱动系统设计。领域模型是对业务模型的抽象，DDD是把业务模型翻译成系统架构设计的一种方式。
-微服务与DDD的关系DDD 提出后在软件开发领域一直都是“雷声大，雨点小”，直到 Martin Fowler 提出微服务架构，DDD 才真正迎来了自己的时代。
+微服务与DDD的关系 DDD 提出后在软件开发领域一直都是“雷声大，雨点小”，直到 Martin Fowler 提出微服务架构，DDD 才真正迎来了自己的时代。
 有些熟悉 DDD 设计方法的软件工程师在进行微服务设计时，发现可以利用 DDD 设计方法来建立领域模型，划分领域边界，再根据这些领域边界从业务视角来划分微服务边界。而按照 DDD 方法设计出的微服务的业务和应用边界都非常合理，可以很好地实现微服务内部和外部的“高内聚、低耦合”。于是越来越多的人开始把 DDD 作为微服务设计的指导思想。
 DDD 是一种处理高度复杂领域的设计思想，它试图分离技术实现的复杂性，并围绕业务概念构建领域模型来控制业务的复杂性，以解决软件难以理解，难以演进的问题。DDD 不是架构，而是一种架构设计方法论，它通过边界划分将复杂业务领域简单化，帮我们设计出清晰的领域和应用边界，可以很容易地实现架构演进。
 DDD 是一种架构设计方法，微服务是一种架构风格，两者从本质上都是为了追求高响应力，而从业务视角去分离应用系统建设复杂度的手段。两者都强调从业务出发，其核心要义是强调根据业务发展，合理划分领域边界，持续调整现有架构，优化现有代码，以保持架构和代码的生命力，也就是我们常说的演进式架构。
@@ -261,15 +309,18 @@ DDD 主要关注：从业务领域视角划分领域边界，构建通用语言�
       <pubDate>Thu, 26 May 2022 21:30:55 +0800</pubDate>
       
       <guid>https://alvin-su.github.io/post/hugo-site/</guid>
-      <description>什么是HugoHugo 是由Go语言实现的静态网站生成器。简单、易用、高效、易扩展、快速部署,可以快速方便的创建自己的博客。
-安装HugoHugo 因为是Go语言实现的 所以支持 Windows\Linux\MacOS 系统。因为日常办公只要是使用的Windows,所以这里只介绍Windows环境的安装。
+      <description>什么是Hugo Hugo 是由Go语言实现的静态网站生成器。简单、易用、高效、易扩展、快速部署,可以快速方便的创建自己的博客。
+安装Hugo Hugo 因为是Go语言实现的 所以支持 Windows\Linux\MacOS 系统。因为日常办公只要是使用的Windows,所以这里只介绍Windows环境的安装。
 在github上下载Hugo的最新版本，地址：https://github.com/gohugoio/hugo/releases 如下图：
 下载下来后进行解压，进入目录只有一个hugo.exe 可执行文件，在系统环境变量path中，配置该exe的路径: 配置好环境变量后，就可以在powershell 中使用 hugo 命令，利用 hugo version 命令查看下hugo 的版本
-创建博客站点可以方便的利用 hugo new site myblog 命令创建一个名为 “myblog” 的博客。
+创建博客站点 可以方便的利用 hugo new site myblog 命令创建一个名为 “myblog” 的博客。
 我们进入到myblog里面，可以看到如下内容:
-添加博客主题可以在 https://themes.gohugo.io/选择自己喜欢的主题进行下载，比如选择 m10c 主题，可以通过下面的命令进行下载： git clone https://github.com/vaga/hugo-theme-m10c.git themes/m10c
+添加博客主题 可以在 https://themes.gohugo.io/选择自己喜欢的主题进行下载，比如选择 m10c 主题，可以通过下面的命令进行下载： git clone https://github.com/vaga/hugo-theme-m10c.git themes/m10c
 输入命令 hugo server -t m10c &amp;ndash;buildDrafts 启动站点
-创建博客文章通过命令 hugo new post/myfirst.md 创建一个 myfirst.md 的文件。</description>
+创建博客文章 通过命令 hugo new post/myfirst.md 创建一个 myfirst.md 的文件。
+本地运行命令：hugo server -t m10c &amp;ndash;buildDrafts
+部署博客站点到远端github上   创建git 仓库，利用Github pages 功能进行部署,命令格式如下：开头 github用户名(alvin-su),结尾 github.io,如：alvin-su.github.io
+  命令 hugo --theme=hugo-coder --baseUrl=&amp;quot;https://alvin-su.</description>
     </item>
     
   </channel>

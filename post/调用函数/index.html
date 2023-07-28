@@ -1,38 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-cn">
-
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
+    <title>调用函数 // Alvinsu Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.99.1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Alvinsu" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://alvin-su.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
 
     
-
-    <meta name="author" content="Alvinsu">
-    <meta name="description" content="调用函数本章学习创建自定义函数，包括声明参数和返回单个值、多个值。我们还将学习指针，以便进行高效的内存函数调用。
-一些重复的代码我们需要计算两面墙的面积，看下面的代码：
-func main(){  var width,height,area float64  //第一面墙的面积计算  width = 4.2  height = 3.0  area = width*height  fmt.Println(area/10,&#34;liters needes&#34;)  //第二面墙的面积计算  width=5.2  heigth=3.5  area=width*height  fmt.Println(area/10,&#34;liters needes&#34;) } 上面的代码存在两个问题：
- 计算结果有异常精确的浮点值，我们只需要精确到两位小数。 有相当多的重复代码，如果需要计算十面墙的面积，那么代码量很可观。  下面我们就解决上面代码中存在的这两个问题，先看浮点数值得问题。
-使用 Printf 和 Sprintf 格式化代码Go的 fmt 包提供了 Printf函数。Printf代表 带格式的打印 。它接受一个字符串并将一个或多个值插入其中，以特定的方式进行格式化。然后打印结果字符串: fmt.Printf(&quot;About one-third:%0.2f\n&quot;,1.0/3.0)。
-Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似，只是它是返回格式化后的字符串而不是打印它。 resultString := fmt.">
-    <meta name="keywords" content="blog,developer,personal">
-
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="调用函数"/>
-<meta name="twitter:description" content="调用函数本章学习创建自定义函数，包括声明参数和返回单个值、多个值。我们还将学习指针，以便进行高效的内存函数调用。
-一些重复的代码我们需要计算两面墙的面积，看下面的代码：
+<meta name="twitter:description" content="调用函数 本章学习创建自定义函数，包括声明参数和返回单个值、多个值。我们还将学习指针，以便进行高效的内存函数调用。
+一些重复的代码 我们需要计算两面墙的面积，看下面的代码：
 func main(){  var width,height,area float64  //第一面墙的面积计算  width = 4.2  height = 3.0  area = width*height  fmt.Println(area/10,&#34;liters needes&#34;)  //第二面墙的面积计算  width=5.2  heigth=3.5  area=width*height  fmt.Println(area/10,&#34;liters needes&#34;) } 上面的代码存在两个问题：
  计算结果有异常精确的浮点值，我们只需要精确到两位小数。 有相当多的重复代码，如果需要计算十面墙的面积，那么代码量很可观。  下面我们就解决上面代码中存在的这两个问题，先看浮点数值得问题。
-使用 Printf 和 Sprintf 格式化代码Go的 fmt 包提供了 Printf函数。Printf代表 带格式的打印 。它接受一个字符串并将一个或多个值插入其中，以特定的方式进行格式化。然后打印结果字符串: fmt.Printf(&quot;About one-third:%0.2f\n&quot;,1.0/3.0)。
-Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似，只是它是返回格式化后的字符串而不是打印它。 resultString := fmt."/>
+使用 Printf 和 Sprintf 格式化代码 Go的 fmt 包提供了 Printf函数。Printf代表 带格式的打印 。它接受一个字符串并将一个或多个值插入其中，以特定的方式进行格式化。然后打印结果字符串: fmt.Printf(&quot;About one-third:%0.2f\n&quot;,1.0/3.0)。
+Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似，只是它是返回格式化后的字符串而不是打印它。 resultString := fmt.Sprintf(&quot;About one-third:%0.2f\n&quot;,1.0/3.0)。
+Printf函数有以下两个特性：
+ 格式化动词(上面字符串中的%0.2f是动词) 值得宽度(也就是动词中间的0.2)  格式化动词 Printf函数的第一个参数是一个字符串，用于格式化输出。它的大部分格式与字符串中显示的格式完全相同。但是，任何 (%)号都被视为格式化动词的开始 ,字符串的一部分将被特定格式的值所替换。其余的参数用作这些动词的值。"/>
 
     <meta property="og:title" content="调用函数" />
-<meta property="og:description" content="调用函数本章学习创建自定义函数，包括声明参数和返回单个值、多个值。我们还将学习指针，以便进行高效的内存函数调用。
-一些重复的代码我们需要计算两面墙的面积，看下面的代码：
+<meta property="og:description" content="调用函数 本章学习创建自定义函数，包括声明参数和返回单个值、多个值。我们还将学习指针，以便进行高效的内存函数调用。
+一些重复的代码 我们需要计算两面墙的面积，看下面的代码：
 func main(){  var width,height,area float64  //第一面墙的面积计算  width = 4.2  height = 3.0  area = width*height  fmt.Println(area/10,&#34;liters needes&#34;)  //第二面墙的面积计算  width=5.2  heigth=3.5  area=width*height  fmt.Println(area/10,&#34;liters needes&#34;) } 上面的代码存在两个问题：
  计算结果有异常精确的浮点值，我们只需要精确到两位小数。 有相当多的重复代码，如果需要计算十面墙的面积，那么代码量很可观。  下面我们就解决上面代码中存在的这两个问题，先看浮点数值得问题。
-使用 Printf 和 Sprintf 格式化代码Go的 fmt 包提供了 Printf函数。Printf代表 带格式的打印 。它接受一个字符串并将一个或多个值插入其中，以特定的方式进行格式化。然后打印结果字符串: fmt.Printf(&quot;About one-third:%0.2f\n&quot;,1.0/3.0)。
-Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似，只是它是返回格式化后的字符串而不是打印它。 resultString := fmt." />
+使用 Printf 和 Sprintf 格式化代码 Go的 fmt 包提供了 Printf函数。Printf代表 带格式的打印 。它接受一个字符串并将一个或多个值插入其中，以特定的方式进行格式化。然后打印结果字符串: fmt.Printf(&quot;About one-third:%0.2f\n&quot;,1.0/3.0)。
+Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似，只是它是返回格式化后的字符串而不是打印它。 resultString := fmt.Sprintf(&quot;About one-third:%0.2f\n&quot;,1.0/3.0)。
+Printf函数有以下两个特性：
+ 格式化动词(上面字符串中的%0.2f是动词) 值得宽度(也就是动词中间的0.2)  格式化动词 Printf函数的第一个参数是一个字符串，用于格式化输出。它的大部分格式与字符串中显示的格式完全相同。但是，任何 (%)号都被视为格式化动词的开始 ,字符串的一部分将被特定格式的值所替换。其余的参数用作这些动词的值。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://alvin-su.github.io/post/%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2022-06-04T22:32:06+08:00" />
@@ -40,117 +38,65 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 
 
 
-    <title>
-  调用函数 · Alvinsu Blog
-</title>
-
-    
-      <link rel="canonical" href="https://alvin-su.github.io/post/%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0/">
-    
-
-    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
-
-    
-      
-      
-      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
-    
-
-    
-
-    
-      
-        
-        
-        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
-      
-    
-
-    
-
-    
-
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
-
-    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-    <meta name="generator" content="Hugo 0.99.1" />
   </head>
-
-  
-  
-    
-  
-  <body class="preload-transitions colorscheme-auto">
-    
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-    <main class="wrapper">
-      <nav class="navigation">
-  <section class="container">
-    <a class="navigation-title" href="/">
-      Alvinsu Blog
-    </a>
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
+  <body>
+    <header class="app-header">
+      <a href="https://alvin-su.github.io"><img class="app-header-avatar" src="/avatar.jpg" alt="Alvinsu" /></a>
+      <h1>Alvinsu Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="post/">Blog</a>
+             - 
           
-            <li class="navigation-item">
-              <a class="navigation-link" href="/post/">Blog</a>
-            </li>
+          <a class="app-header-menu-item" href="tags/">分类</a>
+             - 
           
-            <li class="navigation-item">
-              <a class="navigation-link" href="/tags/">分类</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/about/">关于</a>
-            </li>
-          
+          <a class="app-header-menu-item" href="about/">关于</a>
+      </nav>
+      <p>Alvinsu&#39;s personal website</p>
+      <div class="app-header-social">
         
+          <a href="https://github.com/alvin-su/" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+          </a>
         
-      </ul>
-    
-  </section>
-</nav>
-
-
-      <div class="content">
-        
-  <section class="container page">
-  <article>
-    <header>
-      <h1 class="title">
-        <a class="title-link" href="https://alvin-su.github.io/post/%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0/">
-          调用函数
-        </a>
-      </h1>
+      </div>
     </header>
-
-    <h1 id="调用函数">
-  调用函数
-  <a class="heading-link" href="#%e8%b0%83%e7%94%a8%e5%87%bd%e6%95%b0">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h1>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">调用函数</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jun 4, 2022
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          4 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://alvin-su.github.io/tags/go/">Go</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="调用函数">调用函数</h1>
 <p>本章学习创建自定义函数，包括声明参数和返回单个值、多个值。我们还将学习指针，以便进行高效的内存函数调用。</p>
-<h3 id="一些重复的代码">
-  一些重复的代码
-  <a class="heading-link" href="#%e4%b8%80%e4%ba%9b%e9%87%8d%e5%a4%8d%e7%9a%84%e4%bb%a3%e7%a0%81">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="一些重复的代码">一些重复的代码</h3>
 <p>我们需要计算两面墙的面积，看下面的代码：</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
 </span></span><span style="display:flex;"><span>    <span style="font-weight:bold">var</span> width,height,area <span style="">float64</span>
@@ -171,12 +117,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 <li>有相当多的重复代码，如果需要计算十面墙的面积，那么代码量很可观。</li>
 </ul>
 <p>下面我们就解决上面代码中存在的这两个问题，先看浮点数值得问题。</p>
-<h3 id="使用-printf-和-sprintf-格式化代码">
-  使用 <code>Printf</code> 和 <code>Sprintf</code> 格式化代码
-  <a class="heading-link" href="#%e4%bd%bf%e7%94%a8-printf-%e5%92%8c-sprintf-%e6%a0%bc%e5%bc%8f%e5%8c%96%e4%bb%a3%e7%a0%81">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="使用-printf-和-sprintf-格式化代码">使用 <code>Printf</code> 和 <code>Sprintf</code> 格式化代码</h3>
 <p>Go的 <code>fmt</code> 包提供了 <code>Printf</code>函数。<code>Printf</code>代表 <em><strong>带格式的打印</strong></em> 。它接受一个字符串并将一个或多个值插入其中，以特定的方式进行格式化。然后打印结果字符串: <code>fmt.Printf(&quot;About one-third:%0.2f\n&quot;,1.0/3.0)</code>。</p>
 <p><code>Sprintf</code>函数也是<code>fmt</code>包的一部分，它的工作方式和<code>Printf</code>函数类似，只是它是返回格式化后的字符串而不是打印它。
 <code>resultString := fmt.Sprintf(&quot;About one-third:%0.2f\n&quot;,1.0/3.0)</code>。</p>
@@ -185,12 +126,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 <li>格式化动词(上面字符串中的<code>%0.2f</code>是动词)</li>
 <li>值得宽度(也就是动词中间的0.2)</li>
 </ul>
-<h3 id="格式化动词">
-  格式化动词
-  <a class="heading-link" href="#%e6%a0%bc%e5%bc%8f%e5%8c%96%e5%8a%a8%e8%af%8d">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="格式化动词">格式化动词</h3>
 <p><code>Printf</code>函数的第一个参数是一个字符串，用于格式化输出。它的大部分格式与字符串中显示的格式完全相同。但是，任何 <em><strong><code>(%)</code>号都被视为格式化动词的开始</strong></em> ,字符串的一部分将被特定格式的值所替换。其余的参数用作这些动词的值。</p>
 <p><code>fmt.Printf(&quot;The %s cost %d cents each.\n&quot;,&quot;gumballs&quot;,23)</code>
 <code>fmt.Printf(&quot;That will be $%f please.\n&quot;,0.23*5)</code>
@@ -251,12 +187,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>	fmt.Printf(<span style="font-style:italic">&#34;Types:%T %T %T\n&#34;</span>, 1.2, <span style="font-style:italic">&#34;\t&#34;</span>, <span style="font-weight:bold">true</span>)   <span style="font-style:italic">//格式化所提供的值得类型 int、string等
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>	fmt.Printf(<span style="font-style:italic">&#34;Percent sign:%%\n&#34;</span>)                   <span style="font-style:italic">//格式化一个完完全全的%号
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>}
-</span></span></code></pre></div><h3 id="格式化值宽度">
-  格式化值宽度
-  <a class="heading-link" href="#%e6%a0%bc%e5%bc%8f%e5%8c%96%e5%80%bc%e5%ae%bd%e5%ba%a6">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+</span></span></code></pre></div><h3 id="格式化值宽度">格式化值宽度</h3>
 <p>我们想在纯文本表格中格式化一些数据。我们需要确保格式化的值填充最少的数量的空格，以便列能够正确的对齐。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
 </span></span><span style="display:flex;"><span>
@@ -269,12 +200,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>	fmt.Printf(<span style="font-style:italic">&#34;%12s | %2d\n&#34;</span>, <span style="font-style:italic">&#34;Stamps&#34;</span>, 50)
 </span></span><span style="display:flex;"><span>	fmt.Printf(<span style="font-style:italic">&#34;%12s | %2d\n&#34;</span>, <span style="font-style:italic">&#34;Paper Clips&#34;</span>, 5) <span style="font-style:italic">// 5不够2位用空格填充
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>}
-</span></span></code></pre></div><h3 id="格式化小数宽度">
-  格式化小数宽度
-  <a class="heading-link" href="#%e6%a0%bc%e5%bc%8f%e5%8c%96%e5%b0%8f%e6%95%b0%e5%ae%bd%e5%ba%a6">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+</span></span></code></pre></div><h3 id="格式化小数宽度">格式化小数宽度</h3>
 <p>我们可以用值宽度来指定浮点数的精度(显示的位数)。格式如下：
 <code>%5.3f</code>，5表示整个数的最小宽度，包括数字位和小数点。没达到位数的将用空格填充。小数点后的宽度是要显示的小数位数。如果给出精确的位数，它将被四舍五入以适用给定的小数位数。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
@@ -288,12 +214,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>	fmt.Printf(<span style="font-style:italic">&#34;%%.1f:%.1f\n&#34;</span>, 12.3456) <span style="font-style:italic">//四舍五入到1位 无空格填充
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>}
 </span></span></code></pre></div><p>最后一个格式是<code>%.1f</code>，将允许我们取任意精度的浮点数，并将它们四舍五入到小数点后1位（不会用空格填充）。</p>
-<h3 id="在计算面积的程序中使用printf">
-  在计算面积的程序中使用<code>Printf</code>
-  <a class="heading-link" href="#%e5%9c%a8%e8%ae%a1%e7%ae%97%e9%9d%a2%e7%a7%af%e7%9a%84%e7%a8%8b%e5%ba%8f%e4%b8%ad%e4%bd%bf%e7%94%a8printf">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="在计算面积的程序中使用printf">在计算面积的程序中使用<code>Printf</code></h3>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> main(){
 </span></span><span style="display:flex;"><span>    <span style="font-weight:bold">var</span> width,height,area <span style="">float64</span>
 </span></span><span style="display:flex;"><span>    <span style="font-style:italic">//第一面墙的面积计算
@@ -308,12 +229,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>    fmt.Printf(<span style="font-style:italic">&#34;%.2f liters needed\n&#34;</span>,area/10.0)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>上面的代码解决了浮点数精度的问题，但是还存在着重复代码的问题，我们将通过声明函数来解决。</p>
-<h3 id="声明函数">
-  声明函数
-  <a class="heading-link" href="#%e5%a3%b0%e6%98%8e%e5%87%bd%e6%95%b0">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="声明函数">声明函数</h3>
 <p>函数声明以<code>func</code>开头，后跟希望具有的函数名称、一对圆括号<code>()</code>,然后是包含函数代码的块，用大括号<code>{}</code>包裹。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> sayHi() {
 </span></span><span style="display:flex;"><span>    fmt.Println(<span style="font-style:italic">&#34;Hi!&#34;</span>)
@@ -325,12 +241,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 <li>名称以大写字母开头的函数是可 <em><strong>导出</strong></em> 的，并且可以在当前包之外使用。如果只需在当前包中使用函数，则应该以小写字母开头。</li>
 <li>包含多个单词的名称应该使用驼峰式大小写。<code>sayHi</code></li>
 </ul>
-<h3 id="声明函数参数">
-  声明函数参数
-  <a class="heading-link" href="#%e5%a3%b0%e6%98%8e%e5%87%bd%e6%95%b0%e5%8f%82%e6%95%b0">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="声明函数参数">声明函数参数</h3>
 <p>可以在声明函数时同时声明一个或多个参数。参数是函数的局部变量，其值在调用函数时设置。</p>
 <p>可以在函数声明中的圆括号<code>()</code>之间声明一个或多个参数，用逗号分隔。与声明变量类似，需要为声明的每个参数提供一个名称。后面跟着一个类似(flaot64、bool等)。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> repeatLine (line <span style="">string</span>,times <span style="">int</span>) {
@@ -352,12 +263,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>        fmt.Println(line)
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="在计算面积程序中使用函数">
-  在计算面积程序中使用函数
-  <a class="heading-link" href="#%e5%9c%a8%e8%ae%a1%e7%ae%97%e9%9d%a2%e7%a7%af%e7%a8%8b%e5%ba%8f%e4%b8%ad%e4%bd%bf%e7%94%a8%e5%87%bd%e6%95%b0">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+</span></span></code></pre></div><h3 id="在计算面积程序中使用函数">在计算面积程序中使用函数</h3>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> <span style="font-style:italic">&#34;fmt&#34;</span>
@@ -371,23 +277,13 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>    paintNeeded(4.2,3.0)
 </span></span><span style="display:flex;"><span>    paintNeeded(5.2,3.5)
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="函数返回值">
-  函数返回值
-  <a class="heading-link" href="#%e5%87%bd%e6%95%b0%e8%bf%94%e5%9b%9e%e5%80%bc">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+</span></span></code></pre></div><h3 id="函数返回值">函数返回值</h3>
 <p>上面的程序代码中，我们需要<code>paintNeeded</code>函数的计算结果值，这个时候就需要在函数声明时同时声明它的返回值，在函数声明中的参数后面添加该返回值的类型。然后在函数块中使用<code>return</code>关键字，后面跟着要返回的值。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> double(number <span style="">float64</span>) <span style="">float64</span> {
 </span></span><span style="display:flex;"><span>    <span style="font-weight:bold">return</span> number * 2
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>有返回值的函数必须以<code>return</code>语句结尾，如果返回值的类型与声明的返回类型不匹配，代码也会编译不通过。</p>
-<h3 id="在计算面积的程序中使用函数返回值">
-  在计算面积的程序中使用函数返回值
-  <a class="heading-link" href="#%e5%9c%a8%e8%ae%a1%e7%ae%97%e9%9d%a2%e7%a7%af%e7%9a%84%e7%a8%8b%e5%ba%8f%e4%b8%ad%e4%bd%bf%e7%94%a8%e5%87%bd%e6%95%b0%e8%bf%94%e5%9b%9e%e5%80%bc">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="在计算面积的程序中使用函数返回值">在计算面积的程序中使用函数返回值</h3>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> <span style="font-style:italic">&#34;fmt&#34;</span>
@@ -407,12 +303,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>    total += amount
 </span></span><span style="display:flex;"><span>    fmt.Printf(<span style="font-style:italic">&#34;Total:%.2f liters\n&#34;</span>,total)
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="错误值">
-  错误值
-  <a class="heading-link" href="#%e9%94%99%e8%af%af%e5%80%bc">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+</span></span></code></pre></div><h3 id="错误值">错误值</h3>
 <p>创建错误值的最简单的方法是将字符串传递给<code>errors</code>包的<code>New</code>函数，该函数将返回一个新的错误值。对该错误值调用<code>Error</code>方法，将会得到传递给<code>errors.New</code>的字符串。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
 </span></span><span style="display:flex;"><span>
@@ -426,12 +317,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>    fmt.Println(err.Error())
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>如果要将错误值传递给<code>fmt</code>或<code>log</code>包中的函数，则可能不需要调用它的<code>Error</code>方法。<code>fmt</code>和<code>log</code>包中的函数已经被编写成能够检查是否传递给它们的值有<code>Error</code>方法，如果有，则打印<code>Error</code>的返回值。</p>
-<h3 id="声明多个返回值">
-  声明多个返回值
-  <a class="heading-link" href="#%e5%a3%b0%e6%98%8e%e5%a4%9a%e4%b8%aa%e8%bf%94%e5%9b%9e%e5%80%bc">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="声明多个返回值">声明多个返回值</h3>
 <p>在<code>paintNeeded</code>函数中使用多个返回值，最常见的做法是返回一个主返回值，后跟一个额外值，表示函数是否遇到错误。如果没有问题，通常将额外值设置为<code>nil</code>，如果发生错误，则设置为错误值。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
 </span></span><span style="display:flex;"><span>
@@ -455,12 +341,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    fmt.Printf(<span style="font-style:italic">&#34;%0.2f liters needed\n&#34;</span>,amount)
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="函数形参接收实参的副本">
-  函数形参接收实参的副本
-  <a class="heading-link" href="#%e5%87%bd%e6%95%b0%e5%bd%a2%e5%8f%82%e6%8e%a5%e6%94%b6%e5%ae%9e%e5%8f%82%e7%9a%84%e5%89%af%e6%9c%ac">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+</span></span></code></pre></div><h3 id="函数形参接收实参的副本">函数形参接收实参的副本</h3>
 <p>当你调用一个声明了形参的函数时，需要为调用提供实参。每个实参中的值被复制到相应的形参变量(值传递)。</p>
 <p>我们来看下面的代码：</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
@@ -491,12 +372,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>    double(amount) <span style="font-style:italic">//向函数传递实参
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    fmt.Println(number) <span style="font-style:italic">//得到是原始值6，而不是6的双倍值
 </span></span></span></code></pre></div><p>要想改变变量的原始值，而不是它的副本，我们需要学习 <em><strong>指针</strong></em>。</p>
-<h3 id="指针">
-  指针
-  <a class="heading-link" href="#%e6%8c%87%e9%92%88">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="指针">指针</h3>
 <p><code>Go</code>的地址运算符为<code>&amp;</code>符号，可以使用该符合获取一个变量的地址。如下面的代码：</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
 </span></span><span style="display:flex;"><span>
@@ -508,12 +384,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>    fmt.Println(&amp;amount)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>表示变量地址的值称为指针，因为它指向可以找到变量的位置。</p>
-<h3 id="指针类型">
-  指针类型
-  <a class="heading-link" href="#%e6%8c%87%e9%92%88%e7%b1%bb%e5%9e%8b">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="指针类型">指针类型</h3>
 <p>指针的类型可以写为一个<code>*</code>符号，后面跟着指针指向的变量的类型。例如，指向一个<code>int</code>类型变量的指针的类型被写为<code>*int</code>，我们可以读作 <em><strong>指向int的指针</strong></em> 。</p>
 <p>我们可以使用<code>reflect.TypeOf</code>函数来显示指针的类型：</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
@@ -527,12 +398,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>    <span style="font-weight:bold">var</span> myInt <span style="">int</span>
 </span></span><span style="display:flex;"><span>    fmt.Println(reflect.TypeOf(&amp;myInt))
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h4 id="指针变量">
-  指针变量
-  <a class="heading-link" href="#%e6%8c%87%e9%92%88%e5%8f%98%e9%87%8f">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h4>
+</span></span></code></pre></div><h4 id="指针变量">指针变量</h4>
 <p>我们可以声明保存指针的变量，指针变量只能保存一种类型值得指针。如下代码：</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> main () {
 </span></span><span style="display:flex;"><span>    <span style="font-weight:bold">var</span> myInt <span style="">int</span>
@@ -540,12 +406,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    myIntPointer = &amp;myInt <span style="font-style:italic">//给指针变量分配一个指针
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    fmt.Println(myIntPointer)
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="获取或更改指针的值">
-  获取或更改指针的值
-  <a class="heading-link" href="#%e8%8e%b7%e5%8f%96%e6%88%96%e6%9b%b4%e6%94%b9%e6%8c%87%e9%92%88%e7%9a%84%e5%80%bc">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+</span></span></code></pre></div><h3 id="获取或更改指针的值">获取或更改指针的值</h3>
 <p>我们可以在代码中的指针变量之前输入<code>*</code>运算符来获得指针引用的变量的值。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> main () {
 </span></span><span style="display:flex;"><span>    myInt := 4
@@ -563,12 +424,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span><span style="display:flex;"><span>    fmt.Println(myInt)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>上面的代码，<code>*myIntPointer=8</code>访问了<code>myIntPointer</code>处的变量(即myInt变量)并为其分配了一个新值。所以不仅更新了<code>*myIntPointer</code>的值，而且也更新了<code>myInt</code>的值。</p>
-<h3 id="函数指针">
-  函数指针
-  <a class="heading-link" href="#%e5%87%bd%e6%95%b0%e6%8c%87%e9%92%88">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h3>
+<h3 id="函数指针">函数指针</h3>
 <p>可以从函数返回指针，只需声明函数的返回类型是指针类型。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> createPointer() *<span style="">float64</span> {
 </span></span><span style="display:flex;"><span>    <span style="font-weight:bold">var</span> myFloat =98.5
@@ -582,12 +438,7 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> printPointer(myBoolPointer *<span style="">bool</span>) { <span style="font-style:italic">//为该参数使用一个指针类型
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    fmt.Println(*myBoolPointer) <span style="font-style:italic">//打印传入的指针处的值
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>}
-</span></span></code></pre></div><h2 id="使用指针修复我们的double函数">
-  使用指针修复我们的<code>double</code>函数
-  <a class="heading-link" href="#%e4%bd%bf%e7%94%a8%e6%8c%87%e9%92%88%e4%bf%ae%e5%a4%8d%e6%88%91%e4%bb%ac%e7%9a%84double%e5%87%bd%e6%95%b0">
-    <i class="fa fa-link" aria-hidden="true"></i>
-  </a>
-</h2>
+</span></span></code></pre></div><h2 id="使用指针修复我们的double函数">使用指针修复我们的<code>double</code>函数</h2>
 <p>我们向函数传递一个指针，然后更改该指针处的值，那么这些更改在函数外部依然有效。</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
 </span></span><span style="display:flex;"><span>
@@ -603,48 +454,12 @@ Sprintf函数也是fmt包的一部分，它的工作方式和Printf函数类似�
 </span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>	fmt.Println(amount)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div>
+    </div>
+    <div class="post-footer">
+      
+    </div>
   </article>
-</section>
-
-  
-
-      </div>
-
-      <footer class="footer">
-  <section class="container">
-    ©
-    
-    2022
-     Alvinsu 
-    ·
-    
-    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
-    
-  </section>
-</footer>
 
     </main>
-
-    
-      
-      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
   </body>
-
 </html>
